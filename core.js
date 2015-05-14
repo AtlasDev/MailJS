@@ -42,14 +42,21 @@ var core = function core(callback) {
 util.inherits(core, EventEmitter);
 
 core.prototype.loadPlugin = function loadPlugin(plugin, callback) {
-	//TODO: load module
-	callback();
+	var _this = this;
+    if(_this.config.plugins.available.indexof(plugin) == -1) {
+        var error = new Error("Plugin `"+plugin+"` not available!");
+        _this.error("Plugin `"+plugin+"` not available!", error);
+		callback(error);
+    }
+	callback(null);
 }
 
 core.prototype.unloadPlugin = function unloadPlugin(plugin, callback) {
 	var _this = this;
-	if(_this.config.plugins.enabled.other.indexOf(plugin) != 0) {
-		callback(new Error("Plugin `"+plugin+"` not enabled or essential!"), null)
+	if(_this.config.plugins.enabled.other.indexOf(plugin) == -1) {
+        var error = new Error("Plugin `"+plugin+"` essential or not enabled!");
+        _this.error("Plugin `"+plugin+"` essential or not enabled!", error);
+		callback(error, null);
 	} else {
 		//TODO: unload module
 	}
@@ -59,9 +66,7 @@ core.prototype.scanPluginFolder = function scanPluginFolder(callback) {
 	var _this = this;
 	fs.readdir(_this.config.plugin_folder, function(err, files) {
 		if(err) {
-			console.log('\n');
-			console.log('Error'.red + '    ' + 'Failed to scan for plugins!');
-			console.log('Error'.red + '    ' + err);
+            _this.error("Failed to scan for plugins!", err, true);
 			callback(err, null);
 		}
 		var oldAvailablePlugins = _this.config.plugins.available;
@@ -114,16 +119,18 @@ core.prototype.error = function error(msg, stack, quit) {
 	console.log('\n');
 	console.log('Error'.red + '    ' + msg);
 	if(stack) {
-		console.log('Error'.red + '    ' + stack);
+		console.log('Error'.red + '    ' + stack.stack);
 	}
 	if(quit == true) {
+		console.log('Error'.red + '    Error is severe, quitting...');
 		process.exit(1);
 	}
+	console.log('\n');
 	return true;
 }
 
-core.prototype.log = function log() {
-	
+core.prototype.log = function log(msg) {
+	console.log('Log'.cyan + '      ' + msg);
 }
 
 module.exports = core;

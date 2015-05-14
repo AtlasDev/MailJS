@@ -8,6 +8,8 @@
 			"auth": "",
 			"other": []
 		},
-		"available": []
+		"available": [
+			"web"
+		]
 	}
 }
