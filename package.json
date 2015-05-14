@@ -1,0 +1,8 @@
+{
+    "name": "MailJS",
+    "version": "0.0.1",
+    "description": "A simple mail system",
+    "dependencies": {
+        "colors": "*"
+    }
+}

@@ -1,0 +1,13 @@
+{
+	"process_name": "MailJS",
+	"plugin_folder": "plugins",
+	"plugins": {
+		"enabled": {
+			"mail_incomming": "",
+			"mail_outgoing": "",
+			"auth": "",
+			"other": []
+		},
+		"available": []
+	}
+}
