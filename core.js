@@ -1,5 +1,5 @@
 /**
- * @file The core class for 
+ * @file The core class for MailJS 
  * @author AtlasDev
  * @copyright Dany Sluijk 2015
  */
@@ -14,28 +14,43 @@ var core = function core(callback) {
 	var _this = this;
 	_this.config;
 	
-	console.log('Start'.green + '    ' + '===== Starting core services =====');
-	
-	console.log('Start'.green + '    ' + 'Initialising event system...' + '  DONE\r'.green);
+	_this.log('===== Starting core services =====', true);
+	_this.log('Initialising event system...' + '  DONE\r'.green, true);
 	
 	process.stdout.write('Start'.green + '    ' + 'Loading config file...');
-	_this.reloadConfig(function() {
+	_this.reloadConfig(function(err) {
+        if(err) {
+            process.stdout.write('        FAIL\r'.red);
+			_this.error(err.message, err, true);
+            callback();
+        }
 		process.stdout.write('        DONE\r'.green);
 	
 		process.stdout.write('Start'.green + '    ' + 'Setting process name...');
 		process.title = _this.config.process_name;
 		process.stdout.write('       DONE\r'.green);
 	
-		console.log('Start'.green + '    ' + 'Scanning for plugins...');
+		_this.log('Scanning for plugins...', true);
 		_this.on('pluginAvailable', function(plugin) {
-			console.log('Start'.green + '    ' + ' ' + '--'.yellow + ' Found new plugin `' + plugin + '`');
+			_this.log(' --'.yellow + ' Found new plugin `' + plugin + '`', true);
 		})
-		_this.scanPluginFolder(function(){
-			console.log('Start    '.green + 'Done scanning, ' + _this.config.plugins.available.length + ' plugins found.');
+		_this.scanPluginFolder(function(err){
+            if(err) {
+                _this.error(err.message, err, true);
+            }
+			_this.log('Done scanning, ' + _this.config.plugins.available.length + ' plugins found.', true);
 			_this.removeAllListeners('pluginAvailable');
+            _this.loadPlugin('web', function(err) {
+                if(err) {
+                    _this.error(err.message, err, true);
+                }
+            });
 		});
 	});
-	
+    
+    process.on('uncaughtException', function(err) {
+        _this.error("An uncaught exception has taken place!", err, true);
+    });
 	callback();
 }
 
@@ -43,12 +58,16 @@ util.inherits(core, EventEmitter);
 
 core.prototype.loadPlugin = function loadPlugin(plugin, callback) {
 	var _this = this;
-    if(_this.config.plugins.available.indexof(plugin) == -1) {
-        var error = new Error("Plugin `"+plugin+"` not available!");
-        _this.error("Plugin `"+plugin+"` not available!", error);
-		callback(error);
+    if(_this.config.plugins.available.indexOf(plugin) == -1) {
+		callback(new Error("Plugin `"+plugin+"` not available!"));
+    } else {
+        console.log('\r');
+        this.log("===== Loading plugin `"+plugin+"` =====");
+        
+        this.log("===== Plugin `"+plugin+"` loaded =====");
+        console.log('\r');
+        callback(null);
     }
-	callback(null);
 }
 
 core.prototype.unloadPlugin = function unloadPlugin(plugin, callback) {
@@ -66,7 +85,6 @@ core.prototype.scanPluginFolder = function scanPluginFolder(callback) {
 	var _this = this;
 	fs.readdir(_this.config.plugin_folder, function(err, files) {
 		if(err) {
-            _this.error("Failed to scan for plugins!", err, true);
 			callback(err, null);
 		}
 		var oldAvailablePlugins = _this.config.plugins.available;
@@ -91,7 +109,6 @@ core.prototype.saveConfig = function saveConfig(callback) {
 	var _this = this;
 	fs.writeFile('./config.json', JSON.stringify(_this.config, null, '\t'), function (err) {
 		if(err) {
-			_this.error('Failed to save the config file!', err, true);
 			callback(err);
 		}
 		callback(null);
@@ -102,16 +119,16 @@ core.prototype.reloadConfig = function reloadConfig(callback) {
 	var _this = this;
 	fs.readFile('./config.json', 'utf8', function(err, data) {
 		if(err) {
-			_this.error('Failed to load the config file', err, true);
+            callback(err)
 		}
 		var config;
 		try {
 			config = JSON.parse(data);
 		} catch(err) {
-			_this.error('Failed to parse the config!', err, true);
+            callback(err);
 		}
 		_this.config = config;
-		callback();
+		callback(null);
 	});
 }
 
@@ -129,8 +146,13 @@ core.prototype.error = function error(msg, stack, quit) {
 	return true;
 }
 
-core.prototype.log = function log(msg) {
-	console.log('Log'.cyan + '      ' + msg);
+core.prototype.log = function log(msg, startup) {
+    if(startup == true) {
+        console.log('Start'.green + '    ' + msg);
+    } else {
+        console.log('Log'.cyan + '      ' + msg);
+    }
+    return true;
 }
 
 module.exports = core;

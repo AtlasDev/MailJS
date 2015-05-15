@@ -1,5 +1,5 @@
 /**
- * @file The main class for the DiffieHellman Key Exchange
+ * @file The main class for MailJS
  * @author AtlasDev
  * @copyright Dany Sluijk 2015
  */
@@ -26,4 +26,4 @@ console.log('Start'.green + '    ' + 'NodeJS ' + process.version);
 console.log('Start'.green + '    ' + 'V8 engine v' + process.versions.v8);
 console.log('');
 
-var sys = new core(function(){});
+var core = new core(function(){});
