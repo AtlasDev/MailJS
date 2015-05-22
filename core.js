@@ -38,7 +38,8 @@ var core = function core(callback) {
             if(err) {
                 _this.error(err.message, err, true);
             }
-			_this.log('Done scanning, ' + _this.config.plugins.available.length + ' plugins found.', true);
+			_this.log('Done scanning, ' + _this.config.plugins.available.all.length + ' plugins found.', true);
+			_this.log('===== Core services started =====', true);
 			_this.removeAllListeners('pluginAvailable');
             _this.loadPlugin('web', function(err) {
                 if(err) {
@@ -58,13 +59,13 @@ util.inherits(core, EventEmitter);
 
 core.prototype.loadPlugin = function loadPlugin(plugin, callback) {
 	var _this = this;
-    if(_this.config.plugins.available.indexOf(plugin) == -1) {
+    if(_this.config.plugins.available.all.indexOf(plugin) == -1) {
 		callback(new Error("Plugin `"+plugin+"` not available!"));
     } else {
         console.log('\r');
         this.log("===== Loading plugin `"+plugin+"` =====");
-        
-        this.log("===== Plugin `"+plugin+"` loaded =====");
+        _this.config.plugins.enabled.all.push(plugin);
+        this.log("===== Plugin `"+plugin+"` loaded  =====");
         console.log('\r');
         callback(null);
     }
@@ -72,9 +73,9 @@ core.prototype.loadPlugin = function loadPlugin(plugin, callback) {
 
 core.prototype.unloadPlugin = function unloadPlugin(plugin, callback) {
 	var _this = this;
-	if(_this.config.plugins.enabled.other.indexOf(plugin) == -1) {
-        var error = new Error("Plugin `"+plugin+"` essential or not enabled!");
-        _this.error("Plugin `"+plugin+"` essential or not enabled!", error);
+	if(_this.config.plugins.enabled.all.indexOf(plugin) == -1) {
+        var error = new Error("Plugin `"+plugin+"` not enabled!");
+        _this.error("Plugin `"+plugin+"` not enabled!", error);
 		callback(error, null);
 	} else {
 		//TODO: unload module
@@ -87,13 +88,13 @@ core.prototype.scanPluginFolder = function scanPluginFolder(callback) {
 		if(err) {
 			callback(err, null);
 		}
-		var oldAvailablePlugins = _this.config.plugins.available;
-		_this.config.plugins.available = [];
+		var oldAvailablePlugins = _this.config.plugins.available.all;
+		_this.config.plugins.available.all = [];
 		for(var i = 0; i < files.length; i++) {
 			if(oldAvailablePlugins.indexOf(files[i]) == -1) {
 				_this.emit('pluginAvailable', files[i]);
 			}
-			_this.config.plugins.available.push(files[i]);
+			_this.config.plugins.available.all.push(files[i]);
 		}
 		oldAvailablePlugins = null;
 		_this.saveConfig(function (err) {
