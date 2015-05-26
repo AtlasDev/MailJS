@@ -6,10 +6,19 @@
 			"mail_incomming": "",
 			"mail_outgoing": "",
 			"auth": "",
-			"other": []
+			"storage": "",
+			"other": [],
+			"all": []
 		},
-		"available": [
-			"web"
-		]
+		"available": {
+			"mail_incomming": [],
+			"mail_outgoing": [],
+			"auth": [],
+			"storage": [],
+			"other": [],
+			"all": [
+				"web"
+			]
+		}
 	}
 }
