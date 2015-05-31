@@ -1,0 +1,15 @@
+{
+    "currentLanguage": "English",
+    "settings": {
+        "general": {
+            "title": "General Settings",
+            "language": "Language",
+            "language_desc": "The language to use."
+        },
+        "notifications": {
+            "title": "Notifications",
+            "send": "Send notifications",
+            "send_desc": "Send a desktop notification when a new Email is received."
+        }
+    }
+}

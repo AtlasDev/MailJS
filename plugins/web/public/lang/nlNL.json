@@ -1,0 +1,15 @@
+{
+    "currentLanguage": "Nederlands",
+    "settings": {
+        "general": {
+            "title": "Algemene instellingen",
+            "language": "Taal",
+            "language_desc": "De gebruikte taal."
+        },
+        "notifications": {
+            "title": "Notificaties",
+            "send": "Verstuur notificaties",
+            "send_desc": "Stuur een notificatie wanneer er een nieuwe Email binnenkomt."
+        }
+    }
+}
