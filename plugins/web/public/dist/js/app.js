@@ -6,7 +6,7 @@ app.config(function($routeProvider) {
 	$routeProvider
 		.when('/', {
 			templateUrl : 'pages/mailbox.html',
-			controller  : 'mailController'
+			controller  : 'mailboxController'
 		})
 		.when('/about', {
 			templateUrl : 'pages/about.html',

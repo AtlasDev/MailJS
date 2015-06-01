@@ -38,31 +38,35 @@ app.controller("MailCtrl", function($scope, $window, $translate, socket) {
     });
 });
 
-app.controller('mailController', function($scope) {
-	$scope.message = 'Everyone come and see how good I look!';
+app.controller('mailboxController', function($scope) {
 	$scope.title = 'Mailbox';
 	$scope.subtitle = '';
+	$scope.orderItem = 'starred';
+	$scope.reverse = true;
+	$scope.page = 1;
+	$scope.limit = 15;
 	$scope.mails = [
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1432737154000, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLsfdshbcjbdvsbffvsgjfvsdgjfvsnvdsnbdsvvhdsvvhdsvdshvnbTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: true},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: false, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
-		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, starred: true, attachment: false},
+		{from: 'Arfgnder Pierce', title: 'AdminLTE 2.0 Issue', date: 1432737154000, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexa Pierce', title: 'BdminLTE 2.0 Issue', date: 1431168277937, unread: true, starred: true, attachment: false},
+		{from: 'Dany Sluijk', title: 'Mail test', date: 1430168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLsfdshbcjbdvsbffvsgjfvsdgjfvsnvdsnbdsvvhdsvvhdsvdshvnbTE 2.0 Issue', unread: false, date: 1433168277937, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: false, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: false, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: true, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: true},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: false, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: true, starred: true, attachment: false},
+		{from: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, unread: false, starred: true, attachment: false},
 	];
 });

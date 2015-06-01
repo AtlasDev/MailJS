@@ -5,9 +5,9 @@
 	</h1>
 </section>
 <section class="content">
-	<div class="box box-primary">
+	<div class="box box-danger">
 		<div class="box-header with-border">
-			<h3 class="box-title">Inbox</h3>
+			<h3 class="box-title">Inbox - page {{page}}</h3>
 		    <div class="box-tools pull-right">
 				<div class="has-feedback">
 				  <input type="search" class="form-control input-sm" ng-model="search" placeholder="Search Mail"/>
@@ -23,10 +23,10 @@
 				<button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
 				<button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
 				<div class="pull-right">
-					1-50/200
+					{{page*limit-limit+1}}-{{page*limit}}/{{mails.length}}
 					<div class="btn-group">
-						<button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-						<button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+						<button class="btn btn-default btn-sm" ng-click="page = page-1" ng-disabled="page==1"><i class="fa fa-chevron-left"></i></button>
+						<button class="btn btn-default btn-sm" ng-click="page = page+1" ng-disabled="page*limit>=mails.length"><i class="fa fa-chevron-right"></i></button>
 					</div>
 					<!-- /.btn-group -->
 				</div>
@@ -37,17 +37,17 @@
 					<tbody>
 						<tr>
 							<td></td>
-							<td></td>
-							<td>Sender:</td>
-							<td>Title:</td>
-							<td></td>
-							<td>Date:</td>
+							<td class="filter" ng-class="{bold: orderItem=='starred'}" ng-click="orderItem='starred'; reverse=!reverse"><i class="fa" ng-show="orderItem=='starred'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Starred:</td>
+							<td class="filter" ng-class="{bold: orderItem=='from'}" ng-click="orderItem='from'; reverse=!reverse"><i class="fa" ng-show="orderItem=='from'" ng-class="reverse ? 'fa-arrow-up' : 'fa-arrow-down'">&nbsp;</i>from:</td>
+							<td class="filter" ng-class="{bold: orderItem=='title'}" ng-click="orderItem='title'; reverse=!reverse"><i class="fa" ng-show="orderItem=='title'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Title:</td>
+							<td class="filter" ng-class="{bold: orderItem=='attachment'}" ng-click="orderItem='attachment'; reverse=!reverse"><i class="fa" ng-show="orderItem=='attachment'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Attachment:</td>
+							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Date:</td>
 						</tr>
-						<tr ng-repeat="mail in mails | filter:'search as results' | orderBy:date">
+						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | filter:search | limitTo:limit:page*limit-limit">
 							<td><input type="checkbox" /></td>
 							<td class="mailbox-star"><a href="#"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
-							<td class="mailbox-name"><a href="read-mail.html">{{mail.from}}</a></td>
-							<td class="mailbox-subject"><b>{{mail.title}}</b></td>
+							<td class="mailbox-name">{{mail.from}}</td>
+							<td class="mailbox-subject"><div ng-class="{bold: mail.unread}">{{mail.title}}</div></td>
 							<td class="mailbox-attachment"><i ng-if="mail.attachment" class="fa fa-paperclip"></i></td>
 							<td class="mailbox-date">{{mail.date | date:'HH:mm d MMM yyyy'}}</td>
 						</tr>
@@ -67,10 +67,10 @@
 				<button class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
 				<button class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
 				<div class="pull-right">
-					1-50/200
+					{{page*limit-limit+1}}-{{page*limit}}/{{mails.length}}
 					<div class="btn-group">
-						<button class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-						<button class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+						<button class="btn btn-default btn-sm" ng-click="page = page-1" ng-disabled="page==1"><i class="fa fa-chevron-left"></i></button>
+						<button class="btn btn-default btn-sm" ng-click="page = page+1" ng-disabled="page*limit>=mails.length"><i class="fa fa-chevron-right"></i></button>
 					</div>
 					<!-- /.btn-group -->
 				</div>

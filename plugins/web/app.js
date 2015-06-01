@@ -25,6 +25,6 @@ io.use(socketioJwt.authorize({
 	handshake: true
 }));
 
-io.on('authenticated', function(socket) {
-    console.log('hello! ' + socket.decoded_token.username);
+io.on('connection', function(socket) {
+	console.log(socket.decoded_token.username);
 });
