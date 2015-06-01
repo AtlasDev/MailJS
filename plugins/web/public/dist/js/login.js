@@ -1,17 +1,33 @@
+'use strict';
+
 $(document).ready(function() {
-    if(document.cookie.indexOf("jwt") >= 0) {
+    if(typeof localStorage.jwt != 'undefined') {
         window.location.replace("app.html");
     }
-    if(get['error']) {
-        showError(get['error']);
+    if(get.error) {
+        showError(get.error);
     }
 });
 
-$("form").submit(function( event ) {
+$("form").submit(function(event) {
     event.preventDefault();
-    var request = $.post('/api/v1/login', { username: $("#username").val(), password: $("#password").val() });
-    request.success(function() {
-        window.location.replace("app.html");
+    var request = $.ajax({
+        type: 'POST',
+        url: '/api/v1/login',
+        dataType: 'json',
+        cache: false,
+        data: {
+			username: $("#username").val(),
+			password: $("#password").val()
+		}
+    });
+    request.done(function(data) {
+        if(typeof data.error !== 'undefined') {
+            localStorage.setItem('jwt', data.jwt);
+            window.location.replace("app.html");
+        } else {
+            showError(data.error);
+        }
     });
     request.fail(function(data) {
         showError(JSON.parse(data.responseText).error);
@@ -19,9 +35,9 @@ $("form").submit(function( event ) {
 });
 
 var showError = function showError(err) {
-    $("#errorMsg").replaceWith(err)
+    $("#errorMsg").replaceWith(err);
     $("#error").removeClass('hidden');
-}
+};
 
 var get = (function(a) {
     if (a == "") return {};

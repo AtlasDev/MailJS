@@ -7,6 +7,6 @@
     "express": "*",
     "jsonwebtoken": "^5.0.1",
     "socket.io": "*",
-    "socket.io-cookie": "0.0.1"
+    "socketio-jwt": "*"
   }
 }

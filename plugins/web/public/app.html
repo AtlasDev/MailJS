@@ -152,45 +152,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						</div>
 					</div>
 
-					<!-- search form (Optional) -->
-					<form action="#" method="get" class="sidebar-form">
-						<div class="input-group">
-							<input type="text" name="q" class="form-control" placeholder="Search mail..."/>
-							<span class="input-group-btn">
-								<button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
-					</form>
-					<!-- /.search form -->
-
 					<!-- Sidebar Menu -->
 					<ul class="sidebar-menu">
 						<li class="header">MAILBOXES</li>
 						<!-- Optionally, you can add icons to the links -->
-						<li class="active"><a href="#"><i class='fa fa-link'></i> <span>Inbox</span></a></li>
-						<li><a href="#"><i class='fa fa-link'></i> <span>Send</span></a></li>
-						<li><a href="#"><i class='fa fa-link'></i> <span>Trash</span></a></li>
+						<li class="active"><a href="#"><i class="fa fa-inbox"></i> <span>Inbox<span class="label label-primary pull-right">12</span></span></a></li>
+						<li><a href="#"><i class="fa fa-envelope-o"></i> <span>Send</span></a></li>	
+						<li><a href="#"><i class="fa fa-filter"></i> <span>Junk<span class="label label-waring pull-right">65</span></span></a></li>
+						<li><a href="#"><i class="fa fa-trash-o"></i></i> <span>Trash</span></a></li>
 					</ul><!-- /.sidebar-menu -->
 				</section>
 				<!-- /.sidebar -->
 			</aside>
 
 			<!-- Content Wrapper. Contains page content -->
-			<div class="content-wrapper" ng-controller="PageCtrl">
-				<!-- Content Header (Page header) -->
-				<section class="content-header">
-					<h1>
-						{{title}}
-						<small>{{subtitle}}</small>
-					</h1>
-				</section>
-
-				<!-- Main content -->
-				<section class="content">
-
-					<!-- Your Page Content Here -->
-
-				</section><!-- /.content -->
+			<div class="content-wrapper">
+				<div ng-view></div>
 			</div><!-- /.content-wrapper -->
 
 			<!-- Main Footer -->
@@ -277,6 +254,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 		<!-- AngularJS 1.4.0 -->
 		<script src="plugins/AngularJS/angular-1.4.0.min.js" type="text/javascript"></script>
+		<!-- AngularJS Route 1.4.0 -->
+		<script src="https://code.angularjs.org/1.4.0/angular-route.min.js" type="text/javascript"></script>
 		<!-- AngularJS Translate 2.7.0 -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.7.0/angular-translate.min.js" type="text/javascript"></script>
 		<!-- AngularJS Translate static loader 2.7.0 -->
