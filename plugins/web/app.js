@@ -27,4 +27,14 @@ io.use(socketioJwt.authorize({
 
 io.on('connection', function(socket) {
 	console.log(socket.decoded_token.username);
+
+    socket.on('mail:star', function(data) {
+        io.sockets.emit('mail:star', {uuid: data.uuid, state: data.state});
+    });
+    socket.on('mail:delete', function(data) {
+        io.sockets.emit('mail:delete', {uuid: data.uuid});
+    });
+    socket.on('mail:read', function(data) {
+        io.sockets.emit('mail:read', {uuid: data.uuid, state: data.state});
+    });
 });

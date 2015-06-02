@@ -1,0 +1,26 @@
+Server side:
+	mail:delete
+		desc: fired when a mail is deleted
+		payload:
+			uuid: string | the unique identifier of the mail
+	mail:star
+		desc: fired when a mail is stared/unstared
+		payload:
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+	mail:read
+		desc: fired when a mail is readed
+		payload:
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+
+Client side:
+	mail:star
+		desc: Star/unstar a specific email
+		payload:
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+	mail:delete
+		desc: delete a specific email
+		payload:
+			uuid: string | the unique identifier of the mail

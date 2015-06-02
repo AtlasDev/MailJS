@@ -38,16 +38,16 @@
 						<tr>
 							<td></td>
 							<td class="filter" ng-class="{bold: orderItem=='starred'}" ng-click="orderItem='starred'; reverse=!reverse"><i class="fa" ng-show="orderItem=='starred'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Starred:</td>
-							<td class="filter" ng-class="{bold: orderItem=='from'}" ng-click="orderItem='from'; reverse=!reverse"><i class="fa" ng-show="orderItem=='from'" ng-class="reverse ? 'fa-arrow-up' : 'fa-arrow-down'">&nbsp;</i>from:</td>
+							<td class="filter" ng-class="{bold: orderItem=='sender'}" ng-click="orderItem='sender'; reverse=!reverse"><i class="fa" ng-show="orderItem=='sender'" ng-class="reverse ? 'fa-arrow-up' : 'fa-arrow-down'">&nbsp;</i>sender:</td>
 							<td class="filter" ng-class="{bold: orderItem=='title'}" ng-click="orderItem='title'; reverse=!reverse"><i class="fa" ng-show="orderItem=='title'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Title:</td>
 							<td class="filter" ng-class="{bold: orderItem=='attachment'}" ng-click="orderItem='attachment'; reverse=!reverse"><i class="fa" ng-show="orderItem=='attachment'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Attachment:</td>
 							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Date:</td>
 						</tr>
 						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | filter:search | limitTo:limit:page*limit-limit">
 							<td><input type="checkbox" /></td>
-							<td class="mailbox-star"><a href="#"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
-							<td class="mailbox-name">{{mail.from}}</td>
-							<td class="mailbox-subject"><div ng-class="{bold: mail.unread}">{{mail.title}}</div></td>
+							<td class="mailbox-star"><a href="" ng-click="toggleStar(mail.uuid)"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
+							<td class="mailbox-name">{{mail.sender}}</td>
+							<td class="mailbox-subject"><div ng-class="{bold: !mail.read}">{{mail.title}}</div></td>
 							<td class="mailbox-attachment"><i ng-if="mail.attachment" class="fa fa-paperclip"></i></td>
 							<td class="mailbox-date">{{mail.date | date:'HH:mm d MMM yyyy'}}</td>
 						</tr>
