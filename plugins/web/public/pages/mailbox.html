@@ -44,7 +44,7 @@
 							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Date:</td>
 						</tr>
 						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | filter:search | limitTo:limit:page*limit-limit">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" ng-model="checked" ng-change="select(mail.uuid)"/></td>
 							<td class="mailbox-star"><a href="" ng-click="toggleStar(mail.uuid)"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
 							<td class="mailbox-name">{{mail.sender}}</td>
 							<td class="mailbox-subject"><div ng-class="{bold: !mail.read}">{{mail.title}}</div></td>
@@ -55,6 +55,7 @@
 							<td>No results found...</td>
 						</tr>
 					</tbody>
+					{{selected}}
 				</table>
 				<!-- /.table -->
 			</div>

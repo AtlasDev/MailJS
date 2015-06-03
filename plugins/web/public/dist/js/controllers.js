@@ -45,38 +45,49 @@ app.controller('mailboxController', function($scope, socket) {
 	$scope.page = 1;
 	$scope.limit = 15;
     $scope.toggleStar = function star(uuid) {
-        for (var i in $scope.mails) {
-            if ($scope.mails[i].uuid == uuid) {
+        for(var i in $scope.mails) {
+            if($scope.mails[i].uuid == uuid) {
                 socket.emit('mail:star', {uuid: uuid, state: !$scope.mails[i].starred});
                 break;
             }
         }
     }
     socket.on('mail:star', function(data){
-        for (var i in $scope.mails) {
-            if ($scope.mails[i].uuid == data.uuid) {
+        for(var i in $scope.mails) {
+            if($scope.mails[i].uuid == data.uuid) {
                 $scope.mails[i].starred = data.state;
                 break;
             }
         }
     });
     socket.on('mail:read', function(data){
-        for (var i in $scope.mails) {
-            if ($scope.mails[i].uuid == data.uuid) {
+        for(var i in $scope.mails) {
+            if($scope.mails[i].uuid == data.uuid) {
                 $scope.mails[i].read = data.state;
                 break;
             }
         }
     });
     socket.on('mail:delete', function(data){
-        for (var i in $scope.mails) {
-            if ($scope.mails[i].uuid == data.uuid) {
+        for(var i in $scope.mails) {
+            if($scope.mails[i].uuid == data.uuid) {
                 delete $scope.mails[i];
                 break;
             }
         }
     });
     socket.emit('mail:delete', {uuid: '6'});
+	$scope.selected = [];
+	$scope.select = function select(uuid) {
+		console.log('test');
+		for(var i in $scope.selected) {
+            if($scope.selected[i] == uuid) {
+				delete $scope.selected[i];
+                return true;
+            }
+        }
+		$scope.selected.push(uuid);
+	}
 	$scope.mails = [
 		{uuid: '1', sender: 'Arfgnder Pierce', title: 'AdminLTE 2.0 Issue', date: 1432737154000, read: true, starred: true, attachment: false},
 		{uuid: '2', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
