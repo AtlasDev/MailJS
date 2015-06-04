@@ -7,10 +7,10 @@
 <section class="content">
 	<div class="box box-danger">
 		<div class="box-header with-border">
-			<h3 class="box-title">{{mailbox}} - page {{page}}</h3>
+			<h3 class="box-title">{{mailbox}} - {{'common.page' | translate}} {{page}}</h3>
 		    <div class="box-tools pull-right">
 				<div class="has-feedback">
-				  <input type="search" class="form-control input-sm" ng-model="search" placeholder="Search Mail"/>
+				  <input type="search" class="form-control input-sm" ng-model="search" placeholder="{{'mailbox.search_mail' | translate}}" />
 				  <span class="glyphicon glyphicon-search form-control-feedback"></span>
 				</div>
 		    </div><!-- /.box-tools -->
@@ -37,13 +37,13 @@
 					<tbody>
 						<tr>
 							<td></td>
-							<td class="filter" ng-class="{bold: orderItem=='starred'}" ng-click="orderItem='starred'; reverse=!reverse"><i class="fa" ng-show="orderItem=='starred'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Starred:</td>
-							<td class="filter" ng-class="{bold: orderItem=='sender'}" ng-click="orderItem='sender'; reverse=!reverse"><i class="fa" ng-show="orderItem=='sender'" ng-class="reverse ? 'fa-arrow-up' : 'fa-arrow-down'">&nbsp;</i>sender:</td>
-							<td class="filter" ng-class="{bold: orderItem=='title'}" ng-click="orderItem='title'; reverse=!reverse"><i class="fa" ng-show="orderItem=='title'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Title:</td>
-							<td class="filter" ng-class="{bold: orderItem=='attachment'}" ng-click="orderItem='attachment'; reverse=!reverse"><i class="fa" ng-show="orderItem=='attachment'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Attachment:</td>
-							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>Date:</td>
+							<td class="filter" ng-class="{bold: orderItem=='starred'}" ng-click="orderItem='starred'; reverse=!reverse"><i class="fa" ng-show="orderItem=='starred'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.starred' | translate}}:</td>
+							<td class="filter" ng-class="{bold: orderItem=='sender'}" ng-click="orderItem='sender'; reverse=!reverse"><i class="fa" ng-show="orderItem=='sender'" ng-class="reverse ? 'fa-arrow-up' : 'fa-arrow-down'">&nbsp;</i>{{'mailbox.sender' | translate}}:</td>
+							<td class="filter" ng-class="{bold: orderItem=='title'}" ng-click="orderItem='title'; reverse=!reverse"><i class="fa" ng-show="orderItem=='title'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.title' | translate}}:</td>
+							<td class="filter" ng-class="{bold: orderItem=='attachment'}" ng-click="orderItem='attachment'; reverse=!reverse"><i class="fa" ng-show="orderItem=='attachment'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.attachment' | translate}}:</td>
+							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.date' | translate}}:</td>
 						</tr>
-						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | filter:search | limitTo:limit:page*limit-limit" ng-if="mailbox == mail.mailbox">
+						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | limitTo:limit:page*limit-limit | filter:search as results" ng-if="mailbox == mail.mailbox">
 							<td><input type="checkbox" ng-model="checked" ng-change="select(mail.uuid)"/></td>
 							<td class="mailbox-star"><a href="" ng-click="toggleStar(mail.uuid)"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
 							<td class="mailbox-name">{{mail.sender}}</td>
@@ -52,7 +52,7 @@
 							<td class="mailbox-date">{{mail.date | date:'HH:mm d MMM yyyy'}}</td>
 						</tr>
 						<tr ng-if="results.length == 0">
-							<td>No results found...</td>
+							<td>{{'mailbox.non_found' | translate}}</td>
 						</tr>
 					</tbody>
 				</table>

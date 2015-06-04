@@ -1,5 +1,24 @@
 {
     "currentLanguage": "Nederlands",
+    "mailbox": {
+        "search_mail": "Zoeken",
+        "non_found": "Geen mail gevonden...",
+        "starred": "Favoriet",
+        "sender": "Van",
+        "title": "Titel",
+        "attachment": "Bijlagen",
+        "date": "Datum"
+    },
+    "connection": {
+        "connected": "Verbonden",
+        "connecting": "Verbinden...",
+        "disconnected": "Geen verbinding"
+    },
+    "common": {
+        "page": "pagina",
+        "mailboxes": "mailboxes",
+        "signout": "Uitloggen"
+    },
     "settings": {
         "general": {
             "title": "Algemene instellingen",

@@ -8,9 +8,9 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/mailbox.html',
 			controller  : 'mailboxController'
 		})
-		.when('/about', {
-			templateUrl : 'pages/about.html',
-			controller  : 'aboutController'
+		.when('/mail', {
+			templateUrl : 'pages/mail.html',
+			controller  : 'mailController'
 		})
 		.when('/contact', {
 			templateUrl : 'pages/contact.html',

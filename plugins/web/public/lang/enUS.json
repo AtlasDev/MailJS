@@ -1,5 +1,24 @@
 {
     "currentLanguage": "English",
+    "mailbox": {
+        "search_mail": "Search",
+        "non_found": "No results found...",
+        "starred": "Starred",
+        "sender": "Sender",
+        "title": "Title",
+        "attachment": "Attachment:",
+        "date": "Date"
+    },
+    "connection": {
+        "connected": "Connected",
+        "connecting": "Connecting...",
+        "disconnected": "Disconnected"
+    },
+    "common": {
+        "page": "page",
+        "mailboxes": "mailboxes",
+        "signout": "Sign out"
+    },
     "settings": {
         "general": {
             "title": "General Settings",

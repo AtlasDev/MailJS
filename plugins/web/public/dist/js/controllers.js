@@ -13,7 +13,6 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
     socket.on('connect', function () {
         $scope.socketStatus = 2;
     });
-    
     socket.on('disconnect', function () {
         $scope.socketStatus = 0;
     });
@@ -143,4 +142,10 @@ app.controller('mailboxController', function($rootScope, $scope, socket) {
     socket.on('mail:delete', function(data){
         $scope.countMails();
     });
+});
+
+app.controller('mailController', function($scope) {
+    $scope.title = "Mail test thinggie.";
+    $scope.sender = "danysluyk@live.nl";
+    $scope.date = 1433168277937;
 });
