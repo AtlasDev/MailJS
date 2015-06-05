@@ -1,20 +1,19 @@
 'use strict';
 
-var app = angular.module("mail", ['ngRoute', 'angular-jwt', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate']);
+var app = angular.module("mail", ['ngRoute', 'angular-jwt', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toaster']);
 
 app.config(function($routeProvider) {
 	$routeProvider
-		.when('/', {
+		.when('/mailbox/:mailbox', {
 			templateUrl : 'pages/mailbox.html',
 			controller  : 'mailboxController'
 		})
-		.when('/mail', {
+		.when('/mail/:uuid', {
 			templateUrl : 'pages/mail.html',
 			controller  : 'mailController'
-		})
-		.when('/contact', {
-			templateUrl : 'pages/contact.html',
-			controller  : 'contactController'
+		}).
+		otherwise({
+			redirectTo: '/mailbox/inbox'
 		});
 });
 
@@ -26,4 +25,13 @@ app.config(function($translateProvider) {
     $translateProvider.useSanitizeValueStrategy('escaped');
     $translateProvider.useCookieStorage();
     $translateProvider.preferredLanguage('enUS');
+});
+
+app.filter('capitalize', function () {
+    return function (input) {
+		if (!input) {
+			return input;
+		}
+		return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+    };
 });

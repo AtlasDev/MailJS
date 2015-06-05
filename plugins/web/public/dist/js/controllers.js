@@ -1,7 +1,8 @@
 'use strict';
 
 app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, socket) {
-    $scope.socketStatus = 0;
+    $rootScope.socketStatus = 0;
+	$rootScope.isLoading = false;
     $scope.user = {}
     $scope.user.firstName = "Dany";
     $scope.user.lastName = "Sluijk";
@@ -11,10 +12,10 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
         $translate.use(langKey);
     };
     socket.on('connect', function () {
-        $scope.socketStatus = 2;
+        $rootScope.socketStatus = 2;
     });
     socket.on('disconnect', function () {
-        $scope.socketStatus = 0;
+        $rootScope.socketStatus = 0;
     });
     socket.on('error', function (error) {
 		console.log(error)
@@ -34,32 +35,32 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
         $window.location.href = '/index.html?error='+msg;
     });
     socket.on('reconnecting', function (error) {
-        $scope.socketStatus = 1;
+        $rootScope.socketStatus = 1;
     });
 	
 	$rootScope.mails = [
-		{uuid: '1', mailbox: 'Inbox', sender: 'Arfgnder Pierce', title: 'AdminLTE 2.0 Issue', date: 1432737154000, read: true, starred: true, attachment: false},
-		{uuid: '2', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
-		{uuid: '3', mailbox: 'Inbox', sender: 'Alexa Pierce', title: 'BdminLTE 2.0 Issue', date: 1431168277937, read: true, starred: true, attachment: false},
-		{uuid: '4', mailbox: 'Inbox', sender: 'Dany Sluijk', title: 'Mail test', date: 1430168277937, read: true, starred: true, attachment: false},
-		{uuid: '5', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
-		{uuid: '6', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLsfdshbcjbdvsbffvsgjfvsdgjfvsnvdsnbdsvvhdsvvhdsvdshvnbTE 2.0 Issue', read: false, date: 1433168277937, starred: true, attachment: false},
-		{uuid: '7', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
-		{uuid: '8', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
-		{uuid: '9', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: true},
-		{uuid: '10', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
-		{uuid: '11', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
-		{uuid: '12', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: true},
-		{uuid: '13', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
-		{uuid: '14', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: false},
-		{uuid: '15', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: true},
-		{uuid: '16', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
-		{uuid: '17', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
-		{uuid: '18', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
-		{uuid: '19', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
-		{uuid: '20', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
-		{uuid: '21', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
-		{uuid: '22', mailbox: 'Inbox', sender: 'Alexander Pierce', title: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+		{uuid: '1', mailbox: 'inbox', sender: 'Arfgnder Pierce', subject: 'AdminLTE 2.0 Issue', date: 1432737154000, read: true, starred: true, attachment: false},
+		{uuid: '2', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+		{uuid: '3', mailbox: 'inbox', sender: 'Alexa Pierce', subject: 'BdminLTE 2.0 Issue', date: 1431168277937, read: true, starred: true, attachment: false},
+		{uuid: '4', mailbox: 'inbox', sender: 'Dany Sluijk', subject: 'Mail test', date: 1430168277937, read: true, starred: true, attachment: false},
+		{uuid: '5', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+		{uuid: '6', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLsfdshbcjbdvsbffvsgjfvsdgjfvsnvdsnbdsvvhdsvvhdsvdshvnbTE 2.0 Issue', read: false, date: 1433168277937, starred: true, attachment: false},
+		{uuid: '7', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+		{uuid: '8', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+		{uuid: '9', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: true},
+		{uuid: '10', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+		{uuid: '11', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+		{uuid: '12', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: true},
+		{uuid: '13', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+		{uuid: '14', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: false},
+		{uuid: '15', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: true},
+		{uuid: '16', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+		{uuid: '17', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+		{uuid: '18', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+		{uuid: '19', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+		{uuid: '20', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+		{uuid: '21', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+		{uuid: '22', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
 	];
 	
 	//mail handling
@@ -89,10 +90,10 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
     });
 });
 
-app.controller('mailboxController', function($rootScope, $scope, socket) {
+app.controller('mailboxController', function($rootScope, $routeParams, $scope, socket) {
 	$scope.title = 'Mailbox -> ';
 	$scope.subtitle = '';
-	$scope.mailbox = 'Inbox';
+	$scope.mailbox = $routeParams.mailbox;
 	$scope.page = 1;
 	$scope.limit = 15;
 	$scope.mailCount = 0;
@@ -144,8 +145,22 @@ app.controller('mailboxController', function($rootScope, $scope, socket) {
     });
 });
 
-app.controller('mailController', function($scope) {
-    $scope.title = "Mail test thinggie.";
-    $scope.sender = "danysluyk@live.nl";
-    $scope.date = 1433168277937;
+app.controller('mailController', function($rootScope, $scope, $routeParams, $location, toaster, socket) {
+	$rootScope.isLoading = true;
+	socket.emit('mail:get', {uuid: $routeParams.uuid});
+	socket.on('mail:get', function(data) {
+		if(data.err) {
+			toaster.pop('error', "Could not get the mail", data.err);
+			$rootScope.isLoading = false;
+			$location.path('#/mailbox/inbox');
+		} else {
+			$scope.subject = data.data.subject;
+			$scope.sender = data.data.sender;
+			$scope.date = data.data.date;
+			$scope.content = data.data.content;
+			$scope.attachment = data.data.attachment;
+			socket.emit('mail:read', {uuid: $routeParams.uuid, state: true});
+			$rootScope.isLoading = false;
+		}
+	});
 });

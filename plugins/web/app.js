@@ -37,4 +37,18 @@ io.on('connection', function(socket) {
     socket.on('mail:read', function(data) {
         io.sockets.emit('mail:read', {uuid: data.uuid, state: data.state});
     });
+    socket.on('mail:get', function(data) {
+		if(data.uuid == '5') {
+			var response = {
+				subject: "Test email is testing",
+				sender: 'danysluyk@live.nl',
+				date: 1433168277937,
+				content: 'short test mail',
+				attachment: {}
+			}
+			socket.emit('mail:get', {data: response, err: null});
+		} else {
+			socket.emit('mail:get', {data: null, err: 'Mail `'+data.uuid+'` not found'});
+		}
+    });
 });

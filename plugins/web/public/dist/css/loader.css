@@ -1,0 +1,139 @@
+.content-loader {
+	opacity: 0.25;
+}
+
+.loading-container {
+  width: 256px;
+  height: 256px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+}
+
+.loading {
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  top: 36%;
+  left: 36%;
+  transform: rotate(45deg);  
+}
+
+.loading div {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.l1 div, .l2 div, .l3 div, .l4 div {
+  width: 100%;
+  height: 100%;
+  background-color: #dd4b39;
+}
+
+.l1 { transform: translate(0,0); }
+.l2 { transform: translate(0,32px); }
+.l3 { transform: translate(32px,0px); }
+.l4 { transform: translate(32px,32px); }
+
+@keyframes rot1 {
+  0%{ transform: rotate(0deg); }
+  40%{ transform: rotate(0deg); }
+  50%{ transform: rotate(0deg); }
+  60%{ transform: rotate(90deg); }
+  100%{ transform: rotate(90deg); }
+}
+
+@keyframes rot2 {
+  0%{ transform: rotate(0deg); }
+  40%{ transform: rotate(0deg); }
+  50%{ transform: rotate(0deg); }
+  60%{ transform: rotate(-90deg); }
+  100%{ transform: rotate(-90deg); }
+}
+
+@keyframes rot3 {
+  0%{ transform: rotate(45deg); }
+  35%{ transform: rotate(45deg); }
+  65%{ transform: rotate(405deg); }
+  100%{ transform: rotate(405deg); }
+}
+
+@keyframes l1-rise {
+  0%{ transform: translate(0px,0px); }
+  30%{ transform: translate(-8px, -8px); }
+  70%{ transform: translate(-8px, -8px); }
+  100%{ transform: translate(0px, 0px); }
+}
+
+@keyframes l2-rise {
+  0%{ transform: translate(0,32px); }
+  30%{ transform: translate(-8px, 40px); }
+  70%{ transform: translate(-8px, 40px); }
+  100%{ transform: translate(0,32px); }
+}
+
+@keyframes l3-rise {
+  0%{ transform: translate(32px, 0px); }
+  30%{ transform: translate(40px, -8px); }
+  70%{ transform: translate(40px, -8px); }
+  100%{ transform: translate(32px, 0px); }
+}
+
+@keyframes l4-rise {
+  0%{ transform: translate(32px,32px); }
+  30%{ transform: translate(40px, 40px); }
+  70%{ transform: translate(40px, 40px); }
+  100%{ transform: translate(32px,32px); }
+}
+
+@keyframes color {
+  0%{ background-color: #dd4b39; }
+  50%{ background-color: #dd4b39; }
+  100%{ background-color: #dd4b39; }
+}
+
+.l1 { animation: l1-rise 3s ease 0s infinite; }
+.l2 { animation: l2-rise 3s ease 0s infinite; }
+.l3 { animation: l3-rise 3s ease 0s infinite; }
+.l4 { animation: l4-rise 3s ease 0s infinite; }
+
+.l1 div, .l4 div { animation: rot1 3s ease 0s infinite, color 3s linear 0s infinite; }
+.l2 div, .l3 div { animation: rot2 3s ease 0s infinite, color 3s linear 0s infinite; }*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.loading {
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  top: 36%;
+  left: 36%;
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);  
+}
+
+.l1 div, .l2 div, .l3 div, .l4 div {
+  width: 100%;
+  height: 100%;
+  background-color: #3498db;
+}
+
+.l1 { -webkit-transform: translate(0,0); -ms-transform: translate(0,0); transform: translate(0,0); }
+.l2 { -webkit-transform: translate(0,32px); -ms-transform: translate(0,32px); transform: translate(0,32px); }
+.l3 { -webkit-transform: translate(32px,0px); -ms-transform: translate(32px,0px); transform: translate(32px,0px); }
+.l4 { -webkit-transform: translate(32px,32px); -ms-transform: translate(32px,32px); transform: translate(32px,32px); }
+
+
+.l1 { -webkit-animation: l1-rise 3s ease 0s infinite; animation: l1-rise 3s ease 0s infinite; }
+.l2 { -webkit-animation: l2-rise 3s ease 0s infinite; animation: l2-rise 3s ease 0s infinite; }
+.l3 { -webkit-animation: l3-rise 3s ease 0s infinite; animation: l3-rise 3s ease 0s infinite; }
+.l4 { -webkit-animation: l4-rise 3s ease 0s infinite; animation: l4-rise 3s ease 0s infinite; }
+
+.l1 div, .l4 div { -webkit-animation: rot1 3s ease 0s infinite, color 3s linear 0s infinite; animation: rot1 3s ease 0s infinite, color 3s linear 0s infinite; }
+.l2 div, .l3 div { -webkit-animation: rot2 3s ease 0s infinite, color 3s linear 0s infinite; animation: rot2 3s ease 0s infinite, color 3s linear 0s infinite; }
