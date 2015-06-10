@@ -5,11 +5,11 @@
                 <h3>{{subject}}</h3>
                 <h5>From: {{sender}} <span class="mailbox-read-time pull-right">{{date | date:'HH:mm d MMM yyyy'}}</span></h5>
             </div><!-- /.mailbox-read-info -->
-            <div class="mailbox-controls with-border">
+            <div class="offset mailbox-controls with-border">
                 <div class="btn-group">
-                    <button class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></button>
-                    <button class="btn btn-default btn-sm" data-toggle="tooltip" title="Reply"><i class="fa fa-reply"></i></button>
-                    <button class="btn btn-default btn-sm" data-toggle="tooltip" title="Forward"><i class="fa fa-share"></i></button>
+                    <button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
+					<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
+					<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
                 </div>
             </div><!-- /.mailbox-controls -->
             <div class="mailbox-read-message">
@@ -61,9 +61,11 @@
             </ul>
         </div><!-- /.box-footer -->
         <div class="box-footer">
-            <button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
-            <button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
-            <button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+            <div class="btn-group">
+				<button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
+				<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
+				<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+			</div>
         </div><!-- /.box-footer -->
     </div><!-- /. box -->
 </section>

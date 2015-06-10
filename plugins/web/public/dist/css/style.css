@@ -25,3 +25,7 @@ a:hover {
 .filter:hover {
 	text-decoration: underline;
 }
+
+.offset {
+	padding: 10px !important;
+}
