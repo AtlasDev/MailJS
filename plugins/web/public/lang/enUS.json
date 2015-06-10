@@ -5,8 +5,9 @@
         "non_found": "No results found...",
         "starred": "Starred",
         "sender": "Sender",
+        "subject": "Subject",
         "title": "Title",
-        "attachment": "Attachment:",
+        "attachment": "Attachment",
         "date": "Date"
     },
     "connection": {
