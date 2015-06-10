@@ -91,7 +91,7 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
 });
 
 app.controller('mailboxController', function($rootScope, $routeParams, $scope, socket) {
-	$scope.title = 'Mailbox -> ';
+	$scope.title = 'Mailbox';
 	$scope.subtitle = '';
 	$scope.mailbox = $routeParams.mailbox;
 	$scope.page = 1;
