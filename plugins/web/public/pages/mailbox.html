@@ -43,8 +43,8 @@
 							<td class="filter" ng-class="{bold: orderItem=='attachment'}" ng-click="orderItem='attachment'; reverse=!reverse"><i class="fa" ng-show="orderItem=='attachment'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.attachment' | translate}}:</td>
 							<td class="filter" ng-class="{bold: orderItem=='date'}" ng-click="orderItem='date'; reverse=!reverse"><i class="fa" ng-show="orderItem=='date'" ng-class="reverse ? 'fa-arrow-down' : 'fa-arrow-up'">&nbsp;</i>{{'mailbox.date' | translate}}:</td>
 						</tr>
-						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | limitTo:limit:page*limit-limit | filter:search as results" ng-if="mailbox == mail.mailbox">
-							<td><input type="checkbox" ng-model="checked" ng-change="select(mail.uuid)"/></td>
+						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | limitTo:limit:page*limit-limit | filter:search as results track by $index" ng-if="mailbox == mail.mailbox">
+							<td><input type="checkbox" ng-model="checked" ng-change="select(mail.uuid)" ng-checked="selected.indexOf(mail.uuid) > -1" /></td>
 							<td class="mailbox-star"><a href="" ng-click="toggleStar(mail.uuid)"><i class="fa text-yellow" ng-class="mail.starred ? 'fa-star' : 'fa-star-o'"></i></a></td>
 							<td class="mailbox-name">{{mail.sender}}</td>
 							<td class="mailbox-subject"><div ng-class="{bold: !mail.read}">{{mail.subject}}</div></td>

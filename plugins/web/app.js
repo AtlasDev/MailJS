@@ -30,12 +30,44 @@ io.on('connection', function(socket) {
 
     socket.on('mail:star', function(data) {
         io.sockets.emit('mail:star', {uuid: data.uuid, state: data.state});
+		console.log('\u0007');
     });
     socket.on('mail:delete', function(data) {
         io.sockets.emit('mail:delete', {uuid: data.uuid});
     });
     socket.on('mail:read', function(data) {
         io.sockets.emit('mail:read', {uuid: data.uuid, state: data.state});
+    });
+    socket.on('mail:list', function(data) {
+		if(data.mailbox != 'inbox') {
+			io.sockets.emit('mail:list', {err: 'Could not find mailbox `'+data.mailbox+'`', mails: null, mailbox: data.mailbox})
+		} else {
+			var mails = [
+				{uuid: '1', mailbox: 'inbox', sender: 'Arfgnder Pierce', subject: 'AdminLTE 2.0 Issue', date: 1432737154000, read: true, starred: true, attachment: false},
+				{uuid: '2', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+				{uuid: '3', mailbox: 'inbox', sender: 'Alexa Pierce', subject: 'BdminLTE 2.0 Issue', date: 1431168277937, read: true, starred: true, attachment: false},
+				{uuid: '4', mailbox: 'inbox', sender: 'Dany Sluijk', subject: 'Mail test', date: 1430168277937, read: true, starred: true, attachment: false},
+				{uuid: '5', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+				{uuid: '6', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLsfdshbcjbdvsbffvsgjfvsdgjfvsnvdsnbdsvvhdsvvhdsvdshvnbTE 2.0 Issue', read: false, date: 1433168277937, starred: true, attachment: false},
+				{uuid: '7', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+				{uuid: '8', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+				{uuid: '9', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: true},
+				{uuid: '10', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+				{uuid: '11', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+				{uuid: '12', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: true},
+				{uuid: '13', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+				{uuid: '14', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: false, attachment: false},
+				{uuid: '15', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: true},
+				{uuid: '16', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+				{uuid: '17', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+				{uuid: '18', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: true},
+				{uuid: '19', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+				{uuid: '20', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: false, attachment: false},
+				{uuid: '21', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
+				{uuid: '22', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
+			];
+			io.sockets.emit('mail:list', {err: null, mails: mails, mailbox: data.mailbox});
+		}
     });
     socket.on('mail:get', function(data) {
 		if(data.uuid == '5') {

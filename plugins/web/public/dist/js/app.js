@@ -44,3 +44,9 @@ app.filter('firstLetter', function () {
 		return input.charAt(0);
     };
 });
+
+$(document).ready(function() {	
+	setTimeout(function(){
+		$('body').addClass('preloaded');
+	}, 500);
+});

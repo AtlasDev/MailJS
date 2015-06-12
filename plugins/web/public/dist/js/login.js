@@ -4,9 +4,12 @@ $(document).ready(function() {
     if(typeof localStorage.jwt != 'undefined') {
         window.location.replace("app.html");
     }
-    if(get.error) {
-        showError(get.error);
+    if(get.msg && get.info != true) {
+        showInfo(get.msg);
     }
+	if(get.info == true && get.msg) {
+		showInfo(get.msg);
+	}
 });
 
 $("form").submit(function(event) {
@@ -34,9 +37,14 @@ $("form").submit(function(event) {
     });
 });
 
-var showError = function showError(err) {
-    $("#errorMsg").replaceWith(err);
+var showError = function showError(msg) {
+    $("#errorMsg").replaceWith(msg);
     $("#error").removeClass('hidden');
+};
+
+var showInfo = function showInfo(msg) {
+    $("#infoMsg").replaceWith(msg);
+    $("#info").removeClass('hidden');
 };
 
 var get = (function(a) {
