@@ -39,9 +39,7 @@ io.on('connection', function(socket) {
         io.sockets.emit('mail:read', {uuid: data.uuid, state: data.state});
     });
     socket.on('mail:list', function(data) {
-		if(data.mailbox != 'inbox') {
-			io.sockets.emit('mail:list', {err: 'Could not find mailbox `'+data.mailbox+'`', mails: null, mailbox: data.mailbox})
-		} else {
+		if(data.mailbox == 'inbox') {
 			var mails = [
 				{uuid: '1', mailbox: 'inbox', sender: 'Arfgnder Pierce', subject: 'AdminLTE 2.0 Issue', date: 1432737154000, read: true, starred: true, attachment: false},
 				{uuid: '2', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: true, starred: true, attachment: false},
@@ -67,6 +65,18 @@ io.on('connection', function(socket) {
 				{uuid: '22', mailbox: 'inbox', sender: 'Alexander Pierce', subject: 'AdminLTE 2.0 Issue', date: 1433168277937, read: false, starred: true, attachment: false},
 			];
 			io.sockets.emit('mail:list', {err: null, mails: mails, mailbox: data.mailbox});
+		} else if(data.mailbox == 'send') {
+			var mails = [
+				{uuid: '1', mailbox: 'send', sender: 'Dany Sluijk', subject: 'dbghjdfgfhjdrdv', date: 1432737174000, read: true, starred: false, attachment: true},
+				{uuid: '2', mailbox: 'send', sender: 'Dany Sluijk', subject: 'dwegwegghsdfrghjdrdv', date: 1432737174000, read: false, starred: true, attachment: false},
+				{uuid: '3', mailbox: 'send', sender: 'Dany Sluijk', subject: 'dbghjdfgdaddrdv', date: 1432737174000, read: true, starred: true, attachment: false},
+				{uuid: '4', mailbox: 'send', sender: 'Dany Sluijk', subject: 'wrehergwgdv', date: 1432737174000, read: false, starred: false, attachment: true},
+				{uuid: '5', mailbox: 'send', sender: 'Dany Sluijk', subject: 'dbghjdgergejdrdv', date: 1432737174000, read: true, starred: true, attachment: false},
+			];
+			io.sockets.emit('mail:list', {err: null, mails: mails, mailbox: data.mailbox});
+		} else {
+			io.sockets.emit('mail:list', {err: 'Could not find mailbox `'+data.mailbox+'`', mails: null, mailbox: data.mailbox})
+			
 		}
     });
     socket.on('mail:get', function(data) {
