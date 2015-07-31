@@ -1,0 +1,60 @@
+Server side:
+	mail:delete
+		desc: fired when a mail is deleted
+		payload:
+            err: string | error string if a error has been encounterd
+			uuid: string | the unique identifier of the mail
+	mail:star
+		desc: fired when a mail is stared/unstared
+		payload:
+            err: string | error string if a error has been encounterd
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+	mail:read
+		desc: fired when a mail is readed
+		payload:
+            err: string | error string if a error has been encounterd
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+	mail:list
+		desc: callback for the client side list command
+		payload:
+            err: string | error string if a error has been encounterd
+			mails: array | an array of the mails in the specific mail.
+    mail:get
+        desc: Fired when a mail is requested
+        payload:
+            err: string | error string if a error has been encounterd
+            data:
+                subject: string | The subject of the mail
+                sender: string | The sender mail address
+                date: int | the date in unix format
+                content: string | the content of the mail
+                mailbox: string | the name of the mailbox this mail is in
+                attachment: array | list of attachments
+
+Client side:
+	mail:star
+		desc: Star/unstar a specific email
+		payload:
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+	mail:delete
+		desc: delete a specific email
+		payload:
+			uuid: string | the unique identifier of the mail
+    mail:read
+        desc: fired when a mail is readed
+		payload:
+			uuid: string | the unique identifier of the mail
+			state: bool | the new state of the mail
+    mail:get
+        desc: Get a specific mail
+        payload:
+            data:
+                uuid: string | the unique id of the mail
+    mail:list
+        desc: Get the metadata from a specific mailbox
+        payload:
+            data:
+                mailbox: string | the mailbox id, like `inbox` (lowercase)
