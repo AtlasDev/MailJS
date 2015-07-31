@@ -1,0 +1,35 @@
+{
+    "currentLanguage": "Nederlands",
+    "mailbox": {
+        "search_mail": "Zoeken",
+        "non_found": "Geen mail gevonden...",
+        "starred": "Favoriet",
+        "sender": "Van",
+        "subject": "Onderwerp",
+        "title": "Titel",
+        "attachment": "Bijlagen",
+        "date": "Datum"
+    },
+    "connection": {
+        "connected": "Verbonden",
+        "connecting": "Verbinden...",
+        "disconnected": "Geen verbinding"
+    },
+    "common": {
+        "page": "pagina",
+        "mailboxes": "mailboxes",
+        "signout": "Uitloggen"
+    },
+    "settings": {
+        "general": {
+            "title": "Algemene instellingen",
+            "language": "Taal",
+            "language_desc": "De gebruikte taal."
+        },
+        "notifications": {
+            "title": "Notificaties",
+            "send": "Verstuur notificaties",
+            "send_desc": "Stuur een notificatie wanneer er een nieuwe Email binnenkomt."
+        }
+    }
+}
