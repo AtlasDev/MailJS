@@ -1,8 +1,13 @@
 {
-    "name": "MailJS",
-    "version": "0.0.1",
-    "description": "A simple mail system",
-    "dependencies": {
-        "colors": "*"
-    }
+  "name": "MailJS",
+  "version": "0.0.1",
+  "description": "A simple mail system",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.13.2",
+    "colors": "*",
+    "express": "^4.13.1",
+    "mongoose": "^4.1.0",
+    "socket.io": "^1.3.6"
+  }
 }

@@ -9,26 +9,50 @@
 var EventEmitter = require('events').EventEmitter;
 var fs = require('fs');
 var util = require('util');
+var express = require('express');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var db = require('./database/app.js');
+var frontend = require('./frontend/app.js');
+var api = require('./api/app.js');
 
 var core = function core(callback) {
 	var _this = this;
 	_this.config;
 	
-	_this.log('===== Starting core services =====', true);
-	_this.log('Initialising event system...' + '  DONE\r'.green, true);
+	_this.log('Initialising event system...' + '              DONE\r'.green, true);
 	
 	process.stdout.write('Start'.green + '    ' + 'Loading config file...');
 	_this.reloadConfig(function(err) {
         if(err) {
             process.stdout.write('        FAIL\r'.red);
 			_this.error(err.message, err, true);
-            callback();
+            callback(err);
         }
-		process.stdout.write('        DONE\r'.green);
+		process.stdout.write('                    DONE\r'.green);
 	
 		process.stdout.write('Start'.green + '    ' + 'Setting process name...');
 		process.title = _this.config.process_name;
-		process.stdout.write('       DONE\r'.green);
+		process.stdout.write('                   DONE\r'.green);
+        
+		process.stdout.write('Start'.green + '    ' + 'Connecting to DB...');
+        _this.db = db(_this);
+		process.stdout.write('                       DONE\r'.green);
+	
+		process.stdout.write('Start'.green + '    ' + 'Starting express server...');
+		_this.express = express();
+        _this.express.use(bodyParser.urlencoded({ extended: true }));
+        _this.http = require('http').Server(_this.express);
+        _this.http.listen(_this.config.http.port);
+		process.stdout.write('                DONE\r'.green);
+	
+		process.stdout.write('Start'.green + '    ' + 'Hooking frontend to express server...');
+		_this.frontend = frontend(_this);
+		process.stdout.write('     DONE\r'.green);
+	
+		process.stdout.write('Start'.green + '    ' + 'Hooking api to express server...');
+		_this.api = api(_this);
+		process.stdout.write('          DONE\r'.green);
 	});
     
     process.on('uncaughtException', function(err) {

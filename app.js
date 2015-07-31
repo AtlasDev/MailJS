@@ -26,4 +26,10 @@ console.log('Start'.green + '    ' + 'NodeJS ' + process.version);
 console.log('Start'.green + '    ' + 'V8 engine v' + process.versions.v8);
 console.log('');
 
-var core = new core(function(){});
+var core = new core(function(err){
+    if(err) {
+        console.log('Startup failed!'.red);
+        console.log(err);
+        process.exit(1);
+    }
+});
