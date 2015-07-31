@@ -1,24 +1,4 @@
 {
 	"process_name": "MailJS",
-	"plugin_folder": "plugins",
-	"plugins": {
-		"enabled": {
-			"mail_incomming": "",
-			"mail_outgoing": "",
-			"auth": "",
-			"storage": "",
-			"other": [],
-			"all": []
-		},
-		"available": {
-			"mail_incomming": [],
-			"mail_outgoing": [],
-			"auth": [],
-			"storage": [],
-			"other": [],
-			"all": [
-				"web"
-			]
-		}
-	}
+	"plugin_folder": "plugins"
 }
