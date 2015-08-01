@@ -1,5 +1,6 @@
 {
 	"process_name": "MailJS",
+    "debug": "true",
     "http": {
         "port": "3000"
     },

@@ -6,9 +6,15 @@
 
 'use strict'
 
-var colors = require('colors');
-var core   = require('./core.js');
-var pack   = require('./package.json');
+var colors   = require('colors');
+var pack     = require('./package.json');
+var config   = require('./config.json');
+var mongoose = require('mongoose');
+var util     = require('./util.js');
+var events   = require('events');
+var event    = new events.EventEmitter();
+
+process.title = config.process_name;
 
 console.log('\n')
 console.log(' __  __       _ _    '+'    _  _____  '.cyan);
@@ -19,17 +25,27 @@ console.log('| |  | | (_| | | | '  +'|  __| |____) | '.cyan);
 console.log('|_|  |_|\\\__,_|_|_| '+' \\\____/|_____/  '.cyan);
 console.log('\n');
 
-console.log('Start'.green + '    ' + 'Starting MailJS');
-console.log('Start'.green + '    ' + 'System: ' + process.platform + ' @ ' + process.arch);
-console.log('Start'.green + '    ' + 'MailJS v' + pack.version);
-console.log('Start'.green + '    ' + 'NodeJS ' + process.version);
-console.log('Start'.green + '    ' + 'V8 engine v' + process.versions.v8);
+util.log('Starting MailJS', true);
+util.log('System: ' + process.platform + ' @ ' + process.arch, true);
+util.log('MailJS v' + pack.version, true);
+util.log('NodeJS ' + process.version, true);
+util.log('V8 engine v' + process.versions.v8, true);
 console.log('');
 
-var core = new core(function(err){
-    if(err) {
-        console.log('Startup failed!'.red);
-        console.log(err);
-        process.exit(1);
-    }
+util.log('========== Booting MailJS services ==========', true);
+
+util.log('Connecting to database...', true);
+mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
+
+util.log('Starting http server...', true);
+require('./http/http.js')(event);
+
+util.log('Starting smtp server...', true);
+require('./smtp/smtp.js')(event);
+
+util.log('========== Done booting services   ==========', true);
+console.log('');
+
+process.on('uncaughtException', function(err) {
+    util.error("An uncaught exception has taken place!", err, true);
 });
