@@ -21,27 +21,13 @@ define({ "api": [
             "optional": false,
             "field": "name",
             "description": "<p>Name of the application the client is created for.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "id",
-            "description": "<p>The id used for login.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "secret",
-            "description": "<p>The secret used for login.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Create client:",
-          "content": "{\n  \"name\": \"SpaceCP\",\n  \"id\": \"this_is_the_id\",\n  \"secret\": \"this_is_the_secret\"\n}",
+          "content": "{\n  \"name\": \"SpaceCP\"\n}",
           "type": "json"
         }
       ]
@@ -79,7 +65,7 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVAILID",
+            "field": "EINVALID",
             "description": "<p>Username/Password is not valid.</p> "
           },
           {
@@ -98,8 +84,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "EINVAILID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVAILID\",\n    \"message\": \"name/id/secret not filled in.\"\n  }\n}",
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"name/id/secret not filled in.\"\n  }\n}",
           "type": "json"
         },
         {
@@ -176,7 +162,7 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVAILID",
+            "field": "EINVALID",
             "description": "<p>ID was not given.</p> "
           },
           {
@@ -201,8 +187,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "EINVAILID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVAILID\",\n    \"message\": \"No id given.\"\n  }\n}",
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"No id given.\"\n  }\n}",
           "type": "json"
         },
         {
@@ -319,34 +305,6 @@ define({ "api": [
     "name": ""
   },
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "post",
     "url": "/user",
     "title": "Create a new User",
@@ -433,7 +391,7 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVAILID",
+            "field": "EINVALID",
             "description": "<p>Username/Password is not valid.</p> "
           },
           {
@@ -452,8 +410,8 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "EINVAILID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVAILID\",\n    \"message\": \"Username/Password is not valid.\"\n  }\n}",
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Username/Password is not valid.\"\n  }\n}",
           "type": "json"
         },
         {
@@ -530,7 +488,7 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVAILID",
+            "field": "EINVALID",
             "description": "<p>ID was not given.</p> "
           },
           {
@@ -538,6 +496,12 @@ define({ "api": [
             "optional": false,
             "field": "ENOTFOUND",
             "description": "<p>given id was not found.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMITTED",
+            "description": "<p>You cannot delete yourself.</p> "
           },
           {
             "group": "Error 4xx",
@@ -555,13 +519,23 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "EINVAILID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVAILID\",\n    \"message\": \"No id given.\"\n  }\n}",
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"No id given.\"\n  }\n}",
           "type": "json"
         },
         {
           "title": "ENOTFOUND:",
           "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"The given id was not found.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMITTED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EPERMITTED\",\n    \"message\": \"You cannot delete yourself.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMITTED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EPERMITTED\",\n    \"message\": \"You cannot delete the first user.\"\n  }\n}",
           "type": "json"
         },
         {
@@ -644,5 +618,141 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "type": "put",
+    "url": "/user/group",
+    "title": "Update the group of a user",
+    "version": "0.1.0",
+    "name": "UpdateUserGroup",
+    "group": "User",
+    "permission": [
+      {
+        "name": "Admin"
+      }
+    ],
+    "description": "<p>Update the group of a user.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "id",
+            "description": "<p>The id of the user</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "group",
+            "description": "<p>The id of the new group (1=User 2=Mod 3=Admin)</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Successfull request:",
+          "content": "{\n  \"id\": \"55bcf8a904edc314212c857d\",\n  \"group\": \"2\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>A message of success.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"User group updated.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>ID or group was not given.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ENOTFOUND",
+            "description": "<p>given id was not found.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMITTED",
+            "description": "<p>You cannot change your own group.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMS",
+            "description": "<p>The permission level of the user is not high enough.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"No id/group given.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Group not valid\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "ENOTFOUND:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"The given id was not found.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMITTED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EPERMITTED\",\n    \"message\": \"You cannot change your own group.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMITTED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EPERMITTED\",\n    \"message\": \"You cannot the group of the first user.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMS:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./_apidoc.js",
+    "groupTitle": "User"
   }
 ] });

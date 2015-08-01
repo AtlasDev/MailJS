@@ -46,7 +46,7 @@
  *
  * @apiVersion 0.1.0
  */
- 
+
 // ------------------------------------------------------------------------------------------
 // Methods.
 // ------------------------------------------------------------------------------------------
@@ -113,19 +113,19 @@
  *       "group": 1
  *     }
  *
- * @apiError EINVAILID Username/Password is not valid.
- * @apiErrorExample {json} EINVAILID:
+ * @apiError EINVALID Username/Password is not valid.
+ * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVAILID",
+ *         "name": "EINVALID",
  *         "message": "Username/Password is not valid."
  *       }
  *     }
  *
  * @apiUse PermissionError
  */
- 
+
  /**
  * @api {delete} /user Delete a user
  * @apiVersion 0.1.0
@@ -148,12 +148,12 @@
  *       "message": "User deleted."
  *     }
  *
- * @apiError EINVAILID ID was not given.
- * @apiErrorExample {json} EINVAILID:
+ * @apiError EINVALID ID was not given.
+ * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVAILID",
+ *         "name": "EINVALID",
  *         "message": "No id given."
  *       }
  *     }
@@ -184,15 +184,92 @@
  *     {
  *       "error": {
  *         "name": "EPERMITTED",
- *         "message": "You cannot the first user."
+ *         "message": "You cannot delete the first user."
  *       }
  *     }
  *
  * @apiUse PermissionError
  */
- 
+
+ /**
+ * @api {put} /user/group Update the group of a user
+ * @apiVersion 0.1.0
+ * @apiName UpdateUserGroup
+ * @apiGroup User
+ * @apiPermission Admin
+ *
+ * @apiDescription Update the group of a user.
+ *
+ * @apiParam {String} id The id of the user
+ * @apiParam {Number} group The id of the new group (1=User 2=Mod 3=Admin)
+ * @apiParamExample {json} Successfull request:
+ *     {
+ *       "id": "55bcf8a904edc314212c857d",
+ *       "group": "2"
+ *     }
+ *
+ * @apiSuccess {String} message A message of success.
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "message": "User group updated."
+ *     }
+ *
+ * @apiError EINVALID ID or group was not given.
+ * @apiErrorExample {json} EINVALID:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EINVALID",
+ *         "message": "No id/group given."
+ *       }
+ *     }
+ *
+ * @apiError EINVALID Given group was invalid.
+ * @apiErrorExample {json} EINVALID:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EINVALID",
+ *         "message": "Group not valid"
+ *       }
+ *     }
+ *
+ * @apiError ENOTFOUND given id was not found.
+ * @apiErrorExample {json} ENOTFOUND:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "ENOTFOUND",
+ *         "message": "The given id was not found."
+ *       }
+ *     }
+ *
+ * @apiError EPERMITTED You cannot change your own group.
+ * @apiErrorExample {json} EPERMITTED:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EPERMITTED",
+ *         "message": "You cannot change your own group."
+ *       }
+ *     }
+ *
+ * @apiError EPERMITTED You cannot change the group of the first user.
+ * @apiErrorExample {json} EPERMITTED:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EPERMITTED",
+ *         "message": "You cannot the group of the first user."
+ *       }
+ *     }
+ *
+ * @apiUse PermissionError
+ */
+
  //Client
- 
+
  /**
  * @api {get} /client Get all clients
  * @apiVersion 0.1.0
@@ -234,7 +311,7 @@
  * @apiGroup Client
  * @apiPermission Admin
  *
- * @apiDescription Create a new cliet.
+ * @apiDescription Create a new client.
  *
  * @apiParam {String} name Name of the application the client is created for.
  * @apiParamExample {json} Create client:
@@ -258,19 +335,19 @@
  *       }
 *      }
  *
- * @apiError EINVAILID Username/Password is not valid.
- * @apiErrorExample {json} EINVAILID:
+ * @apiError EINVALID Username/Password is not valid.
+ * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVAILID",
+ *         "name": "EINVALID",
  *         "message": "name/id/secret not filled in."
  *       }
  *     }
  *
  * @apiUse PermissionError
  */
- 
+
  /**
  * @api {delete} /client Delete a client
  * @apiVersion 0.1.0
@@ -293,12 +370,12 @@
  *       "message": "Client deleted."
  *     }
  *
- * @apiError EINVAILID ID was not given.
- * @apiErrorExample {json} EINVAILID:
+ * @apiError EINVALID ID was not given.
+ * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVAILID",
+ *         "name": "EINVALID",
  *         "message": "No id given."
  *       }
  *     }

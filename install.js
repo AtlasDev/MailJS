@@ -30,7 +30,8 @@ if(!config.configured) {
 }
 
 console.log('Connecting to the database..');
-mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
+var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
+mongoose.connect(dburl);
 
 console.log('Generating password..');
 require('crypto').randomBytes(4, function(ex, buf) {
@@ -69,19 +70,22 @@ require('crypto').randomBytes(4, function(ex, buf) {
 var SavePerms = function SavePerms(cb) {
     var permissions = [];
     //user management
-    permissions.push(new Perms({name: 'viewUsers', group: '2'}));
-    permissions.push(new Perms({name: 'createUser', group: '2'}));
-    permissions.push(new Perms({name: 'deleteUser', group: '2'}));
-    
+    permissions.push(new Perms({name: 'user.list', group: '2'}));
+    permissions.push(new Perms({name: 'user.create', group: '2'}));
+    permissions.push(new Perms({name: 'user.delete', group: '2'}));
+    permissions.push(new Perms({name: 'user.group.change', group: '3'}));
+
     //client management
-    permissions.push(new Perms({name: 'createClient', group: '3'}));
-    permissions.push(new Perms({name: 'viewClients', group: '2'}));
-    permissions.push(new Perms({name: 'deleteClient', group: '3'}));
-    
-    //email/domain management
-    permissions.push(new Perms({name: 'createEmail', group: '1'}));
-    permissions.push(new Perms({name: 'addDomain', group: '3'}));
-    
+    permissions.push(new Perms({name: 'client.create', group: '3'}));
+    permissions.push(new Perms({name: 'client.list', group: '2'}));
+    permissions.push(new Perms({name: 'client.delete', group: '3'}));
+
+    //email management
+    permissions.push(new Perms({name: 'email.create', group: '1'}));
+
+    //domain management
+    permissions.push(new Perms({name: 'domain.create', group: '3'}));
+
     permissions.forEach(function(permission, i) {
         permission.save(function(err) {
             if(err) {
