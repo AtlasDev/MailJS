@@ -17,6 +17,7 @@ var app = express();
 var http = require('http').Server(app);
 
 app.set('view engine', 'ejs');
+app.set('views',__dirname + '/views');
 
 app.use(require('body-parser').urlencoded({
     extended: true

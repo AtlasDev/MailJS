@@ -36,6 +36,9 @@ util.log('========== Booting MailJS services ==========', true);
 
 util.log('Connecting to database...', true);
 mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
+mongoose.connection.on('error', function(err) {
+    util.error('Database errored: '+err, true)
+});
 
 util.log('Starting http server...', true);
 require('./http/http.js')(event);

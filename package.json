@@ -1,7 +1,10 @@
 {
   "name": "MailJS",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A simple mail system",
+  "scripts": {
+    "postinstall": "node install.js"
+  },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.13.2",
@@ -11,7 +14,10 @@
     "express-session": "^1.11.3",
     "jsonwebtoken": "^5.0.4",
     "mongoose": "^4.1.0",
+    "oauth2orize": "^1.0.1",
     "passport": "^0.2.2",
+    "passport-http": "^0.2.2",
+    "passport-http-bearer": "^1.0.1",
     "socket.io": "^1.3.6",
     "socketio-jwt": "^4.2.1"
   }

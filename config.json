@@ -1,6 +1,7 @@
 {
+    "configured": "true",
 	"process_name": "MailJS",
-    "debug": "true",
+    "noinstall": "false",
     "http": {
         "port": "3000"
     },

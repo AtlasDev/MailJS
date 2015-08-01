@@ -7,8 +7,8 @@ exports.error = function error(msg, stack, quit) {
 	if(quit == true) {
 		console.log('Error'.red + '    Error is severe, quitting...');
 		process.exit(1);
+        console.log('\n');
 	}
-	console.log('\n');
 	return true;
 }
 
@@ -19,4 +19,20 @@ exports.log = function log(msg, startup) {
         console.log('Log'.cyan + '      ' + msg);
     }
     return true;
+}
+
+exports.uid = function uid (len) {
+    var buf = []
+        , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        , charlen = chars.length;
+
+    for (var i = 0; i < len; ++i) {
+        buf.push(chars[getRandomInt(0, charlen - 1)]);
+    }
+
+    return buf.join('');
+};
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
