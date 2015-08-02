@@ -32,7 +32,7 @@ passport.use('client-basic', new BasicStrategy(
         Client.findOne({ id: username }, function (err, client) {
             if (err) { return callback(err); }
             if(!client) { return callback(null, false); }
-            client.verifyPassword(password, function (err, isMatch) {
+            client.verifySecret(password, function (err, isMatch) {
                 if (err) { return callback(err); }
                 if (!isMatch) { return callback(null, false); }
                 return callback(null, client);

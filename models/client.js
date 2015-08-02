@@ -18,24 +18,14 @@ ClientSchema.pre('save', function(callback) {
             bcrypt.hash(client.secret, salt, null, function(err, hash) {
                 if (err) return callback(err);
                 client.secret = hash;
-                if (client.isModified('id')) {
-                    bcrypt.genSalt(5, function(err, salt) {
-                        if (err) return callback(err);
-
-                        bcrypt.hash(client.id, salt, null, function(err, hash) {
-                            if (err) return callback(err);
-                            client.id = hash;
-                            callback();
-                        });
-                    });
-                }
+                callback();
             });
         });
     }
 });
 
-ClientSchema.methods.verifyPassword = function(password, cb) {
-    bcrypt.compare(password, this.secret, function(err, isMatch) {
+ClientSchema.methods.verifySecret = function(secret, cb) {
+    bcrypt.compare(secret, this.secret, function(err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
     });

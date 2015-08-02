@@ -286,16 +286,12 @@
  *       {
  *         "_id": "55bcfd686aeb0af00ad0cfe3",
  *         "userId": "55bcfd439fc60f902808da36",
- *         "secret": "$2a$05$mRs66hZOQnygrJfGBvKk8Oij.J67hFdJj7aMOnnyYzp/3HQv0Gm/e",
- *         "id": "$2a$05$kjRgAKvF/n00ZmaukIoFSe/r2ZYCcHMTmdutJJiNx67PINogxU4Im",
  *         "name": "mail",
  *         "__v": 0
  *       },
  *       {
  *         "_id": "55bcfe016aeb0af00ad0cfe4",
  *         "userId": "55bcfd439fc60f902808da36",
- *         "secret": "$2a$05$Sw6Ep1SLE7X881ZLjrOezOGg.U5QOnuzU/x6NWwxFSlHHZYqQK8Ji",
- *         "id": "$2a$05$dQca6PfE4eVS6vTvg/h0ZOZlEp5H6Qt7no8hqgAxUoy7wNS3Z6VVK",
  *         "name": "SpaceCP",
  *         "__v": 0
  *       }

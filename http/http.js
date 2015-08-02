@@ -5,13 +5,14 @@
  */
 
 var http = function(events) {
- 
+
 var express = require('express');
 var config = require('../config.json');
 var ejs = require('ejs');
 var session = require('express-session');
 var apiRouter = require('./apiRouter.js');
 var frontend = require('./frontend.js');
+var util = require('../util.js');
 
 var app = express();
 var http = require('http').Server(app);
@@ -23,7 +24,7 @@ app.use(require('body-parser').urlencoded({
     extended: true
 }));
 
-app.use(session({ 
+app.use(session({
     secret: require('crypto').randomBytes(32).toString('hex'),
     saveUninitialized: true,
     resave: true
@@ -36,6 +37,7 @@ app.use('/api', apiRouter);
 frontend(http, app);
 
 http.listen(config.http.port);
+util.log('Http listening at port '+config.http.port, true);
 
 };
 

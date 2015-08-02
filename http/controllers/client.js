@@ -41,7 +41,11 @@ exports.getClients = function(req, res) {
                     res.status(500).json({error: {name: err.name, message: err.message}});
                     return;
                 }
-                res.json(clients);
+                var cleanClients = [];
+                clients.forEach(function(client) {
+                    cleanClients.push({_id: client._id, name: client.name, userId: client.userId});
+                });
+                res.json(cleanClients);
             });
         } else {
             res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
