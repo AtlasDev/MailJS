@@ -13,7 +13,10 @@ Full blown mail system written in NodeJS.
 * Multiple domains
 
 ---
+### Need help?
+Take a look at the [wiki](https://github.com/AtlasDev/MailJS/wiki)!
 
+---
 ### API docs:
 See [here](https://www.atlasdev.nl/docs/mailjs).
 
