@@ -4,7 +4,7 @@
  * @copyright Dany Sluijk 2015
  */
 
-var http = function(events) {
+var http = function() {
 
 var express = require('express');
 var config = require('../config.json');
@@ -13,6 +13,7 @@ var session = require('express-session');
 var apiRouter = require('./apiRouter.js');
 var frontend = require('./frontend.js');
 var util = require('../util.js');
+var event = require('../event.js');
 
 var app = express();
 var http = require('http').Server(app);
@@ -38,6 +39,7 @@ frontend(http, app);
 
 http.listen(config.http.port);
 util.log('Http listening at port '+config.http.port, true);
+event.emit('http.started');
 
 };
 

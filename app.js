@@ -11,8 +11,7 @@ var pack     = require('./package.json');
 var config   = require('./config.json');
 var mongoose = require('mongoose');
 var util     = require('./util.js');
-var events   = require('events');
-var event    = new events.EventEmitter();
+var event    = require('./event.js');
 
 process.title = config.process_name;
 
@@ -41,13 +40,14 @@ mongoose.connection.on('error', function(err) {
 });
 
 util.log('Starting http server...', true);
-require('./http/http.js')(event);
+require('./http/http.js');
 
 util.log('Starting smtp server...', true);
-require('./smtp/smtp.js')(event);
+require('./smtp/smtp.js');
 
 util.log('========== Done booting services   ==========', true);
 console.log('');
+event.emit('app.started');
 
 process.on('uncaughtException', function(err) {
     util.error("An uncaught exception has taken place!", err, true);
