@@ -3,7 +3,8 @@ Full blown mail system written in NodeJS.
 
 ---
 ### Features:
-* SMTP server
+* Mail Transfer Agent
+* Mail Delivery Agent
 * RESTfull api.
 * Oauth 2.0
 * Scalable
