@@ -1,11 +1,18 @@
+var colors = require('colors');
+var cluster = require('cluster');
+
 exports.error = function error(msg, stack, quit) {
+	var name = '';
+	if(cluster.isWorker) {
+		var name = '[#'+cluster.worker.id+'] ';
+	}
 	console.log('\n');
-	console.log('Error'.red + '    ' + msg);
-	if(stack) {
-		console.log('Error'.red + '    ' + stack.stack);
+	console.log(name+'Error'.red + '    ' + msg);
+	if(typeof stack != 'undefined') {
+		console.log(name+'Error'.red + '    ' + stack.stack);
 	}
 	if(quit == true) {
-		console.log('Error'.red + '    Error is severe, quitting...');
+		console.log(name+'Error'.red + '    Error is severe, quitting...');
 		process.exit(1);
         console.log('\n');
 	}
@@ -13,10 +20,14 @@ exports.error = function error(msg, stack, quit) {
 }
 
 exports.log = function log(msg, startup) {
+	var name = '';
+	if(cluster.isWorker) {
+		var name = '[#'+cluster.worker.id+'] ';
+	}
     if(startup == true) {
-        console.log('Start'.green + '    ' + msg);
+        console.log(name+'Start'.green + '    ' + msg);
     } else {
-        console.log('Log'.cyan + '      ' + msg);
+        console.log(name+'Log'.cyan + '      ' + msg);
     }
     return true;
 }

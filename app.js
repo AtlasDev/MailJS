@@ -5,13 +5,16 @@
  */
 
 'use strict'
+var cluster  = require('cluster');
 
-var colors   = require('colors');
-var pack     = require('./package.json');
-var config   = require('./config.json');
-var mongoose = require('mongoose');
-var util     = require('./util.js');
-var event    = require('./event.js');
+if(cluster.isMaster){
+
+var pack      = require('./package.json');
+var config    = require('./config.json');
+var util      = require('./util.js');
+var event     = require('./event.js');
+var os        = require('os');
+var exitcount = 0;
 
 process.title = config.process_name;
 
@@ -31,24 +34,27 @@ util.log('NodeJS ' + process.version, true);
 util.log('V8 engine v' + process.versions.v8, true);
 console.log('');
 
-util.log('========== Booting MailJS services ==========', true);
-
-util.log('Connecting to database...', true);
-mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
-mongoose.connection.on('error', function(err) {
-    util.error('Database errored:', err, true);
-});
-
-util.log('Starting http server...', true);
-require('./http/http.js');
-
-util.log('Starting smtp server...', true);
-require('./smtp/smtp.js');
-
-util.log('========== Done booting services   ==========', true);
-console.log('');
+util.log('========== Booting workers    ==========', true);
+for(var i = 0; i < os.cpus().length; i++) {
+    cluster.fork();
+}
 event.emit('app.started');
+
+cluster.on('exit', function(worker, code, signal) {
+    if(exitcount == config.maxExits) {
+        util.error('Worker '+worker.process.pid+' died ('+signal||code+')!');
+        util.error('Maximum amount of crashes reached, exiting!', null, true);
+    } else {
+        util.log('Worker '+worker.process.pid+' died ('+signal||code+'), restarting...');
+        cluster.fork();
+    }
+    exitcount++;
+});
 
 process.on('uncaughtException', function(err) {
     util.error("An uncaught exception has taken place!", err, true);
 });
+
+} else {
+    require('./worker.js')();
+}
