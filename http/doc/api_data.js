@@ -11,7 +11,7 @@ define({ "api": [
         "name": "Admin"
       }
     ],
-    "description": "<p>Create a new cliet.</p> ",
+    "description": "<p>Create a new client.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -100,7 +100,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/client.js",
     "groupTitle": "Client"
   },
   {
@@ -208,7 +208,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/client.js",
     "groupTitle": "Client"
   },
   {
@@ -239,12 +239,12 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n  {\n    \"_id\": \"55bcfd686aeb0af00ad0cfe3\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"secret\": \"$2a$05$mRs66hZOQnygrJfGBvKk8Oij.J67hFdJj7aMOnnyYzp/3HQv0Gm/e\",\n    \"id\": \"$2a$05$kjRgAKvF/n00ZmaukIoFSe/r2ZYCcHMTmdutJJiNx67PINogxU4Im\",\n    \"name\": \"mail\",\n    \"__v\": 0\n  },\n  {\n    \"_id\": \"55bcfe016aeb0af00ad0cfe4\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"secret\": \"$2a$05$Sw6Ep1SLE7X881ZLjrOezOGg.U5QOnuzU/x6NWwxFSlHHZYqQK8Ji\",\n    \"id\": \"$2a$05$dQca6PfE4eVS6vTvg/h0ZOZlEp5H6Qt7no8hqgAxUoy7wNS3Z6VVK\",\n    \"name\": \"SpaceCP\",\n    \"__v\": 0\n  }\n]",
+          "content": "HTTP/1.1 200 OK\n[\n  {\n    \"_id\": \"55bcfd686aeb0af00ad0cfe3\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"name\": \"mail\",\n    \"__v\": 0\n  },\n  {\n    \"_id\": \"55bcfe016aeb0af00ad0cfe4\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"name\": \"SpaceCP\",\n    \"__v\": 0\n  }\n]",
           "type": "json"
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/client.js",
     "groupTitle": "Client",
     "error": {
       "fields": {
@@ -278,31 +278,143 @@ define({ "api": [
     }
   },
   {
-    "version": "0.1.0",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
     "type": "",
     "url": "",
-    "filename": "./_apidoc.js",
-    "group": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
     "name": ""
   },
   {
     "version": "0.1.0",
     "type": "",
     "url": "",
-    "filename": "./_apidoc.js",
-    "group": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
+    "filename": "./docfiles/generic.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
     "name": ""
   },
   {
     "version": "0.1.0",
     "type": "",
     "url": "",
-    "filename": "./_apidoc.js",
-    "group": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http__apidoc_js",
+    "filename": "./docfiles/generic.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
     "name": ""
+  },
+  {
+    "version": "0.1.0",
+    "type": "",
+    "url": "",
+    "filename": "./docfiles/generic.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
+    "name": ""
+  },
+  {
+    "type": "post",
+    "url": "/login",
+    "title": "Login",
+    "version": "0.1.0",
+    "name": "CreateUser",
+    "group": "Login",
+    "description": "<p>Login on a useraccount, it returns a token which is good for 24 hours.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of the user.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password which belongs to the username</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Login to a user:",
+          "content": "{\n  \"username\": \"AtlasDev\",\n  \"password\": \"supersecretpassword\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>The id of the user.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>The token to login with.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"_id\": \"55bcf8a904edc314212c857d\",\n  \"token\": \"OXznHAmkzEGY9JSIGSWWD3cK6jlRgcSYAmRBZwDH\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>Username/Password is not valid.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Username/Password is not valid.\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/login.js",
+    "groupTitle": "Login"
   },
   {
     "type": "post",
@@ -426,7 +538,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/user.js",
     "groupTitle": "User"
   },
   {
@@ -550,7 +662,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/user.js",
     "groupTitle": "User"
   },
   {
@@ -586,7 +698,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/user.js",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -752,7 +864,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./_apidoc.js",
+    "filename": "./docfiles/user.js",
     "groupTitle": "User"
   }
 ] });
