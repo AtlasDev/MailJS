@@ -38,7 +38,7 @@ app.use('/api', apiRouter);
 frontend(http, app);
 
 http.listen(config.http.port);
-util.log('Http listening at port '+config.http.port, true);
+util.log('Http server started at port '+config.http.port, true);
 event.emit('http.started');
 
 };
