@@ -58,13 +58,13 @@
  *       "group": 1
  *     }
  *
- * @apiError EINVALID Username/Password is not valid.
+ * @apiError EINVALID Username/Password not filled in.
  * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
  *         "name": "EINVALID",
- *         "message": "Username/Password is not valid."
+ *         "message": "Username/Password not filled in."
  *       }
  *     }
  *

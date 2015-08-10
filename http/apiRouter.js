@@ -3,8 +3,12 @@ var express = require('express');
 var router = express.Router();
 var authController = require('./controllers/auth.js');
 var userController = require('./controllers/user.js');
+var loginController = require('./controllers/login.js');
 var clientController = require('./controllers/client.js');
 var oauth2Controller = require('./controllers/oauth2.js');
+
+router.route('/login')
+  .post(loginController.postLogin);
 
 router.route('/user')
   .get(authController.isAuthenticated, userController.getUser)

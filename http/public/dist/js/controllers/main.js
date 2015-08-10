@@ -5,13 +5,15 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
 	$rootScope.isLoading = false;
 	$rootScope.mails = [];
 	$rootScope.mailboxes = [];
+    $rootScope.currentMailbox = "";
     $scope.user = {};
-    $scope.user.firstName = "Dany";
-    $scope.user.lastName = "Sluijk";
-    $scope.user.email = "danysluyk@live.nl";
+    $scope.user.firstName = "s";
+    $scope.user.lastName = "f";
+    $scope.user.email = "safasfasf";
     $scope.user.permLevel = 0;
 	$scope.logout = function logout(){
-		localStorage.removeItem('jwt');
+		localStorage.removeItem('token');
+        localStorage.removeItem('userid');
         $window.location.href = '/index.html?info=true&msg=Logout Succesfull, goodbye!';
 	}
     $scope.changeLanguage = function changeLanguage(langKey) {
@@ -24,16 +26,10 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
         $rootScope.socketStatus = 0;
     });
     socket.on('error', function (error) {
-		console.log(error)
-        localStorage.removeItem('jwt');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userid');
 		var msg;
 		switch(error.message) {
-			case 'jwt malformed':
-				msg = "Invailid token!";
-				break;
-			case 'jwt expired':
-				msg = "Session timed-out!";
-				break;
 			default:
 				msg = "Socket errored!";
 				break;
@@ -42,7 +38,7 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
     });
     socket.on('reconnecting', function (error) {
         $rootScope.socketStatus = 1;
-    });	
+    });
 	//mail handling
     socket.on('mail:star', function(data){
         for(var i in $rootScope.mails) {

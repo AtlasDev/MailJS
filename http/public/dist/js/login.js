@@ -1,7 +1,7 @@
 'use strict';
 
 $(document).ready(function() {
-    if(typeof localStorage.jwt != 'undefined') {
+    if(typeof localStorage.token != 'undefined' && typeof localStorage.userid != 'undefined') {
         window.location.replace("app.html");
     }
     if(get.msg && get.info != true) {
@@ -16,7 +16,7 @@ $("form").submit(function(event) {
     event.preventDefault();
     var request = $.ajax({
         type: 'POST',
-        url: '/api/v1/login',
+        url: '/api/login',
         dataType: 'json',
         cache: false,
         data: {
@@ -25,15 +25,12 @@ $("form").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        if(typeof data.error !== 'undefined') {
-            localStorage.setItem('jwt', data.jwt);
-            window.location.replace("app.html");
-        } else {
-            showError(data.error);
-        }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userid', data.userid);
+        window.location.replace("app.html");
     });
     request.fail(function(data) {
-        showError(JSON.parse(data.responseText).error);
+        showError(JSON.parse(data.responseText).error.message);
     });
 });
 

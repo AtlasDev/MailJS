@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module("mail", ['ngRoute', 'angular-jwt', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toaster']);
+var app = angular.module("mail", ['ngRoute', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toaster']);
 
 app.config(function($routeProvider) {
 	$routeProvider
@@ -45,7 +45,7 @@ app.filter('firstLetter', function () {
     };
 });
 
-$(document).ready(function() {	
+$(document).ready(function() {
 	setTimeout(function(){
 		$('body').addClass('preloaded');
 	}, 500);

@@ -5,7 +5,7 @@ var passport = require('passport');
 
 exports.postUser = function(req, res) {
     if(!req.body.username || !req.body.password) {
-        res.status(400).json({error: {name: "EINVALID", message: 'Username/Password is not valid.'}});
+        res.status(400).json({error: {name: "EINVALID", message: 'Username/Password not filled in.'}});
         return;
     }
     Perm.findOne({name: 'user.create'}, function(err, permission) {
@@ -36,7 +36,7 @@ exports.getUser = function(req, res) {
         if(permission.group <= req.user.group) {
             User.find(function(err, users) {
                 if (err) {
-                    res.status(500).json({error: err});
+                    res.status(500).json({error: {name: err.name, message: err.message}});
                     util.error(err, true);
                     return;
                 }

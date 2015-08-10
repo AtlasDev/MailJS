@@ -1,6 +1,8 @@
 var passport = require('passport');
+var sessions = require("../../redis-session.js");
 var BasicStrategy = require('passport-http').BasicStrategy;
-var BearerStrategy = require('passport-http-bearer').Strategy
+var BearerStrategy = require('passport-http-bearer').Strategy;
+var TokenStrategy = require('passport-token').Strategy;
 var User = require('../../models/user');
 var Client = require('../../models/client');
 var Token = require('../../models/token');
@@ -13,17 +15,27 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-passport.use(new BasicStrategy(
-    function(username, password, callback) {
-        User.findOne({ username: username }, function (err, user) {
-            if (err) { return callback(err); }
-            if (!user) { return callback(null, false); }
-            user.verifyPassword(password, function(err, isMatch) {
-                if (err) { return callback(err); }
-                if (!isMatch) { return callback(null, false); }
-                return callback(null, user);
-            });
-        });
+passport.use('user-token', new TokenStrategy(
+    { usernameHeader: 'x-userid', usernameField:  'userid' },
+    function (userid, token, done) {
+        sessions.get(
+            { app: 'mailjs', token: token },
+            function(err, resp) {
+                if (err) {
+                    return done(null, false);
+                }
+                if(userid == resp.id) {
+                    User.findById(userid, function (err, user) {
+                        if(err) {
+                            return done(null, false);
+                        }
+                        return done(null, user);
+                    })
+                } else {
+                    return done(null, false);
+                }
+            }
+        );
     }
 ));
 
@@ -55,6 +67,6 @@ passport.use(new BearerStrategy(
     }
 ));
 
-exports.isAuthenticated = passport.authenticate(['basic', 'bearer'], { session : false });
+exports.isAuthenticated = passport.authenticate(['user-token', 'bearer'], { session : false });
 exports.isClientAuthenticated = passport.authenticate('client-basic', { session : false });
 exports.isBearerAuthenticated = passport.authenticate('bearer', { session : false });
