@@ -38,7 +38,7 @@ util.log('Booting workers', true);
 for(var i = 0; i < os.cpus().length; i++) {
     cluster.fork();
 }
-event.emit('app.started');
+event.pub('app:started');
 
 cluster.on('exit', function(worker, code, signal) {
     if(exitcount == config.maxExits) {

@@ -29,7 +29,7 @@ mongoose.connection.on('disconnected', function () {
 
 var redis = require('./redis.js');
 
-redis.get('setup', function (err, reply) {
+redis.get('settings:setup', function (err, reply) {
     if(reply != 'true') {
         util.error('Redis not set up, run `npm install` again!', null, true)
     }

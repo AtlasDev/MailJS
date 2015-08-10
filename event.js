@@ -4,8 +4,14 @@
  * @copyright Dany Sluijk 2015
  */
 
-var events = require('events');
+var RedisEvent = require('redis-event');
+var config = require('./config.json');
+var util = require('./util.js');
 
-var EventEmitter = new events.EventEmitter();
+var ev = new RedisEvent(config.redis.host, ['app', 'http', 'smtp']);
 
-module.exports = EventEmitter;
+ev.on('ready', function() {
+    util.log('Redis events ready.', true);
+});
+
+module.exports = ev;

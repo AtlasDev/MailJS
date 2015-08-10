@@ -16,11 +16,12 @@ var util = require('../util.js');
 var event = require('../event.js');
 var crypto = require('crypto');
 var redis = require('../redis.js');
+var RedisStore = require('connect-redis')(session);
 
 var app = express();
 var http = require('http').Server(app);
 
-redis.get('sessionKey', function (err, reply) {
+redis.get('settings:sessionKey', function (err, reply) {
     if(reply == null) {
         util.error('Session key missing!', null, true);
     }
@@ -32,6 +33,7 @@ redis.get('sessionKey', function (err, reply) {
     }));
 
     app.use(session({
+        store: new RedisStore({client: redis, ttl: 86400}),
         secret: secret,
         saveUninitialized: true,
         resave: true
@@ -45,7 +47,7 @@ redis.get('sessionKey', function (err, reply) {
 
     http.listen(config.http.port);
     util.log('Http server started at port '+config.http.port, true);
-    event.emit('http.started');
+    event.pub('http:started');
 });
 
 };

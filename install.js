@@ -42,8 +42,8 @@ console.log('Creating session secret..');
 crypto.randomBytes(32, function(ex, buf) {
     var key = buf.toString('hex');
     console.log('Setting session secret..');
-    client.set("sessionKey", key);
-    client.set("setup", "true");
+    client.set("settings:sessionKey", key);
+    client.set("settings:setup", "true");
     dbstuff();
 });
 

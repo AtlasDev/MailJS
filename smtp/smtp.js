@@ -9,7 +9,7 @@ var event = require('../event.js');
 
 var smtp = function() {
     util.log('SMTP server started', true);
-    event.emit('smtp.started');
+    event.pub('smtp:started');
 };
 
 module.exports = smtp;
