@@ -4,6 +4,8 @@ var colors = require('colors');
 var pack = require('./package.json');
 var User = require('./models/user.js');
 var Perms = require('./models/permissions.js');
+var redis = require('redis');
+var crypto = require('crypto');
 
 if(config.noinstall == true) {
     process.exit(0);
@@ -33,39 +35,53 @@ console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
 mongoose.connect(dburl);
 
-console.log('Generating password..');
-require('crypto').randomBytes(4, function(ex, buf) {
-    var password = buf.toString('hex');
-    console.log(' - password generated');
-    var admin = new User({
-        username: 'admin',
-        password: password,
-        group: '3'
-    });
-    console.log('Saving initial user..');
-    admin.save(function(err) {
-        if (err) {
-            console.log(colors.red('Failed to save initial user: '.red+err));
-            process.exit(1);
-        }
-        console.log(' - User saved');
-        console.log('Populating permission schemas..');
-        SavePerms(function() {
-            console.log('');
-            console.log('########################################');
-            console.log('##                                    ##');
-            console.log('##  Installation Finished!            ##');
-            console.log('##  Initial account details:          ##');
-            console.log('##  Username: '+'admin'.cyan+'                   ##');
-            console.log('##  Password: '+colors.cyan(password)+'                ##');
-            console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
-            console.log('##  It is NOT recoverable!            ##');
-            console.log('##                                    ##');
-            console.log('########################################');
-            process.exit(0);
+console.log('connecting to redis');
+var client = redis.createClient(config.redis.port, config.redis.host);
+
+console.log('Creating session secret..');
+crypto.randomBytes(32, function(ex, buf) {
+    var key = buf.toString('hex');
+    console.log('Setting session secret..');
+    client.set("sessionKey", key);
+    client.set("setup", "true");
+    dbstuff();
+});
+
+var dbstuff = function () {
+    console.log('Generating password..');
+    crypto.randomBytes(4, function(ex, buf) {
+        var password = buf.toString('hex');
+        console.log(' - password generated');
+        var admin = new User({
+            username: 'admin',
+            password: password,
+            group: '3'
+        });
+        console.log('Saving initial user..');
+        admin.save(function(err) {
+            if (err) {
+                console.log(colors.red('Failed to save initial user: '.red+err));
+                process.exit(1);
+            }
+            console.log(' - User saved');
+            console.log('Populating permission schemas..');
+            SavePerms(function() {
+                console.log('');
+                console.log('########################################');
+                console.log('##                                    ##');
+                console.log('##  Installation Finished!            ##');
+                console.log('##  Initial account details:          ##');
+                console.log('##  Username: '+'admin'.cyan+'                   ##');
+                console.log('##  Password: '+colors.cyan(password)+'                ##');
+                console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
+                console.log('##  It is NOT recoverable!            ##');
+                console.log('##                                    ##');
+                console.log('########################################');
+                process.exit(0);
+            });
         });
     });
-});
+}
 
 var SavePerms = function SavePerms(cb) {
     var permissions = [];

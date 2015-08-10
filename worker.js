@@ -19,13 +19,21 @@ mongoose.connection.on('error', function(err) {
 });
 mongoose.connection.on('connected', function () {
     util.log('Connected to database', true);
-})
+});
 mongoose.connection.on('reconnected', function () {
     util.log('Reconnected to database after connection has been lost', true);
-})
+});
 mongoose.connection.on('disconnected', function () {
     util.error('Disconnected from the database!');
-})
+});
+
+var redis = require('./redis.js');
+
+redis.get('setup', function (err, reply) {
+    if(reply != 'true') {
+        util.error('Redis not set up, run `npm install` again!', null, true)
+    }
+});
 
 require('./http/http.js')();
 require('./smtp/smtp.js')();

@@ -34,7 +34,7 @@ util.log('NodeJS ' + process.version, true);
 util.log('V8 engine v' + process.versions.v8, true);
 console.log('');
 
-util.log('========== Booting workers    ==========', true);
+util.log('Booting workers', true);
 for(var i = 0; i < os.cpus().length; i++) {
     cluster.fork();
 }
@@ -42,10 +42,10 @@ event.emit('app.started');
 
 cluster.on('exit', function(worker, code, signal) {
     if(exitcount == config.maxExits) {
-        util.error('Worker '+worker.process.pid+' died ('+signal||code+')!');
+        util.error('Worker '+worker.process.pid+' died ('+code||signal+')!');
         util.error('Maximum amount of crashes reached, exiting!', null, true);
     } else {
-        util.log('Worker '+worker.process.pid+' died ('+signal||code+'), restarting...');
+        util.log('Worker '+worker.process.pid+' died ('+code||signal+'), restarting...');
         cluster.fork();
     }
     exitcount++;

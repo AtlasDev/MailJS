@@ -5,10 +5,12 @@ exports.error = function error(msg, stack, quit) {
 	var name = '';
 	if(cluster.isWorker) {
 		var name = '[#'+cluster.worker.id+'] ';
+	} else {
+		var name = '[MSTR] ';
 	}
 	console.log('\n');
 	console.log(name+'Error'.red + '    ' + msg);
-	if(typeof stack != 'undefined') {
+	if(stack && typeof stack != 'undefined') {
 		console.log(name+'Error'.red + '    ' + stack.stack);
 	}
 	if(quit == true) {
@@ -23,6 +25,8 @@ exports.log = function log(msg, startup) {
 	var name = '';
 	if(cluster.isWorker) {
 		var name = '[#'+cluster.worker.id+'] ';
+	} else {
+		var name = '[MSTR] ';
 	}
     if(startup == true) {
         console.log(name+'Start'.green + '    ' + msg);
