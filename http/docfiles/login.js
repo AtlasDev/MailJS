@@ -1,7 +1,7 @@
 /**
  * @api {post} /login Login
  * @apiVersion 0.1.0
- * @apiName CreateUser
+ * @apiName LoginUser
  * @apiGroup Login
  *
  * @apiDescription Login on a user account, it returns a token which is good for 24 hours.

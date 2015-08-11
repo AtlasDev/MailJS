@@ -3,8 +3,8 @@ var Perm = require('../../models/permissions.js');
 var util = require('../../util.js');
 
 exports.postClients = function(req, res) {
-    if(!req.body.name) {
-        res.status(400).json({error: {name: "EINVALID", message: 'Name not filled in.'}});
+    if(!req.body.name||!req.body.scope) {
+        res.status(400).json({error: {name: "EINVALID", message: 'Missing parameters.'}});
         return;
     }
     Perm.findOne({name: 'client.create'}, function(err, permission) {
@@ -16,6 +16,7 @@ exports.postClients = function(req, res) {
             client.id = id;
             client.secret = secret;
             client.userId = req.user._id;
+            client.scope = req.body.scope;
             client.save(function(err) {
                 if (err) {
                     res.status(500).json({error: {name: err.name, message: err.message}});
@@ -25,7 +26,7 @@ exports.postClients = function(req, res) {
                 responseClient.id = id;
                 responseClient.secret = secret;
                 res.json({ message: 'Client added!', data: responseClient });
-                util.log('New client `'+client._id+'` created');
+                util.log('New client `'+client.name+'` created');
             });
         } else {
             res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
@@ -34,6 +35,7 @@ exports.postClients = function(req, res) {
 };
 
 exports.getClients = function(req, res) {
+    console.log(req.authInfo);
     Perm.findOne({name: 'client.list'}, function(err, permission) {
         if(permission.group <= req.user.group) {
             Client.find({ userId: req.user._id }, function(err, clients) {

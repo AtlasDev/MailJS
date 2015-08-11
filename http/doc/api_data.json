@@ -337,9 +337,9 @@
     "url": "/login",
     "title": "Login",
     "version": "0.1.0",
-    "name": "CreateUser",
+    "name": "LoginUser",
     "group": "Login",
-    "description": "<p>Login on a useraccount, it returns a token which is good for 24 hours.</p> ",
+    "description": "<p>Login on a user account, it returns a token which is good for 24 hours.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -504,7 +504,7 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "EINVALID",
-            "description": "<p>Username/Password is not valid.</p> "
+            "description": "<p>Username/Password not filled in.</p> "
           },
           {
             "group": "Error 4xx",
@@ -523,7 +523,7 @@
       "examples": [
         {
           "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Username/Password is not valid.\"\n  }\n}",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Username/Password not filled in.\"\n  }\n}",
           "type": "json"
         },
         {
@@ -866,5 +866,135 @@
     },
     "filename": "./docfiles/user.js",
     "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/oauth/authorize",
+    "title": "Request for authorization",
+    "version": "0.1.0",
+    "name": "getAuthorize",
+    "group": "oauth",
+    "description": "<p>Request authorization from a client to the account of a user</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "client_id",
+            "description": "<p>The id of the client requesting access.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "response_type",
+            "description": "<p>Response type, should always be code.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirect_uri",
+            "description": "<p>Redirect uri where the code will be send to after the user has accepted the request.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "authorize an client with the id `55bcf8a904edc314212c857d`:",
+          "content": "/api/oauth2/authorize?client_id=55bcf8a904edc314212c857d&response_type=code&redirect_uri=http://localhost",
+          "type": "url"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>html</p> ",
+            "optional": false,
+            "field": "html",
+            "description": "<p>The dialoge page with the request for permissions</p> "
+          }
+        ]
+      }
+    },
+    "filename": "./docfiles/oauth.js",
+    "groupTitle": "oauth"
+  },
+  {
+    "type": "POST",
+    "url": "/oauth/token",
+    "title": "Exchange code",
+    "version": "0.1.0",
+    "name": "postToken",
+    "group": "oauth",
+    "description": "<p>Exchange a code for a bearer access token.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>Sting</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>The code gain from the callback (see /oauth/authorize).</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "response_type",
+            "description": "<p>Response type, should always be code.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "redirect_uri",
+            "description": "<p>The redirect url which was used in GET /oauth/authorize, used as validation</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Exchange a code for a token:",
+          "content": "{\n  \"code\": \"S7VlbvRQW1aIC5X5\",\n  \"response_type\": \"code\",\n  \"redirect_ur\": \"http://localhost\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "mailboxes",
+            "description": "<p>The mailboxes the user has access to.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Number</p> ",
+            "optional": false,
+            "field": "group",
+            "description": "<p>The number of the users group (1=user 2=mod 3=admin)</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"_id\": \"55bcf8a904edc314212c857d\",\n  \"username\": \"AtlasDev\",\n  \"mailboxes\": [],\n  \"group\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/oauth.js",
+    "groupTitle": "oauth"
   }
 ]

@@ -27,21 +27,21 @@
 // Permissions.
 // ------------------------------------------------------------------------------------------
 /**
- * @apiDefinePermission admin Admin access rights needed.
+ * @apiDefinePermission Admin Admin access rights needed.
  * Admin is the highest rank available, should only be given to very trusty people.
  *
  * @apiVersion 0.1.0
  */
 
 /**
- * @apiDefinePermission mod Moderator access rights needed.
+ * @apiDefinePermission Mod Moderator access rights needed.
  * Mod is the middle rank, and should be given to the ones who have to manage the system in daily live.
  *
  * @apiVersion 0.1.0
  */
 
 /**
- * @apiDefinePermission user User access rights needed.
+ * @apiDefinePermission User User access rights needed.
  * User is the lowest rank, and is given standard to every user. These are the people who are actually using the system.
  *
  * @apiVersion 0.1.0

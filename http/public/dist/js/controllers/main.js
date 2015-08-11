@@ -30,6 +30,7 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
         localStorage.removeItem('userid');
 		var msg;
 		switch(error.message) {
+            alert(error.message);
 			default:
 				msg = "Socket errored!";
 				break;
@@ -69,6 +70,5 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
 		data.mails.forEach(function(data) {
 			$rootScope.mails.push(data);
 		});
-		console.log(data);
 	});
 });

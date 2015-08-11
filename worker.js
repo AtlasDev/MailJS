@@ -8,10 +8,15 @@ var config   = require('./config.json');
 var mongoose = require('mongoose');
 var util     = require('./util.js');
 var cluster  = require('cluster');
+var raven    = require('raven');
 
 var worker = function () {
 
 util.log('Booting worker #'+cluster.worker.id, true);
+
+var ravenClient = new raven.Client(config.ravenURL);
+ravenClient.patchGlobal();
+util.log('Raven error logger enabled.', true);
 
 mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
 mongoose.connection.on('error', function(err) {

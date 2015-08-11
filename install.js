@@ -3,7 +3,6 @@ var config = require('./config.json');
 var colors = require('colors');
 var pack = require('./package.json');
 var User = require('./models/user.js');
-var Perms = require('./models/permissions.js');
 var redis = require('redis');
 var crypto = require('crypto');
 
@@ -35,17 +34,27 @@ console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
 mongoose.connect(dburl);
 
-console.log('connecting to redis');
-var client = redis.createClient(config.redis.port, config.redis.host);
+mongoose.connection.on('open', function(){
+    console.log('connecting to redis');
+    var client = redis.createClient(config.redis.port, config.redis.host);
 
-console.log('Creating session secret..');
-crypto.randomBytes(32, function(ex, buf) {
-    var key = buf.toString('hex');
-    console.log('Setting session secret..');
-    client.set("settings:sessionKey", key);
-    client.set("settings:setup", "true");
-    dbstuff();
+    client.on('ready', function () {
+        redisstuff(client);
+    });
 });
+
+var redisstuff = function (client) {
+    console.log('Creating session secret..');
+    crypto.randomBytes(32, function(ex, buf) {
+        client.set("settings:setup", "true");
+        var key = buf.toString('hex');
+        console.log('Setting session secret..');
+        client.set("settings:sessionKey", key);
+        SavePerms(client, function () {
+            dbstuff();
+        });
+    });
+}
 
 var dbstuff = function () {
     console.log('Generating password..');
@@ -64,54 +73,42 @@ var dbstuff = function () {
                 process.exit(1);
             }
             console.log(' - User saved');
-            console.log('Populating permission schemas..');
-            SavePerms(function() {
-                console.log('');
-                console.log('########################################');
-                console.log('##                                    ##');
-                console.log('##  Installation Finished!            ##');
-                console.log('##  Initial account details:          ##');
-                console.log('##  Username: '+'admin'.cyan+'                   ##');
-                console.log('##  Password: '+colors.cyan(password)+'                ##');
-                console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
-                console.log('##  It is NOT recoverable!            ##');
-                console.log('##                                    ##');
-                console.log('########################################');
-                process.exit(0);
-            });
-        });
+            console.log('');
+            console.log('########################################');
+            console.log('##                                    ##');
+            console.log('##  Installation Finished!            ##');
+            console.log('##  Initial account details:          ##');
+            console.log('##  Username: '+'admin'.cyan+'                   ##');
+            console.log('##  Password: '+colors.cyan(password)+'                ##');
+            console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
+            console.log('##  It is NOT recoverable!            ##');
+            console.log('##                                    ##');
+            console.log('########################################');
+            process.exit(0);
+    });
     });
 }
 
-var SavePerms = function SavePerms(cb) {
-    var permissions = [];
+var SavePerms = function SavePerms(client, cb) {
+    console.log('Populating permission schemas..');
+
     //user management
-    permissions.push(new Perms({name: 'user.list', group: '2'}));
-    permissions.push(new Perms({name: 'user.create', group: '2'}));
-    permissions.push(new Perms({name: 'user.delete', group: '2'}));
-    permissions.push(new Perms({name: 'user.group.change', group: '3'}));
+    client.hset("perms", "user.list", "2");
+    client.hset("perms", "user.create", "2");
+    client.hset("perms", "user.delete", "2");
+    client.hset("perms", "user.group.change", "3");
 
     //client management
-    permissions.push(new Perms({name: 'client.create', group: '3'}));
-    permissions.push(new Perms({name: 'client.list', group: '2'}));
-    permissions.push(new Perms({name: 'client.delete', group: '3'}));
+    client.hset("perms", "client.create", "1");
+    client.hset("perms", "client.list", "2");
+    client.hset("perms", "client.delete", "3");
 
-    //email management
-    permissions.push(new Perms({name: 'email.create', group: '1'}));
+    //mailbox management
+    client.hset("perms", "mailbox.create", "1");
 
     //domain management
-    permissions.push(new Perms({name: 'domain.create', group: '3'}));
+    client.hset("perms", "domain.create", "3");
 
-    permissions.forEach(function(permission, i) {
-        permission.save(function(err) {
-            if(err) {
-                console.log(colors.red('Failed to save permissions: '.red+err));
-                process.exit(1);
-            }
-            console.log(' - Saved permission '+permission.name+' to group '+permission.group);
-            if(i == permissions.length-1) {
-                cb();
-            }
-        });
-    });
+    console.log('Permissions saved.');
+    cb();
 }
