@@ -8,13 +8,12 @@ exports.error = function error(msg, stack, quit) {
 	} else {
 		var name = '[MSTR] ';
 	}
-	console.log('\n');
-	console.log(name+'Error'.red + '    ' + msg);
+	console.error(name+'Error'.red + '    ' + msg);
 	if(stack && typeof stack != 'undefined') {
-		console.log(name+'Error'.red + '    ' + stack.stack);
+		console.error(name+'Error'.red + '    ' + stack.stack);
 	}
 	if(quit == true) {
-		console.log(name+'Error'.red + '    Error is severe, quitting...');
+		console.error(name+'Error'.red + '    Error is severe, quitting...');
 		process.exit(1);
         console.log('\n');
 	}

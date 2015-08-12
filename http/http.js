@@ -25,7 +25,8 @@ redis.get('settings:sessionKey', function (err, reply) {
     if(reply == null) {
         util.error('Session key missing!', null, true);
     }
-    var secret = reply;app.set('view engine', 'ejs');
+    var secret = reply;
+    app.set('view engine', 'ejs');
     app.set('views',__dirname + '/views');
 
     app.use(require('body-parser').urlencoded({
@@ -42,6 +43,11 @@ redis.get('settings:sessionKey', function (err, reply) {
     app.use(require('passport').initialize());
 
     app.use('/api', apiRouter);
+
+    app.use(function(err, req, res, next) {
+        console.error(err.stack);
+        res.status(500).send('Internal Server Error');
+    });
 
     frontend(http, app);
 
