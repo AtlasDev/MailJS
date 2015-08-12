@@ -17,6 +17,7 @@ var event = require('../event.js');
 var crypto = require('crypto');
 var redis = require('../redis.js');
 var RedisStore = require('connect-redis')(session);
+var passport = require('passport');
 
 var app = express();
 var http = require('http').Server(app);
@@ -40,7 +41,8 @@ redis.get('settings:sessionKey', function (err, reply) {
         resave: true
     }));
 
-    app.use(require('passport').initialize());
+    app.use(passport.initialize());
+    app.use(passport.session());
 
     app.use('/api', apiRouter);
 

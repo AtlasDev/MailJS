@@ -28,9 +28,9 @@
  * @apiParam {String} redirect_uri The redirect url which was used in GET /oauth/authorize, used as validation
  * @apiParamExample {json} Exchange a code for a token:
  *     {
- *       "code": "S7VlbvRQW1aIC5X5",
+ *       "code": "Aq4XW8Fleb",
  *       "response_type": "code",
- *       "redirect_ur": "http://localhost"
+ *       "redirect_uri": "http://localhost"
  *     }
  *
  * @apiSuccess {Array} mailboxes The mailboxes the user has access to.

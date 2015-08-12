@@ -28,6 +28,7 @@ exports.postClients = function(req, res) {
 };
 
 exports.getClients = function(req, res) {
+    console.log(req.authInfo);
     Client.find({ userId: req.user._id }, function(err, clients) {
         if (err) {
             res.status(500).json({error: {name: err.name, message: err.message}});

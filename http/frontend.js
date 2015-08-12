@@ -4,7 +4,6 @@ var frontend = function frontend(http, app) {
 
 var express = require('express');
 var io = require('socket.io')(http);
-var session = require('../redis-session.js');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -12,20 +11,8 @@ io.use(function(socket, next){
     var userid = socket.handshake.query.userid;
     var token = socket.handshake.query.token;
     if(userid&&token) {
-        session.get({
-            app: 'mailjs',
-            token: token
-        },
-        function(err, resp) {
-            if(err) {
-                return next(new Error('Authentication error'));
-            }
-            if(userid == resp.id) {
-                return next();
-            } else {
-                return next(new Error('Authentication error'));
-            }
-        });
+        //TODO: check if the given data is correct
+        return next();
     } else {
         return next(new Error('Authentication error'));
     }
