@@ -4,21 +4,40 @@ var frontend = function frontend(http, app) {
 
 var express = require('express');
 var io = require('socket.io')(http);
+var sessions = require('../sessions.js');
+var util = require('../util.js');
 
 app.use(express.static(__dirname + '/public'));
 
 io.use(function(socket, next){
-    var userid = socket.handshake.query.userid;
-    var token = socket.handshake.query.token;
-    if(userid&&token) {
-        //TODO: check if the given data is correct
+    sessions.socket(socket, function(err, user, SessionID) {
+        if(err) {
+            return next(new Error('Authentication error'));
+        }
+        socket.data = {};
+        socket.data.user = user;
+        socket.data.sid = SessionID;
         return next();
-    } else {
-        return next(new Error('Authentication error'));
-    }
+    });
 });
 
 io.on('connection', function(socket) {
+    var userObject = {};
+    userObject.username = socket.data.user.username;
+    userObject.firstName = 'Dany';
+    userObject.lastName = 'Sluijk';
+    userObject.uuid = socket.data.user._id;
+    userObject.group = socket.data.user.group;
+    userObject.mailboxes = socket.data.user.mailboxes;
+    socket.emit('user:info', userObject);
+
+    socket.on('user:logout', function() {
+        console.log('Logout by: ', socket.data.user.username);
+        sessions.killSession(socket.data.sid, function (err) {
+            if(err) { return util.error('Session kill errored', err)};
+            socket.disconnect();
+        })
+    });
     socket.on('mail:star', function(data) {
         io.sockets.emit('mail:star', {uuid: data.uuid, state: data.state});
     });

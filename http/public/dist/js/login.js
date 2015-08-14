@@ -1,13 +1,13 @@
 'use strict';
 
 $(document).ready(function() {
-    if(typeof localStorage.token != 'undefined' && typeof localStorage.userid != 'undefined') {
+    if(typeof localStorage.session != 'undefined') {
         window.location.replace("app.html");
     }
-    if(get.msg && get.info != true) {
-        showInfo(get.msg);
+    if(get.msg && get.info != 'true') {
+        showError(get.msg);
     }
-	if(get.info == true && get.msg) {
+	if(get.info == 'true' && get.msg) {
 		showInfo(get.msg);
 	}
 });
@@ -25,8 +25,7 @@ $("form").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userid', data.userid);
+        localStorage.setItem('session', data.session);
         window.location.replace("app.html");
     });
     request.fail(function(data) {
@@ -35,12 +34,12 @@ $("form").submit(function(event) {
 });
 
 var showError = function showError(msg) {
-    $("#errorMsg").replaceWith(msg);
+    $("#errorMsg").text(msg);
     $("#error").removeClass('hidden');
 };
 
 var showInfo = function showInfo(msg) {
-    $("#infoMsg").replaceWith(msg);
+    $("#infoMsg").text(msg);
     $("#info").removeClass('hidden');
 };
 

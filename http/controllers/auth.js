@@ -17,8 +17,8 @@ passport.deserializeUser(function(user, done) {
 passport.use('user', new LocalStrategy(
     function(username, password, callback) {
         User.findOne({ username: username }, function (err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
+            if (err) { return callback(err); }
+            if (!user) { return callback(null, false); }
             user.verifyPassword(password, function (err, isMatch) {
                 if (err) { return callback(err); }
                 if (!isMatch) { return callback(null, false); }

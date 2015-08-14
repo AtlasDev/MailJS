@@ -1,19 +1,19 @@
 'use strict';
 
-app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, socket) {
+app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $translate, socket) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = false;
 	$rootScope.mails = [];
 	$rootScope.mailboxes = [];
     $rootScope.currentMailbox = "";
     $scope.user = {};
-    $scope.user.firstName = "s";
-    $scope.user.lastName = "f";
-    $scope.user.email = "safasfasf";
-    $scope.user.permLevel = 0;
+    $scope.user.firstName = "Loading...";
+    $scope.user.email = "Change me!";
+    $scope.user.group = 0;
 	$scope.logout = function logout(){
-		localStorage.removeItem('token');
-        localStorage.removeItem('userid');
+        localStorage.removeItem('session');
+        $cookies.remove('session');
+        socket.emit('user:logout');
         $window.location.href = '/index.html?info=true&msg=Logout Succesfull, goodbye!';
 	}
     $scope.changeLanguage = function changeLanguage(langKey) {
@@ -26,11 +26,13 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
         $rootScope.socketStatus = 0;
     });
     socket.on('error', function (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userid');
+        localStorage.removeItem('session');
 		var msg;
-		switch(error.message) {
-            alert(error.message);
+        console.log(error);
+        alert(error);
+		switch(error.toString()) {
+            case 'Authentication error':
+                msg = "Session invalid!";
 			default:
 				msg = "Socket errored!";
 				break;
@@ -71,4 +73,12 @@ app.controller("MailCtrl", function($rootScope, $scope, $window, $translate, soc
 			$rootScope.mails.push(data);
 		});
 	});
+    //User handling
+    socket.on('user:info', function (data) {
+        $rootScope.mailboxes = data.mailboxes;
+        $scope.user.firstName = data.firstName;
+        $scope.user.lastName = data.lastName;
+        $scope.user.firstName = data.firstName;
+        $scope.user.group = data.group;
+    });
 });
