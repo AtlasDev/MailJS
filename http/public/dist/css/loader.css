@@ -1,4 +1,4 @@
-.content-loader {
+.content-loader .content-inited {
 	opacity: 0.25;
 }
 
@@ -18,7 +18,7 @@
   position: absolute;
   top: 36%;
   left: 36%;
-  transform: rotate(45deg);  
+  transform: rotate(45deg);
 }
 
 .loading div {
@@ -115,7 +115,7 @@
   left: 36%;
   -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
-          transform: rotate(45deg);  
+          transform: rotate(45deg);
 }
 
 .l1 div, .l2 div, .l3 div, .l4 div {

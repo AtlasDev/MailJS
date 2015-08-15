@@ -73,9 +73,14 @@
 											<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 											<p>
 												{{user.firstName}} {{user.lastName}}
-												<small>{{user.email}}</small>
+												<small>{{user.group | group}}</small>
 											</p>
 										</li>
+										<li class="user-body">
+											<div class="list-group">
+												<button type="button" class="list-group-item full" ng-repeat="mailbox in mailboxes">{{mailbox}}</button>
+											</div>
+						                </li>
 										<!-- Menu Footer-->
 										<li class="user-footer">
 											<div class="pull-right">
@@ -101,11 +106,11 @@
 						<!-- Sidebar user panel (optional) -->
 						<div class="user-panel">
 							<div class="pull-left image">
-								<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
+								<img gravatar-src="'{{currentMailbox}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 							</div>
 							<div class="pull-left info">
 								<p>{{user.firstName}} {{user.lastName}}</p>
-								{{user.email}}
+								{{currentMailbox}}
 							</div>
 						</div>
 

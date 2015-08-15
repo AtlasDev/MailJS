@@ -29,3 +29,11 @@ a:hover {
 .offset {
 	padding: 10px !important;
 }
+
+.full {
+	width: 100%;
+}
+
+.navbar-nav>.user-menu>.dropdown-menu>.user-body {
+	padding: 5px !important;
+}

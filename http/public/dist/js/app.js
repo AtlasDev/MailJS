@@ -45,6 +45,22 @@ app.filter('firstLetter', function () {
     };
 });
 
+app.filter('group', function () {
+    return function (input) {
+		var name;
+		if(input == '1') {
+			name = 'User';
+		} else if(input == '2') {
+			name = 'Moderator';
+		} else if(input == '3') {
+			name = 'Administrator';
+		} else {
+			name = input;
+		}
+		return name;
+    };
+});
+
 $(document).ready(function() {
 	setTimeout(function(){
 		$('body').addClass('preloaded');

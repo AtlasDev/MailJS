@@ -5,11 +5,9 @@
  */
 
 var util = require('../util.js');
-var event = require('../event.js');
 
 var smtp = function() {
     util.log('SMTP server started', true);
-    event.pub('smtp:started');
 };
 
 module.exports = smtp;

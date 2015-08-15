@@ -12,7 +12,6 @@ if(cluster.isMaster){
 var pack      = require('./package.json');
 var config    = require('./config.json');
 var util      = require('./util.js');
-var event     = require('./event.js');
 var os        = require('os');
 var exitcount = 0;
 
@@ -42,7 +41,6 @@ util.log('Booting workers', true);
 for(var i = 0; i < os.cpus().length; i++) {
     cluster.fork();
 }
-event.pub('app:started');
 
 cluster.on('exit', function(worker, code, signal) {
     if(exitcount == config.maxExits) {

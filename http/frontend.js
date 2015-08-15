@@ -6,8 +6,16 @@ var express = require('express');
 var io = require('socket.io')(http);
 var sessions = require('../sessions.js');
 var util = require('../util.js');
+var socketRedis = require('socket.io-redis');
+var redisMod = require('redis');
+var config = require('../config.json');
+
+var pub = redisMod.createClient(config.redis.port, config.redis.host, {return_buffers: true});
+var sub = redisMod.createClient(config.redis.port, config.redis.host, {return_buffers: true});
 
 app.use(express.static(__dirname + '/public'));
+
+io.adapter(socketRedis({ key: 'events', pubClient: pub, subClient: sub }));
 
 io.use(function(socket, next){
     sessions.socket(socket, function(err, user, SessionID) {
@@ -26,9 +34,10 @@ io.on('connection', function(socket) {
     userObject.username = socket.data.user.username;
     userObject.firstName = 'Dany';
     userObject.lastName = 'Sluijk';
+    userObject.mailboxes = socket.data.user.mailboxes;
+    userObject.mailboxes = ['dany@atlasdev.nl', 'info@atlasdev.nl', 'info@mailjs.net'];
     userObject.uuid = socket.data.user._id;
     userObject.group = socket.data.user.group;
-    userObject.mailboxes = socket.data.user.mailboxes;
     socket.emit('user:info', userObject);
 
     socket.on('user:logout', function() {

@@ -12,7 +12,6 @@ var ejs = require('ejs');
 var apiRouter = require('./apiRouter.js');
 var frontend = require('./frontend.js');
 var util = require('../util.js');
-var event = require('../event.js');
 var passport = require('passport');
 var sessions = require('../sessions.js');
 
@@ -40,7 +39,6 @@ frontend(http, app);
 
 http.listen(config.http.port);
 util.log('Http server started at port '+config.http.port, true);
-event.pub('http:started');
 
 };
 

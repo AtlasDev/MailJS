@@ -3,12 +3,12 @@
 app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $translate, socket) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = false;
+    $rootScope.isInit = false;
 	$rootScope.mails = [];
 	$rootScope.mailboxes = [];
     $rootScope.currentMailbox = "";
     $scope.user = {};
     $scope.user.firstName = "Loading...";
-    $scope.user.email = "Change me!";
     $scope.user.group = 0;
 	$scope.logout = function logout(){
         localStorage.removeItem('session');
@@ -80,5 +80,11 @@ app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $tran
         $scope.user.lastName = data.lastName;
         $scope.user.firstName = data.firstName;
         $scope.user.group = data.group;
+        if($rootScope.isInit == false) {
+            if($rootScope.mailboxes[0]) {
+                $rootScope.currentMailbox = $rootScope.mailboxes[0];
+            }
+            $rootScope.isInit = true;
+        }
     });
 });
