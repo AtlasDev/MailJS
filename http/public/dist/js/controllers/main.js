@@ -84,6 +84,10 @@ app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $tran
             if($rootScope.mailboxes[0]) {
                 $rootScope.currentMailbox = $rootScope.mailboxes[0];
             }
+        	setTimeout(function(){
+        		$('body').addClass('preloaded');
+        	}, 500);
+
             $rootScope.isInit = true;
         }
     });
