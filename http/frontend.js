@@ -20,7 +20,7 @@ io.adapter(socketRedis({ key: 'events', pubClient: pub, subClient: sub }));
 io.use(function(socket, next){
     sessions.socket(socket, function(err, user, SessionID) {
         if(err) {
-            return next(new Error('Authentication error'));
+            return next(err);
         }
         socket.data = {};
         socket.data.user = user;

@@ -25,19 +25,11 @@ app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $tran
     socket.on('disconnect', function () {
         $rootScope.socketStatus = 0;
     });
-    socket.on('error', function (error) {
-        localStorage.removeItem('session');
-		var msg;
-        console.log(error);
-        alert(error);
-		switch(error.toString()) {
-            case 'Authentication error':
-                msg = "Session invalid!";
-			default:
-				msg = "Socket errored!";
-				break;
-		}
-        $window.location.href = '/index.html?msg='+msg;
+    socket.on('error', function (err) {
+        if(err.toString() == "Authentication error") {
+            localStorage.removeItem('session');
+            $window.location.href = '/index.html?msg=Session%20invalid!';
+        }
     });
     socket.on('reconnecting', function (error) {
         $rootScope.socketStatus = 1;
