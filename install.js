@@ -85,7 +85,7 @@ var dbstuff = function () {
             console.log('##                                    ##');
             console.log('########################################');
             process.exit(0);
-    });
+        });
     });
 }
 

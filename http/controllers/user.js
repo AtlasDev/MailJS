@@ -1,7 +1,6 @@
 var User = require('../../models/user.js');
 var Perm = require('../../models/permissions.js');
 var util = require('../../util.js');
-var passport = require('passport');
 
 exports.postUser = function(req, res) {
     if(!req.body.username || !req.body.password) {

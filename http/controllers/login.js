@@ -1,6 +1,5 @@
 var User = require('../../models/user.js');
 var util = require('../../util.js');
-var User = require('../../models/user');
 var passport = require('passport');
 var sessions = require('../../sessions.js');
 
