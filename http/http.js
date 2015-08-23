@@ -18,6 +18,8 @@ var sessions = require('../sessions.js');
 var app = express();
 var http = require('http').Server(app);
 
+app.use(express.static(__dirname + '/public'));
+
 app.set('view engine', 'ejs');
 app.set('views',__dirname + '/views');
 

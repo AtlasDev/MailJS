@@ -13,8 +13,6 @@ var config = require('../config.json');
 var pub = redisMod.createClient(config.redis.port, config.redis.host, {return_buffers: true});
 var sub = redisMod.createClient(config.redis.port, config.redis.host, {return_buffers: true});
 
-app.use(express.static(__dirname + '/public'));
-
 io.adapter(socketRedis({ key: 'events', pubClient: pub, subClient: sub }));
 
 io.use(function(socket, next){
