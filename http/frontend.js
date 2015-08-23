@@ -30,6 +30,11 @@ io.use(function(socket, next){
 });
 
 io.on('connection', function(socket) {
+    if(!socket.data.user) {
+        socket.emit('error:nodata');
+        socket.disconnect();
+        return false;
+    }
     var userObject = {};
     userObject.username = socket.data.user.username;
     userObject.firstName = 'Dany';

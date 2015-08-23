@@ -37,3 +37,7 @@ a:hover {
 .navbar-nav>.user-menu>.dropdown-menu>.user-body {
 	padding: 5px !important;
 }
+
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #DD4B39 !important;
+}

@@ -6,13 +6,25 @@ app.config(function($routeProvider) {
 	$routeProvider
 		.when('/mailbox/:mailbox', {
 			templateUrl : 'pages/mailbox.html',
-			controller  : 'mailboxController'
+			controller  : 'mailboxCtrl'
 		})
 		.when('/mail/:uuid', {
 			templateUrl : 'pages/mail.html',
-			controller  : 'mailController'
-		}).
-		otherwise({
+			controller  : 'mailCtrl'
+		})
+		.when('/mainSettings', {
+			templateUrl : 'pages/settings/main.html',
+			controller  : 'mainSettingsCtrl'
+		})
+		.when('/mailboxSettings', {
+			templateUrl : 'pages/settings/mailbox.html',
+			controller  : 'mailboxSettingsCtrl'
+		})
+		.when('/sessionSettings', {
+			templateUrl : 'pages/settings/sessions.html',
+			controller  : 'sessionsSettingsCtrl'
+		})
+		.otherwise({
 			redirectTo: '/mailbox/inbox'
 		});
 });
@@ -59,10 +71,4 @@ app.filter('group', function () {
 		}
 		return name;
     };
-});
-
-$(document).ready(function() {
-	setTimeout(function(){
-		$('body').addClass('preloaded');
-	}, 500);
 });

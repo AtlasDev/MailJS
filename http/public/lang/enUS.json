@@ -18,9 +18,28 @@
     "common": {
         "page": "page",
         "mailboxes": "mailboxes",
-        "signout": "Sign out"
+        "signout": "sign out",
+        "hello": "hello"
     },
     "settings": {
+        "settings": "settings",
+        "main": {
+            "title": "general settings",
+            "explanation": "Here you'll find the general settings like notifications and language.",
+            "language": "language",
+            "currentLang": "currently using",
+            "notifications": "notifications",
+            "notificationButton": "send desktop notifications.",
+            "notificationPerms": "We need to get your permissions to send desktop notifications. You won't be asked again when accepted."
+        },
+        "mailbox": {
+            "title": "mailbox settings",
+            "explanation": "Here you can add new mailboxes, manage existing ones and pair mailboxes to SMTP clients."
+        },
+        "sessions": {
+            "title": "session settings",
+            "explanation": "Here you can view the current existing sessions and kill them if you need to."
+        },
         "general": {
             "title": "General Settings",
             "language": "Language",

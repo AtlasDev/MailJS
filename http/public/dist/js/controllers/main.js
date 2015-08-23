@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $translate, socket) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = false;
     $rootScope.isInit = false;
@@ -16,24 +16,27 @@ app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $tran
         socket.emit('user:logout');
         $window.location.href = '/index.html?info=true&msg=Logout Succesfull, goodbye!';
 	}
-    $scope.changeLanguage = function changeLanguage(langKey) {
-        $translate.use(langKey);
-    };
     socket.on('connect', function () {
         $rootScope.socketStatus = 2;
     });
     socket.on('disconnect', function () {
         $rootScope.socketStatus = 0;
     });
+    socket.on('reconnecting', function (error) {
+        $rootScope.socketStatus = 1;
+    });
+    //error handling
     socket.on('error', function (err) {
         if(err.toString() == "Authentication error") {
             localStorage.removeItem('session');
             $window.location.href = '/index.html?msg=Session%20invalid!';
         }
+        //If not, let it reconnect.
     });
-    socket.on('reconnecting', function (error) {
-        $rootScope.socketStatus = 1;
-    });
+    socket.on('error:nodata', function () {
+        localStorage.removeItem('session');
+        $window.location.href = '/index.html?msg=Connection%20error!';
+    })
 	//mail handling
     socket.on('mail:star', function(data){
         for(var i in $rootScope.mails) {
@@ -79,7 +82,6 @@ app.controller("MailCtrl", function($rootScope, $scope, $cookies, $window, $tran
         	setTimeout(function(){
         		$('body').addClass('preloaded');
         	}, 500);
-
             $rootScope.isInit = true;
         }
     });

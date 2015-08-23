@@ -1,0 +1,52 @@
+<section class="content-header">
+    <h1>
+        {{'settings.main.title' | translate | capitalize}}
+    </h1>
+</section>
+<section class="content">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#mainSettings" data-toggle="tab" aria-expanded="true">{{'settings.main.title' | translate | capitalize}}</a></li>
+            <li class=""><a href="#mailboxSettings" data-toggle="tab" aria-expanded="false">{{'settings.mailbox.title' | translate | capitalize}}</a></li>
+            <li class=""><a href="#sessionSettings" data-toggle="tab" aria-expanded="false">{{'settings.sessions.title' | translate | capitalize}}</a></li>
+        </ul>
+        <div class="tab-content">
+            <b>{{'common.hello' | translate | capitalize}} {{user.firstName}} {{user.lastName}}!</b>
+            <p>{{'settings.main.explanation' | translate}}</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{'settings.main.language' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <p>{{'settings.main.currentLang' | translate | capitalize}} {{'currentLanguage' | translate}}.</p>
+                            <select ng-model="lang" class="form-control" aria-labelledby="languageSelect" ng-change="changeLanguage(lang)">
+                                <option></option>
+                                <option role="presentation"><a role="menuitem" href="">English</a></option>
+                                <option role="presentation"><a role="menuitem" href="">Nederlands</a></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{'settings.main.notifications' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <p>{{'settings.main.notificationPerms' | translate | capitalize}}</p>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-click="toggleNotifications()">
+                                        {{'settings.main.notificationButton' | translate | capitalize}}
+                                    </input>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

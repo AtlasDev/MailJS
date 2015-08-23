@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('mailController', function($rootScope, $scope, $routeParams, $location, toaster, socket) {
+app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $location, toaster, socket) {
 	$rootScope.isLoading = true;
 	socket.emit('mail:get', {uuid: $routeParams.uuid});
 	socket.on('mail:get', function(data) {

@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('mailboxController', function($rootScope, $routeParams, $scope, socket, toaster) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket, toaster) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
 	$scope.mailbox = $routeParams.mailbox;
@@ -50,7 +50,7 @@ app.controller('mailboxController', function($rootScope, $routeParams, $scope, s
 	}
 	$scope.selectAll = function selectAll() {
 		for(var i in $rootScope.mails) {
-			if($scope.selected.indexOf($rootScope.mails[i].uuid) == -1) {	
+			if($scope.selected.indexOf($rootScope.mails[i].uuid) == -1) {
 				if($rootScope.mails[i].mailbox == $scope.mailbox) {
 					$scope.selected.push($rootScope.mails[i].uuid);
 				}
