@@ -1,5 +1,3 @@
-var Client = require('../../models/client.js');
-var Perm = require('../../models/permissions.js');
 var sys = require('../../sys/main.js');
 var util = require('../../util.js');
 
@@ -16,17 +14,22 @@ exports.postClients = function(req, res) {
 };
 
 exports.getClients = function(req, res) {
-    sys.client.get(req.user._id)
-    Client.find({ userId: req.user._id }, function(err, clients) {
-        if (err) {
-            res.status(500).json({error: {name: err.name, message: err.message}});
-            return;
+    var limitBy = null;
+    var skip = null;
+    if (typeof req.body.limit == "number") {
+        limitBy = req.body.limit;
+    }
+    if (typeof req.body.skip == "number") {
+        limitBy = req.body.skip;
+    }
+    sys.client.get(req.user._id, limitBy, skip, function (err, clients) {
+        if(err) {
+             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
-        var cleanClients = [];
-        clients.forEach(function(client) {
-            cleanClients.push({_id: client._id, name: client.name, userId: client.userId});
-        });
-        res.json(cleanClients);
+        for (var i = 0, len = clients.length; i < len; i++) {
+            delete clients[i].secret;
+        }
+        return res.json({message: 'Clients recieved.', amount: clients.length, data: clients});
     });
 };
 
@@ -35,16 +38,10 @@ exports.deleteClients = function(req, res) {
         res.status(400).json({error: {name: "EINVALID", message: 'No id given.'}});
         return;
     }
-    Client.findByIdAndRemove(req.body.id, function(err, client) {
-        if (err) {
-            res.status(500).json({error: {name: err.name, message: err.message}});
-            return;
+    sys.client.remove(req.body.id, function (err) {
+        if(err) {
+             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
-        if(client == null) {
-            res.status(400).json({error: {name: "ENOTFOUND", message: "The given id was not found."}});
-        } else {
-            util.log('Client `'+client._id+'` deleted.');
-            res.json({message: "Client deleted."});
-        }
-    });
+        return res.json({message: 'Client deleted.'});
+    })
 };

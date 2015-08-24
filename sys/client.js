@@ -20,29 +20,29 @@ var Client = require('../models/client.js');
  * @param {Object} client Client object of the new created client, id and secret are not hashed here, these values should be send back to the origin of the request.
  */
 exports.create = function (user, name, description, scopes, callback) {
-      var client = new Client();
-      var id = util.uid(10);
-      var secret = util.uid(10);
-      client.name = name;
-      client.description = description;
-      client.scopes = scopes;
-      client.id = id;
-      client.secret = secret;
-      client.userId = user._id;
-      client.save(function(err) {
-          if (err) {
-              return callback(err, null);
-          }
-          var responseClient = client;
-          responseClient.id = id;
-          responseClient.secret = secret;
-          callback(null, responseClient);
-          util.log('New client `'+client.name+'` created');
-      });
+    var client = new Client();
+    var id = util.uid(10);
+    var secret = util.uid(10);
+    client.name = name;
+    client.description = description;
+    client.scopes = scopes;
+    client.id = id;
+    client.secret = secret;
+    client.userId = user._id;
+    client.save(function(err) {
+        if (err) {
+            return callback(err, null);
+        }
+        var responseClient = client;
+        responseClient.id = id;
+        responseClient.secret = secret;
+        util.log('New client `'+client.name+'` created');
+        return callback(null, responseClient);
+    });
 }
 
 /**
- * .
+ * Get all clients.
  * @name getClient
  * @since 0.1.0
  * @version 1
@@ -71,5 +71,36 @@ exports.get = function function_name(userID, limitBy, skip, callback) {
             return callback(err, null);
         }
         return callback(null, clients);
+    });
+}
+
+/**
+ * Remove a specific client, also removes all access tokens and codes.
+ * @name deleteClient
+ * @since 0.1.0
+ * @version 1
+ * @param {string} clientID ID of the client to be deleted.
+ * @param {deleteClientCallback} callback Callback function after deleting a client.
+ */
+
+/**
+ * Callback for gettting all clients of a user.
+ * @callback deleteClientCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.delete = function (clientID, callback) {
+    //TODO also remove the assiosated access tokens and codes
+    Client.findByIdAndRemove(clientID, function(err, client) {
+        if (err) {
+            return callback(err);
+        }
+        if(client == null) {
+            var error = new Error('The given id was not found.');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        } else {
+            util.log('Client `'+client._id+'` deleted.');
+            return callback();
+        }
     });
 }
