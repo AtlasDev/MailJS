@@ -1,34 +1,22 @@
 var Client = require('../../models/client.js');
 var Perm = require('../../models/permissions.js');
+var sys = require('../../sys/main.js');
 var util = require('../../util.js');
 
 exports.postClients = function(req, res) {
-    if(!req.body.name) {
-        res.status(400).json({error: {name: "EINVALID", message: 'Missing parameters.'}});
-        return;
+    if(!req.body.name || !req.body.description || !req.body.scopes) {
+        return res.status(400).json({error: {name: "EINVALID", message: 'Missing parameters.'}});
     }
-    var client = new Client();
-    var id = util.uid(10);
-    var secret = util.uid(10);
-    client.name = req.body.name;
-    client.id = id;
-    client.secret = secret;
-    client.userId = req.user._id;
-    client.save(function(err) {
-        if (err) {
-            res.status(500).json({error: {name: err.name, message: err.message}});
-            return;
+    sys.client.create(req.user, req.body.name, req.body.description, req.body.scopes, function (err, client) {
+        if(err) {
+            return res.status(500).json({error: {name: err.name, message: err.message}});
         }
-        var responseClient = client;
-        responseClient.id = id;
-        responseClient.secret = secret;
-        res.json({ message: 'Client added!', data: responseClient });
-        util.log('New client `'+client.name+'` created');
+        return res.json({ message: 'Client added!', data: client });
     });
 };
 
 exports.getClients = function(req, res) {
-    console.log(req.authInfo);
+    sys.client.get(req.user._id)
     Client.find({ userId: req.user._id }, function(err, clients) {
         if (err) {
             res.status(500).json({error: {name: err.name, message: err.message}});
