@@ -3,6 +3,7 @@ var util = require('../../util.js');
 var passport = require('passport');
 var sessions = require('../../sessions.js');
 
+// deprecated
 exports.postLogin = function(req, res, next) {
     var username = req.body.username;
     var password = req.body.password;

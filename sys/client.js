@@ -1,5 +1,7 @@
 var util = require('../util.js');
 var Client = require('../models/client.js');
+var Code = require('../models/code.js');
+var Token = require('../models/token.js');
 
 /**
  * Create a new client.
@@ -84,23 +86,77 @@ exports.get = function function_name(userID, limitBy, skip, callback) {
  */
 
 /**
+ * Callback for deleting a clients.
+ * @callback deleteClientCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Int} removedTokens Amount of deleted tokens in the process.
+ * @param {Int} removedCodes Amount of deleted codes in the process.
+ */
+exports.delete = function (clientID, callback) {
+    Token.find({clientId: clientID}).remove(function (err, removedTokens) {
+        if(err) {
+            return callback(err);
+        }
+        Code.find({clientId: clientID}).remove(function (err, removedCodes) {
+            if(err) {
+                return callback(err);
+            }
+            Client.findByIdAndRemove(clientID, function(err, client) {
+                if(err) {
+                    return callback(err);
+                }
+                if(client == null) {
+                    var error = new Error('The given id was not found.');
+                    error.name = 'ENOTFOUND';
+                    return callback(error);
+                } else {
+                    util.log('Client `'+client._id+'` deleted.');
+                    return callback(null, removedTokens, removedCodes);
+                }
+            });
+        });
+    });
+}
+
+/**
+ * Remove all clients of a user, also removes all access tokens and codes.
+ * @name deleteUserClient
+ * @since 0.1.0
+ * @version 1
+ * @param {string} userID ID of the user from which the clients should be deleted.
+ * @param {deleteUserClientCallback} callback Callback function after deleting all clients.
+ */
+
+/**
  * Callback for gettting all clients of a user.
  * @callback deleteClientCallback
  * @param {Error} err Error object, should be undefined.
  */
-exports.delete = function (clientID, callback) {
-    //TODO also remove the assiosated access tokens and codes
-    Client.findByIdAndRemove(clientID, function(err, client) {
-        if (err) {
-            return callback(err);
+exports.deleteUser = function (userID, callback) {
+    Client.find({userId: userID}, function (err, clients) {
+        if(err) {
+            callback(err);
         }
-        if(client == null) {
-            var error = new Error('The given id was not found.');
-            error.name = 'ENOTFOUND';
-            return callback(error);
-        } else {
-            util.log('Client `'+client._id+'` deleted.');
-            return callback();
-        }
-    });
+        exports.delete()
+        callback();
+        deleteUserHelper(0, clients, function (err) {
+            if(err) {
+                return callback(err);
+            }
+            return callback(null);
+        })
+    })
+}
+
+var deleteUserHelper = function (i, clients, cb) {
+    if( i < length ) {
+        exports.delete(clients[i]._id, function(err) {
+            if(err) {
+                cb(err);
+            }
+            deleteUserHelper(i+1);
+        })
+    } else {
+        cb();
+    }
 }

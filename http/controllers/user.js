@@ -1,28 +1,31 @@
 var User = require('../../models/user.js');
-var Perm = require('../../models/permissions.js');
+var sys = require('../../sys/main.js');
 var util = require('../../util.js');
+var perms = require('./permissions.js');
 
 exports.postUser = function(req, res) {
-    if(!req.body.username || !req.body.password) {
-        res.status(400).json({error: {name: "EINVALID", message: 'Username/Password not filled in.'}});
-        return;
-    }
-    var user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        group: '1'
-    });
-    user.save(function(err) {
-        if (err) {
-            res.status(500).json({error: {name: err.name, message: err.message}});
+    perms.hasPerm('user.create', req.user.group, function (err, hasPerm) {
+        if(err) {
+            return res.status(500).json({error: {name: err.name, message: err.message}});
+        }
+        if(hasPerm != true) {
+            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+        }
+        if(!req.body.username || !req.body.password || !req.body.mailboxid) {
+            res.status(400).json({error: {name: "EINVALID", message: 'Username/Password not filled in.'}});
             return;
         }
-        cleanUser = ({_id: user._id, username: user.username, mailboxes: user.mailboxes, group: user.group});
-        res.json(cleanUser);
-        util.log('New user `'+user.username+'` registered.');
+        sys.user.create(req.body.username, req.body.password, req.body.mailboxid, function (err, user) {
+            if(err) {
+                return res.status(500).json({error: {name: err.name, message: err.message}});
+            }
+            delete user.password;
+            return res.json({ message: 'User added!', data: user });
+        });
     });
 };
 
+// deprecated
 exports.getUser = function(req, res) {
     User.find(function(err, users) {
         if (err) {
@@ -38,6 +41,7 @@ exports.getUser = function(req, res) {
     });
 };
 
+// deprecated
 exports.deleteUser = function(req, res) {
     if(!req.body.id) {
         res.status(400).json({error: {name: "EINVALID", message: 'No id given.'}});
@@ -62,6 +66,7 @@ exports.deleteUser = function(req, res) {
     });
 };
 
+// deprecated
 exports.updateUserGroup = function(req, res) {
     if(!req.body.id||!req.body.group) {
         res.status(400).json({error: {name: "EINVALID", message: 'No id/group given.'}});
