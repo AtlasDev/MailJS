@@ -8,7 +8,7 @@ var MailboxSchema = new mongoose.Schema({
     transferCode: { type: String }
 });
 
-UserSchema.methods.generateTransferCode = function(cb) {
+MailboxSchema.methods.generateTransferCode = function(cb) {
     var _this = this;
     var code = util.uid(8);
     this.transferCode = code;

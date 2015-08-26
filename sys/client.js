@@ -38,7 +38,7 @@ exports.create = function (user, name, description, scopes, callback) {
         var responseClient = client;
         responseClient.id = id;
         responseClient.secret = secret;
-        util.log('New client `'+client.name+'` created');
+        util.log('Client `'+client.name+'` created');
         return callback(null, responseClient);
     });
 }

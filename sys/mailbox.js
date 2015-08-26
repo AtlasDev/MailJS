@@ -1,7 +1,8 @@
-var util = require('./util.js');
-var Mailbox = require('../models/Mailbox.js');
+var util = require('../util.js');
+var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
 var User = require('../models/user.js');
+var inboxFunc = require('./inbox.js');
 
 /**
  * Create a new mailbox
@@ -63,7 +64,7 @@ exports.create = function (address, userID, transferable, overwrite, callback) {
                     if(err) {
                         return callback(err);
                     }
-                    inbox.createDefaults(mailbox._id, function (err) {
+                    inboxFunc.createDefaults(mailbox._id, function (err) {
                         if(err) {
                             return callback(err);
                         }
@@ -75,6 +76,7 @@ exports.create = function (address, userID, transferable, overwrite, callback) {
                                 if(err) {
                                     return callback(err);
                                 }
+                                util.log('Mailbox `'+mailbox.address+'` created.')
                                 return callback(null, mailbox);
                             }
                         );

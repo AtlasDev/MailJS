@@ -16,7 +16,7 @@ var UserSchema = new mongoose.Schema({
         default: '1'
     },
     mailboxes: {
-        required: true,
+        default: [],
         type: [String]
     }
 });

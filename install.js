@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var config = require('./config.json');
 var colors = require('colors');
 var pack = require('./package.json');
-var User = require('./models/user.js');
+var sys = require('./sys/main.js');
 var redis = require('redis');
-var crypto = require('crypto');
+var util = require('./util.js');
 
 if(config.noinstall == true) {
     process.exit(0);
@@ -35,7 +35,7 @@ var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.databas
 mongoose.connect(dburl);
 
 mongoose.connection.on('open', function(){
-    console.log('connecting to redis');
+    console.log('Connecting to redis');
     var client = redis.createClient(config.redis.port, config.redis.host);
 
     client.on('ready', function () {
@@ -45,46 +45,54 @@ mongoose.connection.on('open', function(){
 
 var redisstuff = function (client) {
     console.log('Creating session secret..');
-    crypto.randomBytes(32, function(ex, buf) {
-        client.set("settings:setup", "true");
-        var key = buf.toString('hex');
-        console.log('Setting session secret..');
-        client.set("settings:sessionKey", key);
-        SavePerms(client, function () {
-            dbstuff();
-        });
+    var key = util.uid(32);
+    client.set("settings:setup", "true");
+    console.log('Setting session secret..');
+    client.set("settings:sessionKey", key);
+    SavePerms(client, function () {
+        dbstuff();
     });
 }
 
 var dbstuff = function () {
-    console.log('Generating password..');
-    crypto.randomBytes(4, function(ex, buf) {
-        var password = buf.toString('hex');
-        console.log(' - password generated');
-        var admin = new User({
-            username: 'admin',
-            password: password,
-            group: '3'
-        });
-        console.log('Saving initial user..');
-        admin.save(function(err) {
+    console.log('Creating first user.');
+    console.log(' - Generating password..');
+    var password = util.uid(8);
+    console.log('   - password generated');
+    sys.user.create('admin', password, function (err, user) {
+        if (err) {
+            console.log(colors.red('Failed to create initial user: '.red+err));
+            process.exit(1);
+        }
+        console.log(' - User created.');
+        console.log('Creating first domain..');
+        sys.domain.create(config.install.domain, false, function (err) {
             if (err) {
-                console.log(colors.red('Failed to save initial user: '.red+err));
+                console.log(colors.red('Failed to create initial domain: '.red+err));
                 process.exit(1);
             }
-            console.log(' - User saved');
-            console.log('');
-            console.log('########################################');
-            console.log('##                                    ##');
-            console.log('##  Installation Finished!            ##');
-            console.log('##  Initial account details:          ##');
-            console.log('##  Username: '+'admin'.cyan+'                   ##');
-            console.log('##  Password: '+colors.cyan(password)+'                ##');
-            console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
-            console.log('##  It is NOT recoverable!            ##');
-            console.log('##                                    ##');
-            console.log('########################################');
-            process.exit(0);
+            console.log('Domain created.');
+            console.log('Creating initial mailbox..');
+            sys.mailbox.create('info@'+config.install.domain, user._id, true, true, function (err, mailbox) {
+                if (err) {
+                    console.log(colors.red('Failed to create initial mailbox: '.red+err));
+                    process.exit(1);
+                }
+                console.log('Initial mailbox created.');
+                console.log('');
+                console.log('########################################');
+                console.log('##                                    ##');
+                console.log('##  Installation Finished!            ##');
+                console.log('##  Initial account details:          ##');
+                console.log('##  Username: '+'admin'.cyan+'                   ##');
+                console.log('##  Password: '+colors.cyan(password)+'                ##');
+                console.log('##  Mailaddress: '+'info@'.cyan+config.install.domain.cyan+'     ##');
+                console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
+                console.log('##  It is NOT recoverable!            ##');
+                console.log('##                                    ##');
+                console.log('########################################');
+                process.exit(0);
+            });
         });
     });
 }

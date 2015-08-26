@@ -1,10 +1,9 @@
 var User = require('../../models/user.js');
 var sys = require('../../sys/main.js');
 var util = require('../../util.js');
-var perms = require('./permissions.js');
 
 exports.postUser = function(req, res) {
-    perms.hasPerm('user.create', req.user.group, function (err, hasPerm) {
+    sys.perms.hasPerm('user.create', req.user.group, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }

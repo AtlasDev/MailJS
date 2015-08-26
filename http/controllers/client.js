@@ -2,7 +2,7 @@ var sys = require('../../sys/main.js');
 var util = require('../../util.js');
 
 exports.postClients = function(req, res) {
-    perms.hasPerm('client.create', req.user.group, function (err, hasPerm) {
+    sys.perms.hasPerm('client.create', req.user.group, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
