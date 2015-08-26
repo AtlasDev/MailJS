@@ -79,3 +79,43 @@ exports.delete = function (userID, callback) {
         }
     });
 }
+
+/**
+ * Change the group of a user
+ * @name updateGroupUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} userID User id of the user to change the group of.
+ * @param {Int} newgroup New group id of the user.
+ * @param {UpdateGroupUserCallback} callback Callback function after updating the group of a user.
+ */
+
+/**
+ * Callback for Updating a users group
+ * @callback UpdatGroupUserCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.changeGroup = function (userID, newgroup, callback) {
+    if(newgroup < 1 || newgroup > 3) {
+        var error = new Error('Invalid group id.');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
+    User.findById(userID, function (err, user) {
+        if(err) {
+            return callback(err);
+        }
+        if(!user) {
+            var error = new Error('User not found.');
+            var name = 'ENOTFOUND';
+            return callback(error);
+        }
+        user.group = newgroup;
+        user.save(function (err) {
+            if(err) {
+                return callback(err);
+            }
+            return callback(null);
+        });
+    });
+}
