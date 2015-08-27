@@ -3,7 +3,6 @@ var config = require('./config.json');
 var colors = require('colors');
 var pack = require('./package.json');
 var sys = require('./sys/main.js');
-var redis = require('redis');
 var util = require('./util.js');
 
 if(config.noinstall == true) {
@@ -35,24 +34,10 @@ var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.databas
 mongoose.connect(dburl);
 
 mongoose.connection.on('open', function(){
-    console.log('Connecting to redis');
-    var client = redis.createClient(config.redis.port, config.redis.host);
-
-    client.on('ready', function () {
-        redisstuff(client);
-    });
-});
-
-var redisstuff = function (client) {
-    console.log('Creating session secret..');
-    var key = util.uid(32);
-    client.set("settings:setup", "true");
-    console.log('Setting session secret..');
-    client.set("settings:sessionKey", key);
     SavePerms(function (group) {
         dbstuff(group);
     });
-}
+});
 
 var dbstuff = function (group) {
     console.log('Creating first user.');

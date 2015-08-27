@@ -82,10 +82,6 @@ sessions.prototype.getSession = function (token, cb) {
     );
 }
 
-sessions.prototype.express = function(req, res, next) {
-    next();
-}
-
 sessions.prototype.socket = function(socket, cb) {
     var _this = this;
     var token = socket.handshake.query.session;

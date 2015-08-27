@@ -5,3 +5,5 @@ exports.perms = require('./permissions.js');
 exports.mailbox = require('./mailbox.js');
 exports.domain = require('./domain.js');
 exports.inbox = require('./inbox.js');
+exports.token = require('./token.js');
+exports.group = require('./group.js');

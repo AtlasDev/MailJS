@@ -16,7 +16,7 @@ $("form").submit(function(event) {
     event.preventDefault();
     var request = $.ajax({
         type: 'POST',
-        url: '/api/login',
+        url: '/api/v1/login',
         dataType: 'json',
         cache: false,
         data: {

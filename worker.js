@@ -32,14 +32,6 @@ mongoose.connection.on('disconnected', function () {
     util.error('Disconnected from the database!');
 });
 
-var redis = require('./redis.js');
-
-redis.get('settings:setup', function (err, reply) {
-    if(reply != 'true') {
-        util.error('Redis not set up, run `npm install` again!', null, true)
-    }
-});
-
 require('./http/http.js')();
 require('./smtp/smtp.js')();
 

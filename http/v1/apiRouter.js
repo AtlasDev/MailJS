@@ -6,9 +6,16 @@ var userController = require('./controllers/user.js');
 var loginController = require('./controllers/login.js');
 var clientController = require('./controllers/client.js');
 var oauth2Controller = require('./controllers/oauth2.js');
+var groupController = require('./controllers/group.js');
 
 router.route('/login')
-  .post(loginController.postLogin);
+  .post(authController.isUserAuthenticated, loginController.postLogin);
+
+router.route('/group')
+  .get(authController.isAuthenticated, groupController.getGroups);
+
+router.route('/group/:group')
+  .get(authController.isAuthenticated, groupController.getGroup);
 
 router.route('/user')
   .get(authController.isAuthenticated, userController.getUser)

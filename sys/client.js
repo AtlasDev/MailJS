@@ -77,6 +77,40 @@ exports.get = function function_name(userID, limitBy, skip, callback) {
 }
 
 /**
+ * Verify the id and secret of a client.
+ * @name verifyClient
+ * @since 0.1.0
+ * @version 1
+ * @param {string} username The id of the client.
+ * @param {string} password the secret of the client.
+ * @param {verifyClientCallback} callback Callback function after verifying the client.
+ */
+
+/**
+ * Callback for verifying a user.
+ * @callback verifyClientCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Boolean} match If the id and the secret match the ones in the database.
+ * @param {object} client The client found in the database.
+ */
+exports.verify = function (username, password, callback) {
+    Client.findOne({id: username}, function (err, client) {
+        if(err) {
+            return callback(err);
+        }
+        if(!client) {
+            return callback(null, false, false);
+        }
+        client.verifySecret(password, function (err, match) {
+            if(err) {
+                return callback(err);
+            }
+            return callback(null, match, client);
+        })
+    });
+}
+
+/**
  * Remove a specific client, also removes all access tokens and codes.
  * @name deleteClient
  * @since 0.1.0

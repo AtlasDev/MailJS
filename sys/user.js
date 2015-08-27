@@ -36,6 +36,98 @@ exports.create = function (username, password, group, callback) {
 }
 
 /**
+ * Find a user by id.
+ * @name findUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} userID userID of the user to find.
+ * @param {findUserCallback} callback Callback function after finding the user.
+ */
+
+/**
+ * Callback for finding a user.
+ * @callback findUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} user User object of the found user.
+ */
+exports.find = function (userID, callback) {
+    User.findById(userID, function (err, user) {
+        if(err) {
+            return callback(err);
+        }
+        if(!user) {
+            var error = new Error('Could not find user.');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        }
+        return callback(null, user);
+    })
+}
+
+/**
+ * Find a user by username.
+ * @name findByUsernameUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} username username of the user to find.
+ * @param {findByUsernameUserCallback} callback Callback function after finding the user.
+ */
+
+/**
+ * Callback for finding a user.
+ * @callback findByUsernameUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} user User object of the found user.
+ */
+exports.findByUsername = function (username, callback) {
+    User.findOne({username: username}, function (err, user) {
+        if(err) {
+            return callback(err);
+        }
+        if(!user) {
+            var error = new Error('Could not find user.');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        }
+        return callback(null, user);
+    })
+}
+
+/**
+ * Verify user creditals.
+ * @name verifyUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} username Username of the to verify user.
+ * @param {password} password Password of the to verify user.
+ * @param {verifyUserCallback} callback Callback function after verifying the user.
+ */
+
+/**
+ * Callback for verifying a user.
+ * @callback verifyUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {boolean} isMatch Gives if the password and username matches.
+ * @param {Object} user User object of the user (if it matches).
+ */
+exports.verify = function (username, password, callback) {
+    User.findOne({username: username}, function (err, user) {
+        if(err) {
+            return callback(err);
+        }
+        if(!user) {
+            return callback(null, false);
+        }
+        user.verifyPassword(password, function (err, isMatch) {
+            if(err){
+                return callback(err);
+            }
+            return callback(null, isMatch, user);
+        });
+    });
+}
+
+/**
  * Delete a user
  * @name deleteUser
  * @since 0.1.0

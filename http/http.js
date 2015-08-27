@@ -7,13 +7,17 @@
 var http = function() {
 
 var express = require('express');
-var config = require('../config.json');
+var passport = require('passport');
 var ejs = require('ejs');
-var apiRouter = require('./apiRouter.js');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var ConnectRedisSessions = require( "connect-redis-sessions");
+var config = require('../config.json');
+var v1apiRouter = require('./v1/apiRouter.js');
 var frontend = require('./frontend.js');
 var util = require('../util.js');
-var passport = require('passport');
 var sessions = require('../sessions.js');
+var redis = require('../redis.js');
 
 var app = express();
 var http = require('http').Server(app);
@@ -23,14 +27,24 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views',__dirname + '/views');
 
-app.use(require('body-parser').urlencoded({
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use(passport.initialize());
-app.use(function(req, res, next){ sessions.express(req, res, next) });
+app.use(
+    ConnectRedisSessions({
+        app: "MailJS",
+        port: config.redis.port,
+        host: config.redis.host,
+        namespace: 'sess'
+    })
+);
 
-app.use('/api', apiRouter);
+app.use(passport.initialize());
+
+app.use('/api/v1', v1apiRouter);
 
 app.use(function(err, req, res, next) {
     console.error(err.stack);

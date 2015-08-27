@@ -1,6 +1,6 @@
-var User = require('../../models/user.js');
-var sys = require('../../sys/main.js');
-var util = require('../../util.js');
+var User = require('../../../models/user.js');
+var sys = require('../../../sys/main.js');
+var util = require('../../../util.js');
 
 exports.postUser = function(req, res) {
     sys.perms.hasPerm('user.create', req.user.group, function (err, hasPerm) {
