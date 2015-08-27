@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var util = require('../util.js');
 
 var InboxSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
