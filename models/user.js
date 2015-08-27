@@ -12,8 +12,8 @@ var UserSchema = new mongoose.Schema({
         required: true
     },
     group: {
-        type: Number,
-        default: '1'
+        type: String,
+        required: true
     },
     mailboxes: {
         default: [],

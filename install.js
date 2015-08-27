@@ -49,17 +49,17 @@ var redisstuff = function (client) {
     client.set("settings:setup", "true");
     console.log('Setting session secret..');
     client.set("settings:sessionKey", key);
-    SavePerms(client, function () {
-        dbstuff();
+    SavePerms(function (group) {
+        dbstuff(group);
     });
 }
 
-var dbstuff = function () {
+var dbstuff = function (group) {
     console.log('Creating first user.');
     console.log(' - Generating password..');
     var password = util.uid(8);
     console.log('   - password generated');
-    sys.user.create('admin', password, function (err, user) {
+    sys.user.create('admin', password, group._id, function (err, user) {
         if (err) {
             console.log(colors.red('Failed to create initial user: '.red+err));
             process.exit(1);
@@ -97,26 +97,63 @@ var dbstuff = function () {
     });
 }
 
-var SavePerms = function SavePerms(client, cb) {
-    console.log('Populating permission schemas..');
-
-    //user management
-    client.hset("perms", "user.list", "2");
-    client.hset("perms", "user.create", "2");
-    client.hset("perms", "user.delete", "2");
-    client.hset("perms", "user.group.change", "3");
-
-    //client management
-    client.hset("perms", "client.create", "1");
-    client.hset("perms", "client.list", "2");
-    client.hset("perms", "client.delete", "3");
-
-    //mailbox management
-    client.hset("perms", "mailbox.create", "1");
-
-    //domain management
-    client.hset("perms", "domain.create", "3");
-
-    console.log('Permissions saved.');
-    cb();
+var SavePerms = function SavePerms(cb) {
+    console.log('Creating default groups..');
+    sys.perms.createGroup('Administrators', 'Administrators', [
+        'user.list',
+        'user.create',
+        'user.delete',
+        'user.protected',
+        'user.overwrite',
+        'user.group.change',
+        'client.create',
+        'client.list',
+        'client.delete',
+        'mailbox.create',
+        'domain.create'
+    ], function (err, adminGroup) {
+        if(err) {
+            if (err) {
+                console.log(colors.red('Failed to create initial Administrators group: '.red+err));
+                process.exit(1);
+            }
+        }
+        console.log(' - Admin group created');
+        sys.perms.createGroup('Moderators', 'Moderators', [
+            'user.list',
+            'user.create',
+            'user.delete',
+            'user.protected',
+            'client.create',
+            'client.list',
+            'mailbox.create'
+        ], function (err, modGroup) {
+            if(err) {
+                if (err) {
+                    console.log(colors.red('Failed to create initial Moderators group: '.red+err));
+                    process.exit(1);
+                }
+            }
+            console.log(' - Moderators group created.');
+            sys.perms.createGroup('Users', 'Users', [
+                'user.list',
+                'user.create',
+                'user.delete',
+                'user.protected',
+                'client.create',
+                'client.list',
+                'mailbox.create'
+            ], function (err, userGroup) {
+                if(err) {
+                    if (err) {
+                        console.log(colors.red('Failed to create initial Users group: '.red+err));
+                        process.exit(1);
+                    }
+                }
+                console.log(' - Users group created.');
+                console.log('Default groups created.');
+                cb(adminGroup);
+            });
+        });
+    });
 }

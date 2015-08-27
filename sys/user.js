@@ -9,6 +9,7 @@ var clientFunc = require('./client.js');
  * @version 1
  * @param {string} username Username to use.
  * @param {string} password Password to use.
+ * @param {string} group Group ID of the group to add the user to.
  * @param {createUserCallback} callback Callback function after creating the user.
  */
 
@@ -18,11 +19,11 @@ var clientFunc = require('./client.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the new created user.
  */
-exports.create = function (username, password, callback) {
+exports.create = function (username, password, group, callback) {
     var user = new User({
         username: username,
         password: password,
-        group: 1,
+        group: group,
         mailboxes: []
     });
     user.save(function(err) {
@@ -75,7 +76,7 @@ exports.delete = function (userID, callback) {
  * @since 0.1.0
  * @version 1
  * @param {string} userID User id of the user to change the group of.
- * @param {Int} newgroup New group id of the user.
+ * @param {string} newgroup New group id.
  * @param {UpdateGroupUserCallback} callback Callback function after updating the group of a user.
  */
 
@@ -85,11 +86,6 @@ exports.delete = function (userID, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.changeGroup = function (userID, newgroup, callback) {
-    if(newgroup < 1 || newgroup > 3) {
-        var error = new Error('Invalid group id.');
-        error.name = 'EINVALID';
-        return callback(error);
-    }
     User.findById(userID, function (err, user) {
         if(err) {
             return callback(err);
