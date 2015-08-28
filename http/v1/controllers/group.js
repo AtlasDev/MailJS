@@ -6,7 +6,7 @@ exports.getGroups = function (req, res) {
             return res.json({error: {name: err.name, message: err.message} });
         }
         return res.json({groups: groups});
-    })
+    });
 }
 
 exports.getGroup = function(req, res) {

@@ -1,4 +1,5 @@
 var Group = require('../models/group.js');
+var userFunc = require('./user.js');
 
 /**
  * Compare a permission node to a group
@@ -108,7 +109,7 @@ var groupCreateHelper = function (name, type, perms, callback) {
  * @name GetGroups
  * @since 0.1.0
  * @version 1
- * @param {hasPermCallback} callback Callback function after getting all groups.
+ * @param {getGroupsCallback} callback Callback function after getting all groups.
  */
 
 /**
@@ -122,5 +123,39 @@ exports.getGroups = function (callback) {
             return callback(err);
         }
         return callback(groups);
+    });
+}
+
+/**
+ * Delete a group, only if empty.
+ * @name DeleteGroup
+ * @since 0.1.0
+ * @version 1
+ * @param {string} groupID Group ID of the group to be deleted.
+ * @param {deleteGroupCallback} callback Callback function after deleting a group.
+ */
+
+/**
+ * Callback after deleting a group.
+ * @callback deleteGroupCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {object} group The deleted group.
+ */
+exports.deleteGroup = function (groupID, callback) {
+    userFunc.findByGroup(groupID, function(err, users) {
+        if(err) {
+            return callback(err);
+        }
+        if(users) {
+            var error = new Error('Group has user assigned!');
+            error.name = 'EOCCUPIED';
+            return callback(error);
+        }
+        Group.findByIdAndRemove(groupID, function (err, group) {
+            if(err) {
+                return callback(err);
+            }
+            return callback(null, group);
+        })
     });
 }

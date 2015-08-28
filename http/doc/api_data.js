@@ -73,12 +73,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -92,15 +86,10 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/client.js",
+    "filename": "./docfiles/old/client.js",
     "groupTitle": "Client"
   },
   {
@@ -176,12 +165,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -200,15 +183,10 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/client.js",
+    "filename": "./docfiles/old/client.js",
     "groupTitle": "Client"
   },
   {
@@ -244,7 +222,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./docfiles/client.js",
+    "filename": "./docfiles/old/client.js",
     "groupTitle": "Client",
     "error": {
       "fields": {
@@ -254,12 +232,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -268,69 +240,9 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "name": ""
-  },
-  {
-    "version": "0.1.0",
-    "type": "",
-    "url": "",
-    "filename": "./docfiles/generic.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "name": ""
-  },
-  {
-    "version": "0.1.0",
-    "type": "",
-    "url": "",
-    "filename": "./docfiles/generic.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "name": ""
-  },
-  {
-    "version": "0.1.0",
-    "type": "",
-    "url": "",
-    "filename": "./docfiles/generic.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_docfiles_generic_js",
-    "name": ""
   },
   {
     "type": "post",
@@ -339,7 +251,7 @@ define({ "api": [
     "version": "0.1.0",
     "name": "LoginUser",
     "group": "Login",
-    "description": "<p>Login on a user account, it returns a token which is good for 24 hours.</p> ",
+    "description": "<p>Login on a user account, it returns a token which is valid for 24 hours.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -355,7 +267,7 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": false,
             "field": "password",
-            "description": "<p>Password which belongs to the username</p> "
+            "description": "<p>Password which belongs to the username.</p> "
           }
         ]
       },
@@ -374,22 +286,22 @@ define({ "api": [
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "_id",
+            "field": "token",
             "description": "<p>The id of the user.</p> "
           },
           {
             "group": "Success 200",
-            "type": "<p>String</p> ",
+            "type": "<p>Array</p> ",
             "optional": false,
-            "field": "token",
-            "description": "<p>The token to login with.</p> "
+            "field": "user",
+            "description": "<p>User object of the user logged in.</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"_id\": \"55bcf8a904edc314212c857d\",\n  \"token\": \"OXznHAmkzEGY9JSIGSWWD3cK6jlRgcSYAmRBZwDH\",\n}",
+          "title": "Success response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]
@@ -400,21 +312,71 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVALID",
-            "description": "<p>Username/Password is not valid.</p> "
+            "field": "Unauthorized",
+            "description": "<p>The username/password is invalid.</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Username/Password is not valid.\"\n  }\n}",
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
           "type": "json"
         }
       ]
     },
     "filename": "./docfiles/login.js",
     "groupTitle": "Login"
+  },
+  {
+    "type": "delete",
+    "url": "/login",
+    "title": "Logout",
+    "version": "0.1.0",
+    "name": "LogoutUser",
+    "group": "Login",
+    "description": "<p>Logout the current logged in user.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Simple success message.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Logout successfull.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/login.js",
+    "groupTitle": "Login",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    }
   },
   {
     "type": "post",
@@ -511,12 +473,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -530,15 +486,10 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/user.js",
+    "filename": "./docfiles/old/user.js",
     "groupTitle": "User"
   },
   {
@@ -620,12 +571,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -654,15 +599,10 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/user.js",
+    "filename": "./docfiles/old/user.js",
     "groupTitle": "User"
   },
   {
@@ -698,7 +638,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./docfiles/user.js",
+    "filename": "./docfiles/old/user.js",
     "groupTitle": "User",
     "error": {
       "fields": {
@@ -708,12 +648,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -721,11 +655,6 @@ define({ "api": [
         {
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
-          "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
           "type": "json"
         }
       ]
@@ -817,12 +746,6 @@ define({ "api": [
             "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
@@ -856,16 +779,39 @@ define({ "api": [
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
           "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/user.js",
+    "filename": "./docfiles/old/user.js",
     "groupTitle": "User"
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "name": ""
   },
   {
     "type": "get",
@@ -922,7 +868,7 @@ define({ "api": [
         ]
       }
     },
-    "filename": "./docfiles/oauth.js",
+    "filename": "./docfiles/old/oauth.js",
     "groupTitle": "oauth"
   },
   {
@@ -962,7 +908,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Exchange a code for a token:",
-          "content": "{\n  \"code\": \"S7VlbvRQW1aIC5X5\",\n  \"response_type\": \"code\",\n  \"redirect_ur\": \"http://localhost\"\n}",
+          "content": "{\n  \"code\": \"Aq4XW8Fleb\",\n  \"response_type\": \"code\",\n  \"redirect_uri\": \"http://localhost\"\n}",
           "type": "json"
         }
       ]
@@ -994,7 +940,7 @@ define({ "api": [
         }
       ]
     },
-    "filename": "./docfiles/oauth.js",
+    "filename": "./docfiles/old/oauth.js",
     "groupTitle": "oauth"
   }
 ] });

@@ -77,7 +77,7 @@ exports.find = function (userID, callback) {
  * Callback for finding a user.
  * @callback findByUsernameUserCallback
  * @param {Error} err Error object, should be undefined.
- * @param {Object} user User object of the found user.
+ * @param {Object} user User object of the found user, returns false if none.
  */
 exports.findByUsername = function (username, callback) {
     User.findOne({username: username}, function (err, user) {
@@ -85,11 +85,36 @@ exports.findByUsername = function (username, callback) {
             return callback(err);
         }
         if(!user) {
-            var error = new Error('Could not find user.');
-            error.name = 'ENOTFOUND';
-            return callback(error);
+            return callback(null, false);
         }
         return callback(null, user);
+    })
+}
+
+/**
+ * Find all users with a certain group.
+ * @name findByGroupUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} groupID Group ID of the users to find.
+ * @param {findByGroupUserCallback} callback Callback function after finding the user.
+ */
+
+/**
+ * Callback for finding a user.
+ * @callback findByGroupUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Array} users Array of user objects, returns false if none.
+ */
+exports.findByGroup = function (groupID, callback) {
+    User.find({group: groupID}, function (err, users) {
+        if(err) {
+            return callback(err);
+        }
+        if(!users) {
+            return callback(null, false);
+        }
+        return callback(null, users);
     })
 }
 

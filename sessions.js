@@ -33,7 +33,7 @@ sessions.prototype.create = function(username, ip, other, callback) {
             app: _this.appName,
             id: user._id,
             ip: ip,
-            ttl: 3600,
+            ttl: 86400,
             d: options
         },
         function(err, resp) {

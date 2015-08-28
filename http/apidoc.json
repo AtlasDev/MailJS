@@ -2,6 +2,6 @@
   "name": "MailJS",
   "version": "0.1.0",
   "title": "MailJS RESTfull api documentation",
-  "url" : "https://mail.atlasdev.nl/api",
+  "url" : "https://mail.atlasdev.nl/api/v1",
   "withCompare": "true"
 }

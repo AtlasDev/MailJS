@@ -9,7 +9,8 @@ var oauth2Controller = require('./controllers/oauth2.js');
 var groupController = require('./controllers/group.js');
 
 router.route('/login')
-  .post(authController.isUserAuthenticated, loginController.postLogin);
+  .post(authController.isUserAuthenticated, loginController.postLogin)
+  .delete(authController.isSessionAuthenticated, loginController.deleteLogin);
 
 router.route('/group')
   .get(authController.isAuthenticated, groupController.getGroups);

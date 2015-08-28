@@ -1,7 +1,7 @@
 var sys = require('../../../sys/main.js');
 
 exports.postLogin = function(req, res, next) {
-    req.session.upgrade(req.body.username, 7200, function (err) {
+    req.session.upgrade(req.body.username, 86400, function (err) {
         if(err) {
             return res.json({error: {name: err.name, message: err.message} });
         }
@@ -11,7 +11,13 @@ exports.postLogin = function(req, res, next) {
             }
             var responseUser = user;
             responseUser.password = undefined;
+            req.session.user = responseUser;
             res.json({token: req.session.id, user: responseUser});
         });
     });
 };
+
+exports.deleteLogin = function(req, res, next) {
+    req.session.destroy();
+    return res.json({message: 'Logout successfull.'});
+}
