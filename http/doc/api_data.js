@@ -245,6 +245,158 @@ define({ "api": [
     }
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "name": ""
+  },
+  {
+    "type": "get",
+    "url": "/group/:groupid",
+    "title": "Get a specific group",
+    "version": "0.1.0",
+    "name": "GetGroup",
+    "group": "Group",
+    "description": "<p>Get a specific group by group id.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "groupid",
+            "description": "<p>ID of the group to get.</p> "
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "group",
+            "description": "<p>The group requested</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"group\": {\n    \"_id\": \"55e17a65989d3fcc096c3efb\",\n    \"type\": \"Administrators\",\n    \"name\": \"Administrators\",\n    \"__v\": 0,\n    \"permissions\": [\n      \"user.list\",\n      \"user.create\",\n      \"user.delete\",\n      \"user.protected\",\n      \"user.overwrite\",\n      \"user.group.change\",\n      \"client.create\",\n      \"client.list\",\n      \"client.delete\",\n      \"mailbox.create\",\n      \"domain.create\"\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>The given group ID is not in the correct format.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ENOTFOUND",
+            "description": "<p>The given group was not found.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Invalid group ID!\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "ENOTFOUND:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"Group not found.\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/group.js",
+    "groupTitle": "Group"
+  },
+  {
+    "type": "get",
+    "url": "/group",
+    "title": "Get all groups",
+    "version": "0.1.0",
+    "name": "GetGroups",
+    "group": "Group",
+    "description": "<p>Get all groups available</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "groups",
+            "description": "<p>A list of group objects available.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"groups\": [\n    {\n      \"_id\": \"55e17a65989d3fcc096c3efb\",\n      \"type\": \"Administrators\",\n      \"name\": \"Administrators\",\n      \"__v\": 0,\n      \"permissions\": [\n        \"user.list\",\n        \"user.create\",\n        \"user.delete\",\n        \"user.protected\",\n        \"user.overwrite\",\n        \"user.group.change\",\n        \"client.create\",\n        \"client.list\",\n        \"client.delete\",\n        \"mailbox.create\",\n        \"domain.create\"\n      ]\n    },\n    {\n      ....\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/group.js",
+    "groupTitle": "Group",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/login",
     "title": "Login",
@@ -784,34 +936,6 @@ define({ "api": [
     },
     "filename": "./docfiles/old/user.js",
     "groupTitle": "User"
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "name": ""
   },
   {
     "type": "get",

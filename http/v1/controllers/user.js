@@ -2,8 +2,9 @@ var User = require('../../../models/user.js');
 var sys = require('../../../sys/main.js');
 var util = require('../../../util.js');
 
+//deprrcated
 exports.postUser = function(req, res) {
-    sys.perms.hasPerm('user.create', req.user.group, function (err, hasPerm) {
+    sys.perms.hasPerm('user.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
@@ -11,7 +12,7 @@ exports.postUser = function(req, res) {
             return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(!req.body.username || !req.body.password || !req.body.mailboxid) {
-            res.status(400).json({error: {name: "EINVALID", message: 'Username/Password not filled in.'}});
+            res.status(400).json({error: {name: "EINVALID", message: 'Request data is missing.'}});
             return;
         }
         sys.user.create(req.body.username, req.body.password, req.body.mailboxid, function (err, user) {
@@ -23,6 +24,16 @@ exports.postUser = function(req, res) {
         });
     });
 };
+
+exports.setupUser = function (req, res) {
+    console.log(req.user);
+    if(req.user.mailboxes.length > 0) {
+        return res.status(400).json({error: {name: 'EINVALID', message: 'Account has already been setup.'}});
+    }
+    sys.group.getGroup(req.user.group, function (err, group) {
+        res.render('setup', { username: req.user.username, group: req.user.group });
+    })
+}
 
 // deprecated
 exports.getUser = function(req, res) {

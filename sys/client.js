@@ -61,6 +61,11 @@ exports.create = function (user, name, description, scopes, callback) {
  * @param {array} clients Found clients in a array.
  */
 exports.get = function function_name(userID, limitBy, skip, callback) {
+    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     limitBy = limitBy || 20;
     skip = skip || 0;
     var query = (userID) ? {userId: userID} : {};
@@ -127,6 +132,11 @@ exports.verify = function (username, password, callback) {
  * @param {Int} removedCodes Amount of deleted codes in the process.
  */
 exports.delete = function (clientID, callback) {
+    if (!clientID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid client ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     Token.find({clientId: clientID}).remove(function (err, removedTokens) {
         if(err) {
             return callback(err);
@@ -167,6 +177,11 @@ exports.delete = function (clientID, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.deleteUser = function (userID, callback) {
+    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     Client.find({userId: userID}, function (err, clients) {
         if(err) {
             callback(err);

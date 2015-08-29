@@ -1,8 +1,9 @@
 var sys = require('../../../sys/main.js');
 var util = require('../../../util.js');
 
+//deprecated
 exports.postClients = function(req, res) {
-    sys.perms.hasPerm('client.create', req.user.group, function (err, hasPerm) {
+    sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
@@ -21,6 +22,7 @@ exports.postClients = function(req, res) {
     });
 };
 
+//deprecated
 exports.getClients = function(req, res) {
     var limitBy = null;
     var skip = null;
@@ -41,6 +43,7 @@ exports.getClients = function(req, res) {
     });
 };
 
+//deprecated
 exports.deleteClients = function(req, res) {
     if(!req.body.id) {
         res.status(400).json({error: {name: "EINVALID", message: 'No id given.'}});

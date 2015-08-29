@@ -44,7 +44,7 @@ var dbstuff = function (group) {
     console.log(' - Generating password..');
     var password = util.uid(8);
     console.log('   - password generated');
-    sys.user.create('admin', password, group._id, function (err, user) {
+    sys.user.create('admin', password, group._id, 'Admin', 'Adminius', function (err, user) {
         if (err) {
             console.log(colors.red('Failed to create initial user: '.red+err));
             process.exit(1);
@@ -84,7 +84,7 @@ var dbstuff = function (group) {
 
 var SavePerms = function SavePerms(cb) {
     console.log('Creating default groups..');
-    sys.perms.createGroup('Administrators', 'Administrators', [
+    sys.group.createGroup('Administrators', 'Administrators', [
         'user.list',
         'user.create',
         'user.delete',
@@ -104,7 +104,7 @@ var SavePerms = function SavePerms(cb) {
             }
         }
         console.log(' - Admin group created');
-        sys.perms.createGroup('Moderators', 'Moderators', [
+        sys.group.createGroup('Moderators', 'Moderators', [
             'user.list',
             'user.create',
             'user.delete',
@@ -120,7 +120,7 @@ var SavePerms = function SavePerms(cb) {
                 }
             }
             console.log(' - Moderators group created.');
-            sys.perms.createGroup('Users', 'Users', [
+            sys.group.createGroup('Users', 'Users', [
                 'user.list',
                 'user.create',
                 'user.delete',

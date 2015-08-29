@@ -10,6 +10,8 @@ var clientFunc = require('./client.js');
  * @param {string} username Username to use.
  * @param {string} password Password to use.
  * @param {string} group Group ID of the group to add the user to.
+ * @param {string} firstName First name of the user.
+ * @param {string} lastName Last name of the user.
  * @param {createUserCallback} callback Callback function after creating the user.
  */
 
@@ -19,11 +21,13 @@ var clientFunc = require('./client.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the new created user.
  */
-exports.create = function (username, password, group, callback) {
+exports.create = function (username, password, group, firstName, lastName, callback) {
     var user = new User({
         username: username,
         password: password,
         group: group,
+        firstName: firstName,
+        lastName: lastName,
         mailboxes: []
     });
     user.save(function(err) {
@@ -51,6 +55,11 @@ exports.create = function (username, password, group, callback) {
  * @param {Object} user User object of the found user.
  */
 exports.find = function (userID, callback) {
+    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     User.findById(userID, function (err, user) {
         if(err) {
             return callback(err);
@@ -107,6 +116,11 @@ exports.findByUsername = function (username, callback) {
  * @param {Array} users Array of user objects, returns false if none.
  */
 exports.findByGroup = function (groupID, callback) {
+    if (!groupID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid group ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     User.find({group: groupID}, function (err, users) {
         if(err) {
             return callback(err);
@@ -167,6 +181,11 @@ exports.verify = function (username, password, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.delete = function (userID, callback) {
+    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     User.findByIdAndRemove(userID, function(err, user) {
         if(err) {
             return callback(err);
@@ -203,6 +222,11 @@ exports.delete = function (userID, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.changeGroup = function (userID, newgroup, callback) {
+    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
     User.findById(userID, function (err, user) {
         if(err) {
             return callback(err);

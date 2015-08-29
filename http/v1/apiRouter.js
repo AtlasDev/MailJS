@@ -18,24 +18,29 @@ router.route('/group')
 router.route('/group/:group')
   .get(authController.isAuthenticated, groupController.getGroup);
 
-router.route('/user')
-  .get(authController.isAuthenticated, userController.getUser)
-  .delete(authController.isAuthenticated, userController.deleteUser)
-  .post(authController.isAuthenticated, userController.postUser);
-
-router.route('/user/group')
-  .put(authController.isAuthenticated, userController.updateUserGroup);
-
-router.route('/client')
-  .post(authController.isAuthenticated, clientController.postClients)
-  .delete(authController.isAuthenticated, clientController.deleteClients)
-  .get(authController.isAuthenticated, clientController.getClients);
-
-router.route('/oauth2/authorize')
-  .get(authController.isAuthenticated, oauth2Controller.authorization)
-  .post(authController.isAuthenticated, oauth2Controller.decision);
-
-router.route('/oauth2/token')
-  .post(authController.isClientAuthenticated, oauth2Controller.token);
+router.route('/user/setup')
+  .get(authController.isSessionAuthenticated, userController.setupUser);
+  
+/*
+* router.route('/user')
+*   .get(authController.isAuthenticated, userController.getUser)
+*   .delete(authController.isAuthenticated, userController.deleteUser)
+*   .post(authController.isAuthenticated, userController.postUser);
+*
+* router.route('/user/group')
+*   .put(authController.isAuthenticated, userController.updateUserGroup);
+*
+* router.route('/client')
+*   .post(authController.isAuthenticated, clientController.postClients)
+*   .delete(authController.isAuthenticated, clientController.deleteClients)
+*   .get(authController.isAuthenticated, clientController.getClients);
+*
+* router.route('/oauth2/authorize')
+*   .get(authController.isAuthenticated, oauth2Controller.authorization)
+*   .post(authController.isAuthenticated, oauth2Controller.decision);
+*
+* router.route('/oauth2/token')
+*   .post(authController.isClientAuthenticated, oauth2Controller.token);
+*/
 
 module.exports = router;
