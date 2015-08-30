@@ -48,7 +48,7 @@ exports.create = function (user, name, description, scopes, callback) {
  * @name getClient
  * @since 0.1.0
  * @version 1
- * @param {string|null} userID Userid of the user to find the sessions from, it finds all clients when null.
+ * @param {string|null} userID Userid of the user to find the clients from, it finds all clients when null.
  * @param {int} limitBy Amount of clients to limit to. Default: 20
  * @param {int} skip Amount of clients to skip before returning, can be used for pagination. Default: 0;
  * @param {getClientCallback} callback Callback function after finding all client.
@@ -60,8 +60,8 @@ exports.create = function (user, name, description, scopes, callback) {
  * @param {Error} err Error object, should be undefined.
  * @param {array} clients Found clients in a array.
  */
-exports.get = function function_name(userID, limitBy, skip, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+exports.get = function (userID, limitBy, skip, callback) {
+    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         return callback(error);
@@ -132,7 +132,7 @@ exports.verify = function (username, password, callback) {
  * @param {Int} removedCodes Amount of deleted codes in the process.
  */
 exports.delete = function (clientID, callback) {
-    if (!clientID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!clientID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid client ID!');
         error.name = 'EINVALID';
         return callback(error);
@@ -177,7 +177,7 @@ exports.delete = function (clientID, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.deleteUser = function (userID, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         return callback(error);

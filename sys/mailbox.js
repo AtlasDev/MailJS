@@ -23,7 +23,7 @@ var inboxFunc = require('./inbox.js');
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
 exports.create = function (address, userID, transferable, overwrite, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         return callback(error);

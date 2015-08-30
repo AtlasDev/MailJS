@@ -18,9 +18,13 @@ router.route('/group')
 router.route('/group/:group')
   .get(authController.isAuthenticated, groupController.getGroup);
 
+router.route('/user')
+  .post(authController.isAuthenticated, userController.postUser)
+  .get(authController.isAuthenticated, userController.getUsers);
+
 router.route('/user/setup')
-  .get(authController.isSessionAuthenticated, userController.setupUser);
-  
+  .get(authController.isAuthenticated, userController.setupUser);
+
 /*
 * router.route('/user')
 *   .get(authController.isAuthenticated, userController.getUser)

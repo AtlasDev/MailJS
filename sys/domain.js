@@ -31,3 +31,26 @@ exports.create = function (domain, disabled, callback) {
         return callback(null, domain);
     });
 }
+
+/**
+ * Get all open domains
+ * @name getDomains
+ * @since 0.1.0
+ * @version 1
+ * @param {getDomainsCallback} callback Callback function after getting all domains
+ */
+
+/**
+ * Callback for getting all available domains.
+ * @callback getDomainsCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Array} domains An array of domain objects
+ */
+exports.getDomains = function (callback) {
+    Domain.find({ disabled: false }, function (err, domains) {
+        if(err) {
+            return callback(err);
+        }
+        return callback(null, domains);
+    })
+}

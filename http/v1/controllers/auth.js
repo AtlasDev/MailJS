@@ -77,6 +77,6 @@ passport.use(new BearerStrategy(
 
 exports.isAuthenticated = passport.authenticate(['session', 'bearer']);
 exports.isSessionAuthenticated = passport.authenticate('session');
-exports.isUserAuthenticated = passport.authenticate('user', { failureRedirect: '/index.html' } );
+exports.isUserAuthenticated = passport.authenticate('user');
 exports.isClientAuthenticated = passport.authenticate('client');
 exports.isBearerAuthenticated = passport.authenticate('bearer');

@@ -39,12 +39,35 @@ exports.getGroups = function (callback) {
  * @param {object} group The requested group.
  */
 exports.getGroup = function (groupID, callback) {
-    if (!groupID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!groupID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid group ID!');
         error.name = 'EINVALID';
         return callback(error);
     }
-    Group.findById(groupID, function (err, group) {
+    Group.findById(groupID.toString(), function (err, group) {
+        if(err) {
+            return callback(err);
+        }
+        return callback(null, group);
+    })
+}
+
+/**
+ * Get the default group.
+ * @name getDefaultGroup
+ * @since 0.1.0
+ * @version 1
+ * @param {getDefaultGroupCallback} callback Callback function after getting the default group.
+ */
+
+/**
+ * Callback for getting the default group.
+ * @callback getDefaultGroupCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {object} group The requested group.
+ */
+exports.getDefaultGroup = function (callback) {
+    Group.findOne({default: true}, function (err, group) {
         if(err) {
             return callback(err);
         }
@@ -69,7 +92,7 @@ exports.getGroup = function (groupID, callback) {
  * @param {Error} err Error object, should be undefined or passed trough.
  * @param {object} group The new created group.
  */
-exports.createGroup = function (name, type, masterGroup, callback) {
+exports.createGroup = function (name, type, masterGroup, def, callback) {
     if(!name) {
         var error = new Error('Name not set');
         error.name = 'EINVALID';
@@ -91,7 +114,7 @@ exports.createGroup = function (name, type, masterGroup, callback) {
                 return callback(error);
             }
             type = type || responseMasterGroup.type;
-            groupCreateHelper(name, type, responseMasterGroup.permissions, function (err, group) {
+            groupCreateHelper(name, type, responseMasterGroup.permissions, def, function (err, group) {
                 if(err) {
                     return callback(err);
                 }
@@ -99,7 +122,7 @@ exports.createGroup = function (name, type, masterGroup, callback) {
             })
         });
     } else {
-        groupCreateHelper(name, type, masterGroup, function (err, group) {
+        groupCreateHelper(name, type, masterGroup, def, function (err, group) {
             if(err) {
                 return callback(err);
             }
@@ -108,10 +131,11 @@ exports.createGroup = function (name, type, masterGroup, callback) {
     }
 }
 
-var groupCreateHelper = function (name, type, perms, callback) {
+var groupCreateHelper = function (name, type, perms, def, callback) {
     var group = new Group();
     group.name = name;
     group.type = type;
+    group.default = def;
     group.permissions = perms;
     group.save(function (err) {
         if(err) {

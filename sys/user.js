@@ -1,6 +1,7 @@
 var util = require('../util.js');
 var User = require('../models/user.js');
 var clientFunc = require('./client.js');
+var groupFunc = require('./group.js');
 
 /**
  * Create a new user.
@@ -9,7 +10,6 @@ var clientFunc = require('./client.js');
  * @version 1
  * @param {string} username Username to use.
  * @param {string} password Password to use.
- * @param {string} group Group ID of the group to add the user to.
  * @param {string} firstName First name of the user.
  * @param {string} lastName Last name of the user.
  * @param {createUserCallback} callback Callback function after creating the user.
@@ -21,21 +21,89 @@ var clientFunc = require('./client.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the new created user.
  */
-exports.create = function (username, password, group, firstName, lastName, callback) {
-    var user = new User({
-        username: username,
-        password: password,
-        group: group,
-        firstName: firstName,
-        lastName: lastName,
-        mailboxes: []
-    });
-    user.save(function(err) {
-        if (err) {
-            return callback(err, null);
+exports.create = function (username, password, firstName, lastName, callback) {
+    groupFunc.getDefaultGroup(function (err, group) {
+        if(err) {
+            return callback(err);
         }
-        util.log('User `'+user.username+'` created.');
-        return callback(null, user);
+        if(!group) {
+            var error = new Error('No default group found!');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        }
+        var user = new User({
+            username: username,
+            password: password,
+            group: group._id,
+            firstName: firstName,
+            lastName: lastName,
+            mailboxes: []
+        });
+        user.save(function(err) {
+            if (err) {
+                return callback(err, null);
+            }
+            util.log('User `'+user.username+'` created.');
+            return callback(null, user);
+        });
+    });
+}
+
+/**
+ * Replace the current group of a user with a new one.
+ * @name setGroup
+ * @since 0.1.0
+ * @version 1
+ * @param {string} userID UserID of the user to replace the group from.
+ * @param {string} groupID ID of the new group.
+ * @param {SetGroupCallback} callback Callback function after replacing the group.
+ */
+
+/**
+ * Callback for replacing a group.
+ * @callback setGroupCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} user User object of user of which the group was replaced.
+ */
+exports.setGroup = function (userID, groupID, callback) {
+    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        console.log('fail');
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
+    if (!groupID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid group ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
+    groupFunc.getGroup(groupID, function (err, group) {
+        if(err) {
+            return callback(err);
+        }
+        if(!group) {
+            var error = new Error('Group not found!');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        }
+        exports.find(userID, function (err, user) {
+            if(err) {
+                return callback(err);
+            }
+            if(!user) {
+                var error = new Error('User not found!');
+                error.name = 'ENOTFOUND';
+                return callback(error);
+            }
+            user.group = groupID;
+            user.save(function (err) {
+                if(err) {
+                    return callback(err);
+                }
+                util.log('Group of `'+user.username+'` has been changed to `'+group.name+'`.');
+                return callback(null, user);
+            });
+        })
     });
 }
 
@@ -55,7 +123,7 @@ exports.create = function (username, password, group, firstName, lastName, callb
  * @param {Object} user User object of the found user.
  */
 exports.find = function (userID, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         return callback(error);
@@ -98,6 +166,37 @@ exports.findByUsername = function (username, callback) {
         }
         return callback(null, user);
     })
+}
+
+/**
+ * Find all users.
+ * @name findAll
+ * @since 0.1.0
+ * @version 1
+ * @param {int} limitBy Amount of users to limit to. Default: 20
+ * @param {int} skip Amount of users to skip before returning, can be used for pagination. Default: 0;
+ * @param {findAllCallback} callback Callback function after finding all users.
+ */
+
+/**
+ * Callback for finding the users.
+ * @callback findAllCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {array} clients Found users in a array.
+ */
+exports.findAll = function (limitBy, skip, callback) {
+    limitBy = limitBy || 20;
+    skip = skip || 0;
+    User.find({})
+    .limit(limitBy)
+    .skip(skip)
+    .sort({name: 'asc'})
+    .exec(function(err, users) {
+        if (err) {
+            return callback(err, null);
+        }
+        return callback(null, users);
+    });
 }
 
 /**
@@ -203,46 +302,5 @@ exports.delete = function (userID, callback) {
                 return callback(null);
             })
         }
-    });
-}
-
-/**
- * Change the group of a user
- * @name updateGroupUser
- * @since 0.1.0
- * @version 1
- * @param {string} userID User id of the user to change the group of.
- * @param {string} newgroup New group id.
- * @param {UpdateGroupUserCallback} callback Callback function after updating the group of a user.
- */
-
-/**
- * Callback for Updating a users group
- * @callback UpdatGroupUserCallback
- * @param {Error} err Error object, should be undefined.
- */
-exports.changeGroup = function (userID, newgroup, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
-        var error = new Error('Invalid user ID!');
-        error.name = 'EINVALID';
-        return callback(error);
-    }
-    User.findById(userID, function (err, user) {
-        if(err) {
-            return callback(err);
-        }
-        if(!user) {
-            var error = new Error('User not found.');
-            var name = 'ENOTFOUND';
-            return callback(error);
-        }
-        user.group = newgroup;
-        user.save(function (err) {
-            if(err) {
-                return callback(err);
-            }
-            util.log('Group of user `'+user.username+'` changed to group `'+user.group+'`.');
-            return callback(null);
-        });
     });
 }
