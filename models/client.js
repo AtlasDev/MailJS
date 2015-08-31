@@ -5,6 +5,7 @@ var ClientSchema = new mongoose.Schema({
     name: { type: String, unique: true, required: true },
     scopes: { type: Array, required: true },
     description: { type: String, required: true },
+    url: { type: String, required: true },
     id: { type: String, required: true },
     secret: { type: String, required: true },
     userId: { type: String, required: true }

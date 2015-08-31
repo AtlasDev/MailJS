@@ -28,6 +28,10 @@ router.route('/user/:user')
 router.route('/user/setup')
   .get(authController.isAuthenticated, userController.setupUser);
 
+router.route('/client')
+  .post(authController.isAuthenticated, clientController.postClient)
+  .get(authController.isAuthenticated, clientController.getOwnClients);
+
 /*
 * router.route('/user/group')
 *   .put(authController.isAuthenticated, userController.updateUserGroup);

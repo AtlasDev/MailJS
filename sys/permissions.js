@@ -23,7 +23,6 @@ exports.hasPerm = function (node, group, authInfo, callback) {
         callback = authInfo;
         authInfo = null;
     }
-    console.log(authInfo);
     if(authInfo && authInfo.type == 'token') {
         if(authInfo.scope.indexOf() == -1) {
             return callback(null, false);

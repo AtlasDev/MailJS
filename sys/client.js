@@ -21,12 +21,13 @@ var Token = require('../models/token.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} client Client object of the new created client, id and secret are not hashed here, these values should be send back to the origin of the request.
  */
-exports.create = function (user, name, description, scopes, callback) {
+exports.create = function (user, name, description, url, scopes, callback) {
     var client = new Client();
     var id = util.uid(10);
     var secret = util.uid(10);
     client.name = name;
     client.description = description;
+    client.url = url;
     client.scopes = scopes;
     client.id = id;
     client.secret = secret;

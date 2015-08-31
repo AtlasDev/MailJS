@@ -1,7 +1,7 @@
 var sys = require('../../../sys/main.js');
 var util = require('../../../util.js');
 
-exports.postClients = function(req, res) {
+exports.postClient = function(req, res) {
     sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
@@ -9,20 +9,20 @@ exports.postClients = function(req, res) {
         if(hasPerm != true) {
             return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
-        if(!req.body.name || !req.body.description || !req.body.scopes || !(req.body.scopes instanceof Array)) {
+        if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
         }
-        sys.client.create(req.user, req.body.name, req.body.description, req.body.scopes, function (err, client) {
+        sys.client.create(req.user, req.body.name, req.body.description, req.body.url, req.body.scopes, function (err, client) {
             if(err) {
                 return res.status(500).json({error: {name: err.name, message: err.message}});
             }
-            return res.json({ message: 'Client added!', data: client });
+            return res.json({ message: 'Client added.', client: client });
         });
     });
 };
 
 exports.getOwnClients = function(req, res) {
-    if ((req.param.limitBy && isNaN(req.param.limitBy)) || (req.param.skip && isNaN(req.param.skip)) {
+    if ((req.param.limitBy && isNaN(req.param.limitBy)) || (req.param.skip && isNaN(req.param.skip))) {
         return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
     }
     sys.client.get(req.user._id, req.param.limitBy, req.param.skip, function (err, clients) {

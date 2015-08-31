@@ -54,7 +54,7 @@ exports.getUser = function(req, res) {
         if(hasPerm != true) {
             return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
-        if(req.query.getBy && (!req.query.getBy == 'ID' || !req.query.getBy=='username') {
+        if(req.query.getBy && (!req.query.getBy == 'ID' || !req.query.getBy=='username')) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
         }
         if(req.query.getBy == 'username') {

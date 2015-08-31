@@ -1,17 +1,17 @@
 [
   {
     "type": "post",
-    "url": "/client",
+    "url": "/clients",
     "title": "Create a new client",
     "version": "0.1.0",
     "name": "CreateClient",
-    "group": "Client",
+    "group": "Clients",
     "permission": [
       {
-        "name": "Admin"
+        "name": "client.create"
       }
     ],
-    "description": "<p>Create a new client.</p> ",
+    "description": "<p>Create a new client with the specified data. In the response <code>secret</code> will be unencrypted. Save that somewhere secure! You need it later to exchange access tokens. You cannot recover the secret.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -20,107 +20,35 @@
             "type": "<p>String</p> ",
             "optional": false,
             "field": "name",
-            "description": "<p>Name of the application the client is created for.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Create client:",
-          "content": "{\n  \"name\": \"SpaceCP\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "Message",
-            "description": "<p>A message of success.</p> "
+            "description": "<p>Desired username of the user.</p> "
           },
-          {
-            "group": "Success 200",
-            "type": "<p>Array</p> ",
-            "optional": false,
-            "field": "data",
-            "description": "<p>The client object created.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Client added!\",\n  \"data\": {\n    \"__v\": 0,\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"secret\": \"$2a$05$jjU7Tx7ssFGMs0Zp7TjVGOfG9kilWgUb8atQ7yikp2Mjl7w/nUX3O\",\n    \"id\": \"$2a$05$aP6QNevEHPfQYDL1tNeYqOKHyTfkfOXXfwKvbKYzWa8mGXST3wXrO\",\n    \"name\": \"MailTest\",\n    \"_id\": \"55bcffbc6aeb0af00ad0cfe8\"\n  }\n }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "EINVALID",
-            "description": "<p>Username/Password is not valid.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "EPERMS",
-            "description": "<p>The permission level of the user is not high enough.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"name/id/secret not filled in.\"\n  }\n}",
-          "type": "json"
-        },
-        {
-          "title": "EPERMS:",
-          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "./docfiles/old/client.js",
-    "groupTitle": "Client"
-  },
-  {
-    "type": "delete",
-    "url": "/client",
-    "title": "Delete a client",
-    "version": "0.1.0",
-    "name": "DeleteClient",
-    "group": "Client",
-    "permission": [
-      {
-        "name": "Admin"
-      }
-    ],
-    "description": "<p>Delete a client.</p> ",
-    "parameter": {
-      "fields": {
-        "Parameter": [
           {
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "id",
-            "description": "<p>The id of the client to be deleted. (found by a GET request, it's the _id property).</p> "
+            "field": "description",
+            "description": "<p>Description of the user.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "url",
+            "description": "<p>Image url of the logo of the client.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "scopes",
+            "description": "<p>Scopes of the client, these are the same as permissions (https://github.com/AtlasDev/MailJS/wiki/Permissions).</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "Successfull request:",
-          "content": "{\n  \"id\": \"55bcfe016aeb0af00ad0cfe4\"\n}",
+          "title": "Create a new client:",
+          "content": "{\n  \"name\": \"SpaceCP\",\n  \"description\": \"Super awesome controll panel.\",\n  \"url\": \"https://spacecp.net/img/rocket.png\",\n  \"scopes\": [\n    \"mailbox.create\",\n    \"user.list\"\n  ]\n}",
           "type": "json"
         }
       ]
@@ -133,14 +61,21 @@
             "type": "<p>String</p> ",
             "optional": false,
             "field": "message",
-            "description": "<p>A message of success.</p> "
+            "description": "<p>Simple success message</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "client",
+            "description": "<p>The created client.</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Client deleted.\"\n}",
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Client added.\";\n  \"client\": {\n    \"__v\": 0,\n    \"userId\": \"55e40dc8cf8dbadb0c352305\",\n    \"secret\": \"0cFMaxMH5i\",\n    \"id\": \"hqa2j7W7YN\",\n    \"url\": \"https://spacecp.net/img/rocket.png\",\n    \"description\": \"Super awesome controll panel.\",\n    \"name\": \"SpaceCP\",\n    \"_id\": \"55e430cbdec945f825ba6429\",\n    \"scopes\": [\n      \"mailbox.create\",\n      \"user.list\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]
@@ -152,97 +87,106 @@
             "group": "Error 4xx",
             "optional": false,
             "field": "EINVALID",
-            "description": "<p>ID was not given.</p> "
+            "description": "<p>Invalid parameters.</p> "
           },
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "ENOTFOUND",
-            "description": "<p>given id was not found.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "EPERMS",
-            "description": "<p>The permission level of the user is not high enough.</p> "
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"No id given.\"\n  }\n}",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Invalid parameters.\"\n  }\n}",
           "type": "json"
         },
         {
-          "title": "ENOTFOUND:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"The given id was not found.\"\n  }\n}",
-          "type": "json"
-        },
-        {
-          "title": "EPERMS:",
-          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
           "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/old/client.js",
-    "groupTitle": "Client"
+    "filename": "./docfiles/client.js",
+    "groupTitle": "Clients"
   },
   {
     "type": "get",
-    "url": "/client",
-    "title": "Get all clients",
+    "url": "/clients",
+    "title": "Get own clients",
     "version": "0.1.0",
-    "name": "GetClients",
-    "group": "Client",
-    "permission": [
-      {
-        "name": "Mod"
-      }
-    ],
-    "description": "<p>Gives back a list of clients registered with there properties.</p> ",
+    "name": "GetOwnClients",
+    "group": "Clients",
+    "description": "<p>Get all clients which the authenticated user owns.</p> ",
     "success": {
       "fields": {
         "Success 200": [
           {
             "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Simple response message</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Int</p> ",
+            "optional": false,
+            "field": "amount",
+            "description": "<p>Amount of client received.</p> "
+          },
+          {
+            "group": "Success 200",
             "type": "<p>Array</p> ",
             "optional": false,
-            "field": "users",
-            "description": "<p>All client objects registered.</p> "
+            "field": "clients",
+            "description": "<p>A list of client objects.</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[\n  {\n    \"_id\": \"55bcfd686aeb0af00ad0cfe3\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"name\": \"mail\",\n    \"__v\": 0\n  },\n  {\n    \"_id\": \"55bcfe016aeb0af00ad0cfe4\",\n    \"userId\": \"55bcfd439fc60f902808da36\",\n    \"name\": \"SpaceCP\",\n    \"__v\": 0\n  }\n]",
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"Clients recieved.\",\n  \"amount\": \"2\",\n  \"clients\": [\n    {\n      \"_id\": \"55e430cbdec945f825ba6429\",\n      \"userId\": \"55e40dc8cf8dbadb0c352305\",\n      \"id\": \"hqa2j7W7YN\",\n      \"url\": \"https://spacecp.net/img/rocket.png\",\n      \"description\": \"Super awesome controll panel.\",\n      \"name\": \"SpaceCP\",\n      \"__v\": 0,\n      \"scopes\": [\n        \"mailbox.create\",\n        \"user.list\"\n      ]\n    },\n    {\n      ...\n    }\n  ]\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "./docfiles/old/client.js",
-    "groupTitle": "Client",
     "error": {
       "fields": {
         "Error 4xx": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EPERMS",
-            "description": "<p>The permission level of the user is not high enough.</p> "
+            "field": "EINVALID",
+            "description": "<p>Invalid parameters.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
       "examples": [
         {
-          "title": "EPERMS:",
-          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Invalid parameters.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
           "type": "json"
         }
       ]
-    }
+    },
+    "filename": "./docfiles/client.js",
+    "groupTitle": "Clients"
   },
   {
     "type": "get",
@@ -534,7 +478,7 @@
             "type": "<p>String</p> ",
             "optional": false,
             "field": "getBy",
-            "description": "<p>whenether you get a user by ID or username. Throws error if specified but not <code>username</code> or <code>ID</code>. default to ID.</p> "
+            "description": "<p>whenether you get a user by ID or username. Throws error if specified but not <code>username</code> or <code>ID</code>. default to <code>ID</code>.</p> "
           },
           {
             "group": "Parameter",
