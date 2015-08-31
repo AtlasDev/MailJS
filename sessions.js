@@ -1,7 +1,7 @@
 var config = require('./config.json');
 var RedisSessions = require("redis-sessions");
 var redis = require('./redis.js');
-var User = require('./models/user.js');
+var sys = require('./sys/main.js');
 var mongoose = require('mongoose');
 var cookie = require('cookie');
 
@@ -25,10 +25,12 @@ sessions.prototype.create = function(username, ip, other, callback) {
         cb = callback;
         options = other;
     }
-    User.findOne({username: username}, function (err, user) {
+    sys.user.findByUsername(username, function (err, user) {
         if(err){ cb(err, null) };
         options.group = user.group;
         options.username = user.username;
+        options._id = user._id;
+        options.mailboxes = user.mailboxes;
         _this.sessions.create({
             app: _this.appName,
             id: user._id,
@@ -84,16 +86,28 @@ sessions.prototype.getSession = function (token, cb) {
 
 sessions.prototype.socket = function(socket, cb) {
     var _this = this;
-    var token = socket.handshake.query.session;
-    if(token && token != '') {
-        _this.getSession(token, function (err, session) {
-            if(err) { return cb(new Error('Authentication error')); };
-            User.findById(session.id, function (err, user) {
-                cb(null, user, token);
-            })
-        })
-    } else {
-        cb(new Error('Authentication error'));
+    var cookie1 = socket.handshake.headers.cookie.split('; ');
+    var cookies = [];
+    for (var i = 0; i < cookie1.length; i++) {
+        var token = cookie1[i].split('=');
+        if(token[0]=='session') {
+            if(token[1] && token[1] != '') {
+                _this.getSession(token[1], function (err, session) {
+                    if(err) { return cb(new Error('Authentication error')); };
+                    sys.user.findByUsername(session.id, function (err, user) {
+                        if(err) {
+                            return cb(new Error('Authentication error'));
+                        }
+                        cb(null, user, token[1]);
+                    })
+                })
+            } else {
+                cb(new Error('Authentication error'));
+            }
+        }
+        if(i >= cookie1.length) {
+            cb(new Error('Authentication error'));
+        }
     }
 }
 

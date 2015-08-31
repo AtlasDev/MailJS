@@ -25,7 +25,6 @@ $("form").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        localStorage.setItem('session', data.session);
         window.location.replace("app.html");
     });
     request.fail(function(data) {

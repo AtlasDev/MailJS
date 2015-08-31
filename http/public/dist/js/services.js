@@ -1,7 +1,7 @@
 'use strict';
 
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect(document.location.protocol+'//'+document.location.host, { query: 'session='+localStorage.getItem('session') });
+  var socket = io.connect(document.location.protocol+'//'+document.location.host);
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {

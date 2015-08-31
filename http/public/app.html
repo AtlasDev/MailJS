@@ -77,12 +77,12 @@
 											<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 											<p>
 												{{user.firstName}} {{user.lastName}}
-												<small>{{user.group | group}}</small>
+												<small>{{user.group.name}}</small>
 											</p>
 										</li>
 										<li class="user-body">
 											<div class="list-group">
-												<button type="button" class="list-group-item full" ng-repeat="box in mailboxes">{{box}}</button>
+												<button type="button" class="list-group-item full" ng-repeat="box in mailboxes">{{box.address}}</button>
 											</div>
 						                </li>
 										<!-- Menu Footer-->
@@ -108,7 +108,7 @@
 							</div>
 							<div class="pull-left info">
 								<p>{{user.firstName}} {{user.lastName}}</p>
-								{{currentMailbox}}
+								{{currentMailbox.address}}
 							</div>
 						</div>
 						<!-- Sidebar Menu -->

@@ -91,3 +91,35 @@ exports.create = function (address, userID, transferable, overwrite, callback) {
         })
     })
 }
+
+/**
+ * Find a mailbox by ID
+ * @name findMailbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID ID of the mailbox to recieve.
+ * @param {findMailboxCallback} callback Callback function after receiving the mailbox.
+ */
+
+/**
+ * Callback for finding a mailbox.
+ * @callback findMailboxCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object|Boolean} mailbox Mailbox object of the found mailbox, false if not found.
+ */
+exports.find = function (mailboxID, callback) {
+    if (!mailboxID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
+    Mailbox.findById(mailboxID, function (err, mailbox) {
+        if(err) {
+            return callback(err);
+        }
+        if(!mailbox) {
+            return callback(null, false);
+        }
+        return callback(null, mailbox);
+    });
+}

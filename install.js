@@ -90,7 +90,7 @@ var dbstuff = function (group) {
 
 var SavePerms = function SavePerms(cb) {
     console.log('Creating default groups..');
-    sys.group.createGroup('Administrators', 'Administrators', [
+    sys.group.createGroup('Administrator', 'Administrators', [
         'user.list',
         'user.create',
         'user.delete',
@@ -110,7 +110,7 @@ var SavePerms = function SavePerms(cb) {
             }
         }
         console.log(' - Admin group created');
-        sys.group.createGroup('Moderators', 'Moderators', [
+        sys.group.createGroup('Moderator', 'Moderators', [
             'user.list',
             'user.create',
             'user.delete',
@@ -127,7 +127,7 @@ var SavePerms = function SavePerms(cb) {
                 }
             }
             console.log(' - Moderators group created.');
-            sys.group.createGroup('Users', 'Users', [
+            sys.group.createGroup('User', 'Users', [
                 'client.create',
                 'mailbox.create'
             ], true, function (err, userGroup) {

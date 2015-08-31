@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = false;
     $rootScope.isInit = false;
@@ -11,7 +11,6 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     $scope.user.firstName = "Loading...";
     $scope.user.group = 0;
 	$scope.logout = function logout(){
-        localStorage.removeItem('session');
         $cookies.remove('session');
         socket.emit('user:logout');
         $window.location.href = '/index.html?info=true&msg=Logout Succesfull, goodbye!';
@@ -28,14 +27,22 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     //error handling
     socket.on('error', function (err) {
         if(err.toString() == "Authentication error") {
-            localStorage.removeItem('session');
+            $cookies.remove('MailJS');
             $window.location.href = '/index.html?msg=Session%20invalid!';
         }
         //If not, let it reconnect.
     });
     socket.on('error:nodata', function () {
-        localStorage.removeItem('session');
+        $cookies.remove('session');
         $window.location.href = '/index.html?msg=Connection%20error!';
+    })
+    socket.on('error:dberror', function () {
+        $cookies.remove('session');
+        $window.location.href = '/index.html?msg=Database%20error!';
+    })
+    socket.on('error:nodata', function () {
+        $cookies.remove('session');
+        $window.location.href = '/api/v1/user/setup';
     })
 	//mail handling
     socket.on('mail:star', function(data){
@@ -74,15 +81,31 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         $scope.user.firstName = data.firstName;
         $scope.user.lastName = data.lastName;
         $scope.user.firstName = data.firstName;
-        $scope.user.group = data.group;
         if($rootScope.isInit == false) {
             if($rootScope.mailboxes[0]) {
                 $rootScope.currentMailbox = $rootScope.mailboxes[0];
             }
-        	setTimeout(function(){
-        		$('body').addClass('preloaded');
-        	}, 500);
-            $rootScope.isInit = true;
+            var req = {
+                method: 'GET',
+                url: '/api/v1/group/'+data.group,
+                headers: {
+                    'x-token': $cookies.get('session')
+                }
+            };
+            $http(req).then(function(res) {
+                $scope.user.group = res.data.group;
+            	setTimeout(function(){
+            		$('body').addClass('preloaded');
+            	}, 500);
+                $rootScope.isInit = true;
+            }, function(res) {
+                console.log(res);
+                $cookies.remove('session');
+                if(res.status == 401) {
+                    return $window.location.href = '/index.html?msg=Token%20invalid.';
+                }
+                $window.location.href = '/index.html?msg='+JSON.parse(res.data).error.message;
+            });
         }
     });
 });

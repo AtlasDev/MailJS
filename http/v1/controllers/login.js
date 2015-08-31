@@ -12,6 +12,7 @@ exports.postLogin = function(req, res, next) {
             if(err) {
                 return res.json({error: {name: err.name, message: err.message} });
             }
+            res.cookie('session', req.session.id);
             res.json({token: req.session.id, user: responseUser});
         });
     });
