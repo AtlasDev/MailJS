@@ -22,6 +22,9 @@ router.route('/user')
   .post(authController.isAuthenticated, userController.postUser)
   .get(authController.isAuthenticated, userController.getUsers);
 
+router.route('/user/:user')
+  .get(authController.isAuthenticated, userController.getUser);
+
 router.route('/user/setup')
   .get(authController.isAuthenticated, userController.setupUser);
 

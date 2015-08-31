@@ -113,7 +113,7 @@ exports.setGroup = function (userID, groupID, callback) {
  * @since 0.1.0
  * @version 1
  * @param {string} userID userID of the user to find.
- * @param {findUserCallback} callback Callback function after finding the user.
+ * @param {findUserCallback} callback Callback function after finding the user, returns false if none found.
  */
 
 /**
@@ -133,9 +133,7 @@ exports.find = function (userID, callback) {
             return callback(err);
         }
         if(!user) {
-            var error = new Error('Could not find user.');
-            error.name = 'ENOTFOUND';
-            return callback(error);
+            return callback(null, false);
         }
         return callback(null, user);
     })

@@ -44,19 +44,49 @@ exports.setupUser = function (req, res) {
     })
 }
 
-// deprecated
 exports.getUser = function(req, res) {
-    User.find(function(err, users) {
+    sys.perms.hasPerm('user.list', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) {
             res.status(500).json({error: {name: err.name, message: err.message}});
             util.error(err, true);
             return;
         }
-        var cleanUsers = [];
-        users.forEach(function(user) {
-            cleanUsers.push({_id: user._id, username: user.username, mailboxes: user.mailboxes, group: user.group});
-        });
-        res.json(cleanUsers);
+        if(hasPerm != true) {
+            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+        }
+        if(req.query.getBy && (!req.query.getBy == 'ID' || !req.query.getBy=='username') {
+            return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
+        }
+        if(req.query.getBy == 'username') {
+            sys.user.findByUsername(req.query.user, function (err, user) {
+                if(err) {
+                    res.status(500).json({error: {name: err.name, message: err.message}});
+                    util.error(err, true);
+                    return;
+                }
+                if(user == false) {
+                    return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
+                }
+                return res.json({user: user});
+            });
+        } else {
+            if (!req.params.user.toString().match(/^[0-9a-fA-F]{24}$/)) {
+                var error = new Error('Invalid user ID!');
+                error.name = 'EINVALID';
+                return callback(error);
+            }
+            sys.user.find(req.params.user, function (err, user) {
+                if(err) {
+                    res.status(500).json({error: {name: err.name, message: err.message}});
+                    util.error(err, true);
+                    return;
+                }
+                if(user == false) {
+                    return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
+                }
+                return res.json({user: user});
+            })
+        }
     });
 };
 
@@ -70,19 +100,18 @@ exports.getUsers = function(req, res) {
         if(hasPerm != true) {
             return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
-        if(req.body.limitBy) {
-            if(isNaN(req.body.limitBy)) {
-                res.status(400).json({error: {name: "EINVALID", message: 'LimitBy should be a number.'}});
-                return;
+        if(req.query.limitBy) {
+            if(isNaN(req.query.limitBy)) {
+                return res.status(400).json({error: {name: "EINVALID", message: 'LimitBy should be a number.'}});
             }
         }
-        if(req.body.skip) {
-            if(isNaN(req.body.skip)) {
+        if(req.query.skip) {
+            if(isNaN(req.query.skip)) {
                 res.status(400).json({error: {name: "EINVALID", message: 'Skip should be a number.'}});
                 return;
             }
         }
-        sys.user.findAll(req.body.LimitBy, req.body.skip, function (err, users) {
+        sys.user.findAll(req.query.LimitBy, req.query.skip, function (err, users) {
             if (err) {
                 res.status(500).json({error: {name: err.name, message: err.message}});
                 util.error(err, true);
