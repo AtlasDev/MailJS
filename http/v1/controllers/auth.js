@@ -2,7 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
-var LocalAPIKeyStrategy = require('passport-localapikey').Strategy;
+var SessionStrategy = require('passport-sessiontoken').Strategy;
 var sessions = require('../../../sessions.js');
 var sys = require('../../../sys/main.js');
 
@@ -28,7 +28,7 @@ passport.use('user', new LocalStrategy(
     }
 ));
 
-passport.use('session', new LocalAPIKeyStrategy(
+passport.use('session', new SessionStrategy(
     function(token, done) {
         sessions.getSession(token, function (err, session) {
             if(err) { return done(err) };
@@ -41,7 +41,7 @@ passport.use('session', new LocalAPIKeyStrategy(
                 return done(null, user, { session: true, type: 'session' });
             })
         });
-    }, {apiKeyField: 'session', apiKeyHeader: 'session'}
+    }
 ));
 
 passport.use('client', new BasicStrategy(
