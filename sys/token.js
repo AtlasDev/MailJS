@@ -36,8 +36,7 @@ exports.verify = function (token, callback) {
             }
             return callback(null, true, user);
         });
-    })
-    callback();
+    });
 }
 
 /**
@@ -70,5 +69,4 @@ exports.getClient = function (token, callback) {
             return callback(null, client);
         })
     })
-    callback();
 }

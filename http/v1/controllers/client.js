@@ -1,7 +1,6 @@
 var sys = require('../../../sys/main.js');
 var util = require('../../../util.js');
 
-//deprecated
 exports.postClients = function(req, res) {
     sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
@@ -10,8 +9,8 @@ exports.postClients = function(req, res) {
         if(hasPerm != true) {
             return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
-        if(!req.body.name || !req.body.description || !req.body.scopes) {
-            return res.status(400).json({error: {name: "EINVALID", message: 'Missing parameters.'}});
+        if(!req.body.name || !req.body.description || !req.body.scopes || !(req.body.scopes instanceof Array)) {
+            return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
         }
         sys.client.create(req.user, req.body.name, req.body.description, req.body.scopes, function (err, client) {
             if(err) {
@@ -22,24 +21,18 @@ exports.postClients = function(req, res) {
     });
 };
 
-//deprecated
-exports.getClients = function(req, res) {
-    var limitBy = null;
-    var skip = null;
-    if (typeof req.body.limit == "number") {
-        limitBy = req.body.limit;
+exports.getOwnClients = function(req, res) {
+    if ((req.param.limitBy && isNaN(req.param.limitBy)) || (req.param.skip && isNaN(req.param.skip)) {
+        return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
     }
-    if (typeof req.body.skip == "number") {
-        limitBy = req.body.skip;
-    }
-    sys.client.get(req.user._id, limitBy, skip, function (err, clients) {
+    sys.client.get(req.user._id, req.param.limitBy, req.param.skip, function (err, clients) {
         if(err) {
              return res.status(500).json({error: {name: err.name, message: err.message}});
         }
         for (var i = 0, len = clients.length; i < len; i++) {
-            delete clients[i].secret;
+            clients[i].secret = undefined;
         }
-        return res.json({message: 'Clients recieved.', amount: clients.length, data: clients});
+        return res.json({message: 'Clients recieved.', amount: clients.length, clients: clients});
     });
 };
 

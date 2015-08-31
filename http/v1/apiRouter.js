@@ -29,11 +29,6 @@ router.route('/user/setup')
   .get(authController.isAuthenticated, userController.setupUser);
 
 /*
-* router.route('/user')
-*   .get(authController.isAuthenticated, userController.getUser)
-*   .delete(authController.isAuthenticated, userController.deleteUser)
-*   .post(authController.isAuthenticated, userController.postUser);
-*
 * router.route('/user/group')
 *   .put(authController.isAuthenticated, userController.updateUserGroup);
 *
