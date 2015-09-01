@@ -5,14 +5,13 @@ exports.postLogin = function(req, res, next) {
         if(err) {
             return res.json({error: {name: err.name, message: err.message} });
         }
-        var responseUser = user;
-        responseUser.password = undefined;
-        req.session.d.user = responseUser;
+        req.session.d.user = user;
         req.session.upgrade(req.body.username, 86400, function (err) {
+            var responseUser = user;
+            responseUser.password = undefined;
             if(err) {
                 return res.json({error: {name: err.name, message: err.message} });
             }
-            res.cookie('session', req.session.id);
             return res.json({token: req.session.id, user: responseUser});
         });
     });

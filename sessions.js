@@ -86,11 +86,10 @@ sessions.prototype.getSession = function (token, cb) {
 
 sessions.prototype.socket = function(socket, cb) {
     var _this = this;
-    var cookie1 = socket.handshake.headers.cookie.split('; ');
-    var cookies = [];
-    for (var i = 0; i < cookie1.length; i++) {
-        var token = cookie1[i].split('=');
-        if(token[0]=='session') {
+    var cookies = socket.handshake.headers.cookie.split('; ');
+    for (var i = 0; i < cookies.length; i++) {
+        if(cookies[i].split('=')[0]=='MailJS') {
+            var token = cookies[i].split('=');
             if(token[1] && token[1] != '') {
                 _this.getSession(token[1], function (err, session) {
                     if(err) { return cb(new Error('Authentication error')); };
@@ -98,15 +97,12 @@ sessions.prototype.socket = function(socket, cb) {
                         if(err) {
                             return cb(new Error('Authentication error'));
                         }
-                        cb(null, user, token[1]);
+                        return cb(null, user, token[1]);
                     })
                 })
             } else {
-                cb(new Error('Authentication error'));
+                return cb(new Error('Authentication error'));
             }
-        }
-        if(i >= cookie1.length) {
-            cb(new Error('Authentication error'));
         }
     }
 }

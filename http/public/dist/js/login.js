@@ -25,7 +25,6 @@ $("form").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        setCookie('session', data.token, 1);
         window.location.replace("app.html");
     });
     request.fail(function(data) {
@@ -72,11 +71,4 @@ function getCookie(cname) {
         if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
     }
     return "";
-}
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
 }

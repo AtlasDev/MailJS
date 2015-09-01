@@ -39,7 +39,10 @@ app.use(
         app: "MailJS",
         port: config.redis.port,
         host: config.redis.host,
-        namespace: 'sess'
+        namespace: 'sess',
+        cookie: {
+            httpOnly: false
+        }
     })
 );
 

@@ -67,8 +67,7 @@ io.on('connection', function(socket) {
         });
     }
     socket.on('user:logout', function() {
-        util.log('Logout by: ', socket.data.user.username);
-        sessions.killSession(socket.data.user._id, function (err) {
+        sessions.killSession(socket.data.sid, function (err) {
             if(err) { return util.error('Session kill errored', err)};
             socket.disconnect();
         })
