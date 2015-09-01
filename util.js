@@ -50,3 +50,7 @@ exports.uid = function uid (len) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+exports.copyObject = function(old) {
+	return JSON.parse(JSON.stringify(old));
+};

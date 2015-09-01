@@ -39,13 +39,10 @@ io.on('connection', function(socket) {
         socket.disconnect();
         return false;
     }
-    var userObject = {};
-    userObject.username = socket.data.user.username;
-    userObject.firstName = socket.data.user.firstName;
-    userObject.lastName = socket.data.user.lastName;
+    var userObject = util.copyObject(socket.data.user);
+    userObject.password = undefined;
     userObject.mailboxes = [];
-    userObject.uuid = socket.data.user._id;
-    userObject.group = socket.data.user.group;
+    userObject.sid = socket.data.sid;
     for (var i = 0; i < socket.data.user.mailboxes.length; i++) {
         socket.join(socket.data.user.mailboxes[i]);
         sys.mailbox.find(socket.data.user.mailboxes[i], function (err, mailbox) {
@@ -66,12 +63,6 @@ io.on('connection', function(socket) {
             }
         });
     }
-    socket.on('user:logout', function() {
-        sessions.killSession(socket.data.sid, function (err) {
-            if(err) { return util.error('Session kill errored', err)};
-            socket.disconnect();
-        })
-    });
 });
 
 };

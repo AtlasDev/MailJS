@@ -10,11 +10,22 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     $scope.user = {};
     $scope.user.firstName = "Loading...";
     $scope.user.group = 0;
+    $scope.sid;
 
 	$scope.logout = function logout(){
-        $cookies.remove('session');
-        socket.emit('user:logout');
-        $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
+        $http({
+            method: 'DELETE',
+            url: '/api/v1/login',
+            headers: {
+                'x-token': $scope.sid
+            }
+        }).then(function(res) {
+            $cookies.remove('session');
+            $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
+        }, function(res) {
+            $cookies.remove('session');
+            $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
+        });
 	}
 
     $scope.canNotificate = false;
@@ -88,18 +99,13 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
             }
         }
     });
-	socket.on('mail:list', function(data) {
-		$rootScope.isLoading = false;
-		data.mails.forEach(function(data) {
-			$rootScope.mails.push(data);
-		});
-	});
     //User handling
     socket.on('user:info', function (data) {
         $rootScope.mailboxes = data.mailboxes;
         $scope.user.firstName = data.firstName;
         $scope.user.lastName = data.lastName;
         $scope.user.firstName = data.firstName;
+        $scope.sid = data.sid;
         if($rootScope.isInit == false) {
             if($rootScope.mailboxes[0]) {
                 $rootScope.currentMailbox = $rootScope.mailboxes[0];
@@ -108,17 +114,14 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
                 method: 'GET',
                 url: '/api/v1/group/'+data.group,
                 headers: {
-                    'x-token': $cookies.get('session')
+                    'x-token': $scope.sid
                 }
             };
             $http(req).then(function(res) {
                 $scope.user.group = res.data.group;
-            	setTimeout(function(){
-            		$('body').addClass('preloaded');
-            	}, 500);
                 $rootScope.isInit = true;
+            	$('body').addClass('preloaded');
             }, function(res) {
-                console.log(res);
                 $cookies.remove('session');
                 if(res.status == 401) {
                     return $window.location.href = '/index.html?msg=Token%20invalid.';
