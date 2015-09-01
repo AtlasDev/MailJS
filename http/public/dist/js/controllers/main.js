@@ -7,6 +7,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 	$rootScope.mails = [];
 	$rootScope.mailboxes = [];
     $rootScope.currentMailbox = "";
+    $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
     $scope.user = {};
     $scope.user.firstName = "Loading...";
     $scope.user.group = 0;
@@ -28,20 +29,48 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         });
 	}
 
-    $scope.canNotificate = false;
-
-    $scope.initNotificate = function () {
-        if (("Notification" in window) && Notification.permission === "granted") {
-            return 'noSupport';
-        }
-    }
-
-    $scope.sendNotification = function (message) {
-        if($scope.canNotificate() == true) {
-            var notification = new Notification("Hi there!");
+    $scope.checkNotify = function () {
+        if(("Notification" in window) && (Notification.permission === "granted") && (localStorage.getItem('notifications') == 'true')) {
+            return true;
         } else {
             return false;
         }
+    };
+
+    $scope.sendNotification = function (title, message, icon, callback) {
+        if(typeof icon == "function") {
+            callback = icon;
+            icon = '/favicon-96x96.png';
+        }
+        if(icon == null) {
+            icon = '/favicon-96x96.png';
+        }
+        if($scope.checkNotify() == true) {
+            var options = {
+                  body: message,
+                  icon: icon
+            }
+            var notification = new Notification(title, options);
+            setTimeout(notification.close.bind(notification), localStorage.getItem('notifyTimeout'));
+            notification.onclick = function(x) {
+                window.focus();
+                if(callback) {
+                    callback();
+                }
+            };
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    console.log($scope.sendNotification('New Mail: `RE: Proof of concept voor het profielwerkstuk` - from Dany Suijk', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim ante justo, eget viverra quam porttitor a. In vestibulum, diam vitae efficitur blandit, mi libero facilisis tortor, a ultricies orci augue quis tellus. Aliquam eget pretium diam. Praesent gravida interdum consectetur. Aliquam posuere ipsum felis, nec posuere augue commodo sed. Maecenas sapien dui, tempus quis dui et, faucibus porta mi. Vivamus at augue eget nulla mollis volutpat. Etiam mattis, leo ut viverra molestie, sem turpis mattis augue, quis consequat eros magna ac velit. Mauris tempor dui nec bibendum scelerisque. Curabitur faucibus pulvinar tellus, id rhoncus tellus tempus eget. Integer gravida velit at tincidunt rhoncus...'));
+
+    if(localStorage.getItem('notification') == "true" || localStorage.getItem('notification') == "false") {
+        localStorage.setItem('notifications', 'false');
+    }
+    if(localStorage.getItem('notifyTimeout') === null && typeof localStorage.getItem('notifyTimeout') === "object") {
+        localStorage.setItem('notifyTimeout', '10000');
     }
 
     //Socket stuff

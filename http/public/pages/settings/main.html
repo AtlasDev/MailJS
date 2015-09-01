@@ -12,15 +12,15 @@
         </ul>
         <div class="tab-content">
             <b>{{'common.hello' | translate | capitalize}} {{user.firstName}} {{user.lastName}}!</b>
-            <p>{{'settings.main.explanation' | translate}}</p>
+            <p>{{'settings.main.message' | translate}}</p>
             <div class="row">
                 <div class="col-md-3">
                     <div class="box box-danger">
                         <div class="box-header with-border">
-                            <h3 class="box-title">{{'settings.main.language' | translate | capitalize}}</h3>
+                            <h3 class="box-title">{{'settings.main.language.title' | translate}}</h3>
                         </div>
                         <div class="box-body">
-                            <p>{{'settings.main.currentLang' | translate | capitalize}} {{'currentLanguage' | translate}}.</p>
+                            <p>{{'settings.main.language.current' | translate}} {{'currentLanguage' | translate}}.</p>
                             <select ng-model="lang" class="form-control" aria-labelledby="languageSelect" ng-change="changeLanguage(lang)">
                                 <option></option>
                                 <option role="presentation"><a role="menuitem" href="">English</a></option>
@@ -32,14 +32,18 @@
                 <div class="col-md-3">
                     <div class="box box-danger">
                         <div class="box-header with-border">
-                            <h3 class="box-title">{{'settings.main.notifications' | translate | capitalize}}</h3>
+                            <h3 class="box-title">{{'settings.main.notifications.title' | translate}}</h3>
                         </div>
                         <div class="box-body">
-                            <p>{{'settings.main.notificationPerms' | translate | capitalize}}</p>
+                            <p>{{'settings.main.notifications.message' | translate}}</p>
+                            <div class="callout callout-warning" ng-show="!hasNotiApi">
+                                <h4>{{'settings.main.notifications.noAPI.title' | translate}}</h4>
+                                {{'settings.main.notifications.noAPI.message' | translate}}
+                            </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="canNotificate" ng-change="askPerms()" ng-disabled="canNotificate == 'noSupport'">
-                                        {{'settings.main.notificationButton' | translate | capitalize}}
+                                    <input type="checkbox" ng-model="notifyToggle" ng-change="askPerms()" ng-disabled="!hasNotiApi">
+                                        {{'settings.main.notifications.button' | translate}}
                                     </input>
                                 </label>
                             </div>

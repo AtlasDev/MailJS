@@ -86,6 +86,9 @@ sessions.prototype.getSession = function (token, cb) {
 
 sessions.prototype.socket = function(socket, cb) {
     var _this = this;
+    if(!socket.handshake.headers.cookie) {
+        return cb(new Error('Authentication error'));
+    }
     var cookies = socket.handshake.headers.cookie.split('; ');
     for (var i = 0; i < cookies.length; i++) {
         if(cookies[i].split('=')[0]=='MailJS') {

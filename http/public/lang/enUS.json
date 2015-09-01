@@ -25,12 +25,20 @@
         "settings": "settings",
         "main": {
             "title": "general settings",
-            "explanation": "Here you'll find the general settings like notifications and language.",
-            "language": "language",
-            "currentLang": "currently using",
-            "notifications": "notifications",
-            "notificationButton": "send desktop notifications.",
-            "notificationPerms": "We need to get your permissions to send desktop notifications. You won't be asked again when accepted."
+            "message": "Here you'll find the general settings like notifications and language.",
+            "language": {
+                "title": "Language",
+                "current": "Currently using"
+            },
+            "notifications": {
+                "title": "Notifications",
+                "button": "Send desktop notifications.",
+                "message": "We need to get your permissions to send desktop notifications. You won't be asked again when accepted.",
+                "noAPI": {
+                    "title": "Browser not supported!",
+                    "message": "I'm sorry, but the browser you are using does not support desktop notifications, please consider a update to a modern browser like Firefox and Chrome."
+                }
+            }
         },
         "mailbox": {
             "title": "mailbox settings",
