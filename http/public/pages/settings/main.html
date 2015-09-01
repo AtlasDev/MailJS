@@ -38,7 +38,7 @@
                             <p>{{'settings.main.notificationPerms' | translate | capitalize}}</p>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-click="toggleNotifications()">
+                                    <input type="checkbox" ng-model="canNotificate" ng-change="askPerms()" ng-disabled="canNotificate == 'noSupport'">
                                         {{'settings.main.notificationButton' | translate | capitalize}}
                                     </input>
                                 </label>

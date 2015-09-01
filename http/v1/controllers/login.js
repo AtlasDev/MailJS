@@ -7,13 +7,13 @@ exports.postLogin = function(req, res, next) {
         }
         var responseUser = user;
         responseUser.password = undefined;
-        req.session.user = responseUser;
+        req.session.d.user = responseUser;
         req.session.upgrade(req.body.username, 86400, function (err) {
             if(err) {
                 return res.json({error: {name: err.name, message: err.message} });
             }
             res.cookie('session', req.session.id);
-            res.json({token: req.session.id, user: responseUser});
+            return res.json({token: req.session.id, user: responseUser});
         });
     });
 };

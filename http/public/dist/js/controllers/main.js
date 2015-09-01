@@ -10,11 +10,30 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     $scope.user = {};
     $scope.user.firstName = "Loading...";
     $scope.user.group = 0;
+
 	$scope.logout = function logout(){
         $cookies.remove('session');
         socket.emit('user:logout');
-        $window.location.href = '/index.html?info=true&msg=Logout Succesfull, goodbye!';
+        $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
 	}
+
+    $scope.canNotificate = false;
+
+    $scope.initNotificate = function () {
+        if (("Notification" in window) && Notification.permission === "granted") {
+            return 'noSupport';
+        }
+    }
+
+    $scope.sendNotification = function (message) {
+        if($scope.canNotificate() == true) {
+            var notification = new Notification("Hi there!");
+        } else {
+            return false;
+        }
+    }
+
+    //Socket stuff
     socket.on('connect', function () {
         $rootScope.socketStatus = 2;
     });
@@ -27,8 +46,8 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     //error handling
     socket.on('error', function (err) {
         if(err.toString() == "Authentication error") {
-            $cookies.remove('MailJS');
-            $window.location.href = '/index.html?msg=Session%20invalid!';
+            $cookies.remove('session');
+            $window.location.href = '/index.html?msg=Authentication%20failure!';
         }
         //If not, let it reconnect.
     });

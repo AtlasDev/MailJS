@@ -21,4 +21,18 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
             $translate.use(langKey);
         }
     };
+    $scope.askPerms = function () {
+        if($scope.canNotificate == true) {
+            return true;
+        }
+        Notification.requestPermission(function (permission) {
+            if (permission === "granted") {
+                $scope.canNotificate = true;
+                return true;
+                var notification = new Notification("Hi there!");
+            } else {
+                return false;
+            }
+        });
+    }
 });
