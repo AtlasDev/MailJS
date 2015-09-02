@@ -1,5 +1,5 @@
 'use strict';
 
-app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $location, toaster, socket) {
+app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $location, toastr, socket) {
 	$rootScope.isLoading = true;
 });

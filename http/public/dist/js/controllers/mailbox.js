@@ -36,7 +36,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket,
 			delCount++;
 		}
 		if(delCount > 0) {
-			toaster.pop('success', "Selected items have been deleted.", delCount+' items have been deleted.');
+			toastr.success("Selected items have been deleted.", delCount+' items have been deleted.');
 		}
 		return true;
 	}

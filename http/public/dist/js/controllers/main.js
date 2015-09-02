@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, toastr) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = false;
     $rootScope.isInit = false;
@@ -37,7 +37,17 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         }
     };
 
-    $scope.sendNotification = function (title, message, icon, callback) {
+    $scope.sendNotification = function (title, message, type, icon, callback) {
+        if(message.length > 25) {
+            message = message.substring(0,150)+"...";
+        }
+        if(type == 'success') {
+            toastr.success(message, title);
+        } else if(type == 'error') {
+            toastr.error(message, title);
+        } else {
+            toastr.info(message, title);
+        }
         if(typeof icon == "function") {
             callback = icon;
             icon = '/favicon-96x96.png';
@@ -64,7 +74,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         }
     }
 
-    console.log($scope.sendNotification('New Mail: `RE: Proof of concept voor het profielwerkstuk` - from Dany Suijk', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim ante justo, eget viverra quam porttitor a. In vestibulum, diam vitae efficitur blandit, mi libero facilisis tortor, a ultricies orci augue quis tellus. Aliquam eget pretium diam. Praesent gravida interdum consectetur. Aliquam posuere ipsum felis, nec posuere augue commodo sed. Maecenas sapien dui, tempus quis dui et, faucibus porta mi. Vivamus at augue eget nulla mollis volutpat. Etiam mattis, leo ut viverra molestie, sem turpis mattis augue, quis consequat eros magna ac velit. Mauris tempor dui nec bibendum scelerisque. Curabitur faucibus pulvinar tellus, id rhoncus tellus tempus eget. Integer gravida velit at tincidunt rhoncus...'));
+    $scope.sendNotification('New Mail: `RE: Proof of concept voor het profielwerkstuk` - from Dany Suijk', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim ante justo, eget viverra quam porttitor a. In vestibulum, diam vitae efficitur blandit, mi libero facilisis tortor, a ultricies orci augue quis tellus. Aliquam eget pretium diam. Praesent gravida interdum consectetur. Aliquam posuere ipsum felis, nec posuere augue commodo sed. Maecenas sapien dui, tempus quis dui et, faucibus porta mi. Vivamus at augue eget nulla mollis volutpat. Etiam mattis, leo ut viverra molestie, sem turpis mattis augue, quis consequat eros magna ac velit. Mauris tempor dui nec bibendum scelerisque. Curabitur faucibus pulvinar tellus, id rhoncus tellus tempus eget. Integer gravida velit at tincidunt rhoncus...', 'info');
 
     if(localStorage.getItem('notification') == "true" || localStorage.getItem('notification') == "false") {
         localStorage.setItem('notifications', 'false');

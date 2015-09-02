@@ -32,9 +32,9 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
                 $scope.notifyToggle = true;
                 localStorage.setItem('notifications', true);
             } else {
-                $scope.notifyToggle = false;
                 Notification.requestPermission(function (perm) {
                     if (perm === "granted") {
+                        localStorage.setItem('notifications', true);
                         $scope.notifyToggle = true;
                         $scope.notifyTimeout = 1000;
                         var options = {

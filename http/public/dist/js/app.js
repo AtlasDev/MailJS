@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module("mail", ['ngRoute', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toaster']);
+var app = angular.module("mail", ['ngRoute', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toastr']);
 
 app.config(function($routeProvider) {
 	$routeProvider
