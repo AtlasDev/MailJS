@@ -74,6 +74,38 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         }
     }
 
+    $scope.toggleFullScreen = function () {
+        if (!$scope.isFullscreen()) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    $scope.isFullscreen = function () {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     $scope.sendNotification('New Mail: `RE: Proof of concept voor het profielwerkstuk` - from Dany Suijk', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim ante justo, eget viverra quam porttitor a. In vestibulum, diam vitae efficitur blandit, mi libero facilisis tortor, a ultricies orci augue quis tellus. Aliquam eget pretium diam. Praesent gravida interdum consectetur. Aliquam posuere ipsum felis, nec posuere augue commodo sed. Maecenas sapien dui, tempus quis dui et, faucibus porta mi. Vivamus at augue eget nulla mollis volutpat. Etiam mattis, leo ut viverra molestie, sem turpis mattis augue, quis consequat eros magna ac velit. Mauris tempor dui nec bibendum scelerisque. Curabitur faucibus pulvinar tellus, id rhoncus tellus tempus eget. Integer gravida velit at tincidunt rhoncus...', 'info');
 
     if(localStorage.getItem('notification') == "true" || localStorage.getItem('notification') == "false") {
