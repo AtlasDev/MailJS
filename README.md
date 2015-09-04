@@ -12,6 +12,7 @@ Full blown mail system written in NodeJS.
 * Compleatly secured with HTTPS/TLS
 * Automatical certificate installation with 
 * Multiple domains
+* Two factor authentication
 
 ---
 ### Need help?
