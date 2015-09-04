@@ -26,6 +26,9 @@ var UserSchema = new mongoose.Schema({
     mailboxes: {
         default: [],
         type: [String]
+    },
+    authyID: {
+        type: String
     }
 });
 

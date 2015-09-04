@@ -4,6 +4,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
     $rootScope.isLoading = false;
     $scope.notifyToggle = $scope.checkNotify();
     $scope.hasNotiApi = ("Notification" in window);
+    $scope.notifyTimeout = parseInt(localStorage.getItem('notifyTimeout'))/1000;
     $scope.changeLanguage = function changeLanguage(lang) {
         var langKey
         switch(lang){
@@ -56,5 +57,8 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
             localStorage.setItem('notifications', false);
             return false;
         }
+    }
+    $scope.updateTimeout = function () {
+        localStorage.setItem('notifyTimeout', Math.round($scope.notifyTimeout*1000));
     }
 });

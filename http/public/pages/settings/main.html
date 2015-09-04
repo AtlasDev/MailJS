@@ -29,10 +29,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="box box-danger">
                         <div class="box-header with-border">
                             <h3 class="box-title">{{'settings.main.notifications.title' | translate}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <p>{{'settings.main.notifications.message' | translate}}</p>
+                            <div class="callout callout-warning" ng-show="!hasNotiApi">
+                                <h4>{{'settings.main.notifications.noAPI.title' | translate}}</h4>
+                                {{'settings.main.notifications.noAPI.message' | translate}}
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="notifyToggle" ng-change="askPerms()" ng-disabled="!hasNotiApi">
+                                        {{'settings.main.notifications.button' | translate}}
+                                    </input>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="notifyTimeout">{{'settings.main.notifications.timeoutTitle' | translate}}</label>
+                                <input type="number" class="form-control" ng-model="notifyTimeout" ng-change="updateTimeout()" ng-disabled="!hasNotiApi" id="notifyTimeout" placeholder="{{'settings.main.notifications.timeoutPlaceholder' | translate}}"></input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{'settings.main.2fa.title' | translate}}</h3>
                         </div>
                         <div class="box-body">
                             <p>{{'settings.main.notifications.message' | translate}}</p>
