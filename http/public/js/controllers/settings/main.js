@@ -46,5 +46,10 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
     $scope.updateTimeout = function () {
         localStorage.setItem('notifyTimeout', Math.round($scope.notifyTimeout*1000));
     }
+    $scope.checkVerify = function () {
+        if($scope.verifyCode.length == 9) {
+            $rootScope.isLoading = true;
+        }
+    }
 
 });

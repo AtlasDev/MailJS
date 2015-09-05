@@ -59,20 +59,34 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="box box-danger">
                         <div class="box-header with-border">
                             <h3 class="box-title">{{'settings.main.2fa.title' | translate}}</h3>
                         </div>
                         <div class="box-body">
-                            <p>{{'settings.main.notifications.message' | translate}}</p>
-                            <img ng-src="https://placeholdit.imgix.net/~text?txtsize=33&txt=QR%20code&w=166&h=166" />
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" ng-model="notifyToggle" ng-change="askPerms()" ng-disabled="!hasNotiApi">
-                                        {{'settings.main.notifications.button' | translate}}
-                                    </input>
-                                </label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="QRcode">Verification number</label>
+                                            <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="string" id="qr" ng-class="{blur: !showQR}"></qrcode>
+                                        </label>
+                                        <label for="verifyCode">Verification number</label>
+                                            <input type="text" class="form-control" name="verifyCode" mask="999-999-9" restrict="reject" ng-change="checkVerify()" ng-model="verifyCode"></input>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <p><b>{{'settings.main.2fa.status' | translate}} {{$scope.user.tfa}}</b></p>
+                                    <p>{{'settings.main.2fa.message' | translate}}</p>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ng-model="showQR">
+                                                {{'settings.main.2fa.show' | translate}}
+                                            </input>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
