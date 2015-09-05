@@ -5,24 +5,9 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
     $scope.notifyToggle = $scope.checkNotify();
     $scope.hasNotiApi = ("Notification" in window);
     $scope.notifyTimeout = parseInt(localStorage.getItem('notifyTimeout'))/1000;
-    $scope.changeLanguage = function changeLanguage(lang) {
-        var langKey
-        switch(lang){
-            case '':
-                break;
-            case 'English':
-                langKey = 'enUS';
-                break;
-            case 'Nederlands':
-                langKey = 'nlNL';
-                break;
-            default:
-                langKey = 'enUS';
-                break;
-        }
-        if(langKey != '') {
-            $translate.use(langKey);
-        }
+    $scope.lang = $translate.use();
+    $scope.changeLanguage = function changeLanguage() {
+        $translate.use($scope.lang);
     };
     $scope.askPerms = function () {
         if(!("Notification" in window)) {
@@ -61,4 +46,5 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
     $scope.updateTimeout = function () {
         localStorage.setItem('notifyTimeout', Math.round($scope.notifyTimeout*1000));
     }
+
 });
