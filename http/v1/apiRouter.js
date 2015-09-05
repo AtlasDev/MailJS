@@ -26,10 +26,10 @@ router.route('/user/:user')
   .get(authController.isAuthenticated, userController.getUser);
 
 router.route('/user/setup')
-  .get(authController.isAuthenticated, userController.setupUser);
+  .get(authController.isSessionAuthenticated, userController.setupUser);
 
 router.route('/client')
-  .post(authController.isAuthenticated, clientController.postClient)
+  .post(authController.isSessionAuthenticated, clientController.postClient)
   .get(authController.isAuthenticated, clientController.getOwnClients);
 
 /*

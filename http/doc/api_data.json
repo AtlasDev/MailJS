@@ -1,5 +1,305 @@
 [
   {
+    "type": "delete",
+    "url": "/user/2fa",
+    "title": "Remove 2FA",
+    "version": "0.1.0",
+    "name": "Disable2FA",
+    "group": "2FA",
+    "description": "<p>Remove Two Factor Authentication on the user account.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>Int</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>One last time the TOTP value, to validate the disable request.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Valid TOTP value:",
+          "content": "{\n  \"code\": \"3294815\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"2FA disabled.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>TOTP value invalid.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"TOTP value invalid.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"TOTP value missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/2fa.js",
+    "groupTitle": "2FA",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/user/2fa",
+    "title": "Enable 2FA",
+    "version": "0.1.0",
+    "name": "Enable2FA",
+    "group": "2FA",
+    "description": "<p>Enable 2FA by sending a valid TOTP value. This will destroy ALL active sessions from the user (including the current), but not the OAuth tokens.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>Int</p> ",
+            "optional": false,
+            "field": "code",
+            "description": "<p>A valid TOTP value with the key send with the last key request.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Valid TOTP value:",
+          "content": "{\n  \"code\": \"3294815\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Success message.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"message\": \"2FA has been enabled.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>TOTP value invalid.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"TOTP value invalid.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"TOTP value missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/2fa.js",
+    "groupTitle": "2FA",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/user/2fa",
+    "title": "Generate key",
+    "version": "0.1.0",
+    "name": "Get2FA",
+    "group": "2FA",
+    "description": "<p>Get a key to enable 2FA with. You should generate a QR code with the URI and/or display the key to the user for manual input. The key is secret, and the 2FA layer is useless if it leaks. You need to send the post request described underneat to actually activate 2FA.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "key",
+            "description": "<p>The key to display to the user.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "uri",
+            "description": "<p>The URI to be put as a value into the QR code.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"key\": \"KY7TSZRWFZBXCMJGHRED6PDOPBS\",\n  \"uri\": \"otpauth://totp/MailJS?secret=KY7TSZRWFZBXCMJGHRED6PDOPBS\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>2FA already enabled.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"2FA already enabled.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/2fa.js",
+    "groupTitle": "2FA",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
     "type": "post",
     "url": "/clients",
     "title": "Create a new client",
@@ -111,7 +411,27 @@
       ]
     },
     "filename": "./docfiles/client.js",
-    "groupTitle": "Clients"
+    "groupTitle": "Clients",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "get",
@@ -186,7 +506,67 @@
       ]
     },
     "filename": "./docfiles/client.js",
-    "groupTitle": "Clients"
+    "groupTitle": "Clients",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "name": ""
   },
   {
     "type": "get",
@@ -271,7 +651,39 @@
       ]
     },
     "filename": "./docfiles/group.js",
-    "groupTitle": "Group"
+    "groupTitle": "Group",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "get",
@@ -319,6 +731,38 @@
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
           "type": "json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
         }
       ]
     }
@@ -455,6 +899,26 @@
           "type": "json"
         }
       ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
     }
   },
   {
@@ -575,7 +1039,39 @@
       ]
     },
     "filename": "./docfiles/user.js",
-    "groupTitle": "User"
+    "groupTitle": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "get",
@@ -625,7 +1121,27 @@
       ]
     },
     "filename": "./docfiles/user.js",
-    "groupTitle": "User"
+    "groupTitle": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "get",
@@ -734,7 +1250,39 @@
       ]
     },
     "filename": "./docfiles/user.js",
-    "groupTitle": "User"
+    "groupTitle": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "post",
@@ -852,35 +1400,39 @@
       ]
     },
     "filename": "./docfiles/user.js",
-    "groupTitle": "User"
-  },
-  {
-    "success": {
+    "groupTitle": "User",
+    "header": {
       "fields": {
-        "Success 200": [
+        "Header": [
           {
-            "group": "Success 200",
+            "group": "Header",
+            "type": "String",
             "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
+            "field": "x-token",
+            "description": "<p>User session token</p> "
           },
           {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
+            "group": "Header",
+            "type": "String",
             "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
           }
         ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "name": ""
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
   },
   {
     "type": "get",

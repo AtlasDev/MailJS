@@ -54,4 +54,5 @@
   *     }
   *
   * @apiUse AuthError
+  * @apiUse UserAuthHeader
   */

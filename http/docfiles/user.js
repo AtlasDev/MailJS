@@ -56,6 +56,8 @@
  *
  * @apiUse AuthError
  * @apiUse PermissionError
+ * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
  */
 
 /**
@@ -109,6 +111,8 @@
  *
  * @apiUse PermissionError
  * @apiUse AuthError
+ * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
  */
 
 /**
@@ -174,6 +178,8 @@
  *
  * @apiUse AuthError
  * @apiUse PermissionError
+ * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
  */
 
 /**
@@ -199,4 +205,5 @@
  *     }
  *
  * @apiUse AuthError
+ * @apiUse UserAuthHeader
  */
