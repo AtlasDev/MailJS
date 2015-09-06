@@ -51,7 +51,10 @@ app.use(passport.initialize());
 app.use('/api/v1', v1apiRouter);
 
 app.use(function(err, req, res, next) {
-    console.error(err.stack);
+    if(err.name == 'SyntaxError') {
+        return res.status(400).json({'EINVALID': 'JSON invalid.'});
+    }
+    util.error('Express errored:', err);
     res.status(500).send('Internal Server Error');
 });
 

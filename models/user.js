@@ -27,7 +27,11 @@ var UserSchema = new mongoose.Schema({
         default: [],
         type: [String]
     },
-    authyID: {
+    tfa: {
+        default: false,
+        type: Boolean
+    },
+    tfaToken: {
         type: String
     }
 });

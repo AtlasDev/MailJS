@@ -71,9 +71,7 @@ exports.getUser = function(req, res) {
             });
         } else {
             if (!req.params.user.toString().match(/^[0-9a-fA-F]{24}$/)) {
-                var error = new Error('Invalid user ID!');
-                error.name = 'EINVALID';
-                return callback(error);
+                res.status(500).json({error: {name: 'EINVALID', message: 'Invalid user ID!'}});
             }
             sys.user.find(req.params.user, function (err, user) {
                 if(err) {
