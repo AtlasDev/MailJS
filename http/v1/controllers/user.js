@@ -20,6 +20,7 @@ exports.postUser = function(req, res) {
             }
             responseUser = user;
             responseUser.password = undefined;
+            responseUser.tfaToken = undefined;
             return res.json({ message: 'User added!', data: user });
         });
     });
@@ -38,7 +39,6 @@ exports.setupUser = function (req, res) {
                 return res.status(500).json({error: {name: err.name, message: err.message}});
             }
             var canCreate = (group.permissions.indexOf('mailbox.create') > -1) ? true : false;
-            console.log(canCreate);
             res.render('setup', { username: req.user.username, canCreate: canCreate, domains: domains });
         })
     })
@@ -82,6 +82,8 @@ exports.getUser = function(req, res) {
                 if(user == false) {
                     return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
                 }
+                user.password = undefined;
+                user.tfaToken = undefined;
                 return res.json({user: user});
             })
         }
@@ -117,6 +119,7 @@ exports.getUsers = function(req, res) {
             }
             users.forEach(function (user) {
                 user.password = undefined;
+                user.tfaToken = undefined;
             })
             res.json({users: users});
         });

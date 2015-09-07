@@ -14,27 +14,31 @@ router.route('/login')
   .delete(authController.isSessionAuthenticated, loginController.deleteLogin);
 
 router.route('/group')
-  .get(authController.isAuthenticated, groupController.getGroups);
+  .get(authController.isAuthenticated, authController.checkTFA, groupController.getGroups);
 
 router.route('/group/:group')
-  .get(authController.isAuthenticated, groupController.getGroup);
+  .get(authController.isAuthenticated, authController.checkTFA, groupController.getGroup);
 
 router.route('/user')
-  .post(authController.isAuthenticated, userController.postUser)
-  .get(authController.isAuthenticated, userController.getUsers);
+  .post(authController.isAuthenticated, authController.checkTFA, userController.postUser)
+  .get(authController.isAuthenticated, authController.checkTFA, userController.getUsers);
 
-router.route('/user/2fa')
-  .get(authController.isSessionAuthenticated, tfaController.getTFA)
+router.route('/2fa')
+  .get(authController.isSessionAuthenticated, authController.checkTFA, tfaController.getTFA)
+  .post(authController.isSessionAuthenticated, authController.checkTFA, tfaController.postTFA);
+
+router.route('/2fa/login')
+  .get(authController.isSessionAuthenticated, tfaController.getLogin);
 
 router.route('/user/:user')
-  .get(authController.isAuthenticated, userController.getUser);
+  .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
 
 router.route('/user/setup')
-  .get(authController.isSessionAuthenticated, userController.setupUser);
+  .get(authController.isSessionAuthenticated, authController.checkTFA, userController.setupUser);
 
 router.route('/client')
-  .post(authController.isSessionAuthenticated, clientController.postClient)
-  .get(authController.isAuthenticated, clientController.getOwnClients);
+  .post(authController.isSessionAuthenticated, authController.checkTFA, clientController.postClient)
+  .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
 
 /*
 * router.route('/user/group')

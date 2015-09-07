@@ -1,5 +1,5 @@
 /**
- * @api {get} /user/2fa Generate key
+ * @api {get} /2fa Generate key
  * @apiVersion 0.1.0
  * @apiName Get2FA
  * @apiGroup 2FA
@@ -30,7 +30,7 @@
  */
 
 /**
- * @api {post} /user/2fa Enable 2FA
+ * @api {post} /2fa Enable 2FA
  * @apiVersion 0.1.0
  * @apiName Enable2FA
  * @apiGroup 2FA
@@ -75,7 +75,7 @@
  */
 
 /**
- * @api {delete} /user/2fa Remove 2FA
+ * @api {delete} /2fa Remove 2FA
  * @apiVersion 0.1.0
  * @apiName Disable2FA
  * @apiGroup 2FA
@@ -118,3 +118,30 @@
  * @apiUse AuthError
  * @apiUse UserAuthHeader
  */
+
+ /**
+  * @api {get} /2fa/login Get 2FA login page
+  * @apiVersion 0.1.0
+  * @apiName GetLogin
+  * @apiGroup 2FA
+  *
+  * @apiDescription Get the 2FA login page
+  *
+  * @apiSuccess {String} message Success message.
+  * @apiSuccessExample {html} Created response:
+  *     HTTP/1.1 200 OK
+  *     <html>...</html>
+  *
+  * @apiError EINVALID 2FA already done or not enabled.
+  * @apiErrorExample {json} EINVALID:
+  *     HTTP/1.1 400 Bad Request
+  *     {
+  *       "error": {
+  *         "name": "EINVALID",
+  *         "message": "2FA already done or not enabled."
+  *       }
+  *     }
+  *
+  * @apiUse AuthError
+  * @apiUse UserAuthHeader
+  */

@@ -6,6 +6,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
     $scope.hasNotiApi = ("Notification" in window);
     $scope.notifyTimeout = parseInt(localStorage.getItem('notifyTimeout'))/1000;
     $scope.lang = $translate.use();
+    $scope.TFAactivated = false;
     $scope.changeLanguage = function changeLanguage() {
         $translate.use($scope.lang);
     };

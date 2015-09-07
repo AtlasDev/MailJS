@@ -38,7 +38,7 @@ passport.use('session', new SessionStrategy(
             sys.user.findByUsername(session.id, function (err, user) {
                 if (err) { return done(err); }
                 if (!user) { return done(null, false); }
-                return done(null, user, { session: true, type: 'session' });
+                return done(null, user, { session: false, type: 'session' });
             })
         });
     }
@@ -74,6 +74,16 @@ passport.use(new BearerStrategy(
         });
     }
 ));
+
+exports.checkTFA = function (req, res, next) {
+    if(req.user.tfa == true && req.authinfo.type == 'session') {
+        if(req.session.finishTFA != true) {
+            return req.status(401).end('Unauthorized');
+        }
+        return next();
+    }
+    return next();
+}
 
 exports.isAuthenticated = passport.authenticate(['session', 'bearer']);
 exports.isSessionAuthenticated = passport.authenticate('session');

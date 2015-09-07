@@ -59,8 +59,7 @@ sessions.prototype.getSessions = function (id, cb) {
 }
 
 sessions.prototype.killSession = function (token, cb) {
-    var _this = this;
-    _this.sessions.kill({
+    this.sessions.kill({
             app: _this.appName,
             token: token
         },
@@ -69,6 +68,15 @@ sessions.prototype.killSession = function (token, cb) {
             cb();
         }
     );
+}
+
+sessions.prototype.killAll = function (user, cb) {
+    this.sessions.killsoid({
+        app: rsapp,
+        id: user
+    }, function (err, resp) {
+        return cb(err, resp);
+    });
 }
 
 sessions.prototype.getSession = function (token, cb) {

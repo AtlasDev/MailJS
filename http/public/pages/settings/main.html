@@ -68,10 +68,12 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="QRcode">Verification number</label>
-                                            <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="string" id="qr" ng-class="{blur: !showQR}"></qrcode>
+                                        <label ng-show="!TFAactivated" for="QRcode">
+                                            {{'settings.main.2fa.qrTitle' | translate}}
+                                            <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="{{QRdata}}" id="qr" ng-class="{blur: !showQR}"></qrcode>
                                         </label>
-                                        <label for="verifyCode">Verification number</label>
+                                        <label for="verifyCode">
+                                            {{'settings.main.2fa.verificationTitle' | translate}}
                                             <input type="text" class="form-control" name="verifyCode" mask="999-999-9" restrict="reject" ng-change="checkVerify()" ng-model="verifyCode"></input>
                                         </label>
                                     </div>
