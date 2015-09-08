@@ -44,7 +44,7 @@
  *       }
  *     }
  *
- * @apiError EINVALID Skip should be a number..
+ * @apiError EINVALID Skip should be a number.
  * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request
  *     {

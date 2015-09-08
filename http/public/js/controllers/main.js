@@ -21,10 +21,10 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
                 'x-token': $rootScope.sid
             }
         }).then(function(res) {
-            $cookies.remove('session');
+            $cookies.remove('MailJS');
             $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
         }, function(res) {
-            $cookies.remove('session');
+            $cookies.remove('MailJS');
             $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
         });
 	}

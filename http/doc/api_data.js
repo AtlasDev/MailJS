@@ -768,13 +768,13 @@ define({ "api": [
     }
   },
   {
-    "type": "post",
+    "type": "patch",
     "url": "/login",
-    "title": "Login",
+    "title": "2FA Login",
     "version": "0.1.0",
-    "name": "LoginUser",
+    "name": "2faLoginUser",
     "group": "Login",
-    "description": "<p>Login on a user account, it returns a token which is valid for 24 hours.</p> ",
+    "description": "<p>Log in to the user account if 2fa is needed. need to have a token already which still needs 2fa auth.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -782,22 +782,15 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "username",
-            "description": "<p>Username of the user.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "password",
-            "description": "<p>Password which belongs to the username.</p> "
+            "field": "code",
+            "description": "<p>TOTP code got from the 2fa authenticator</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Login to a user:",
-          "content": "{\n  \"username\": \"AtlasDev\",\n  \"password\": \"supersecretpassword\"\n}",
+          "content": "{\n  \"code\": \"2194832\"\n}",
           "type": "json"
         }
       ]
@@ -810,35 +803,14 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": false,
             "field": "token",
-            "description": "<p>The id of the user.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>Array</p> ",
-            "optional": false,
-            "field": "user",
-            "description": "<p>User object of the user logged in.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>Boolean</p> ",
-            "optional": false,
-            "field": "need2FA",
-            "description": "<p>If the user needs to authenticate with 2FA after login</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "2FAuri",
-            "description": "<p>URI of the 2FA login, only exists if need2FA = true</p> "
+            "description": "<p>The auth token of the user, uses for futher auth.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"need2FA\": \"true\",\n  \"2FAuri\": \"/api/v1/2fa/setup\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"success\": \"true\"\n}",
           "type": "json"
         }
       ]
@@ -849,12 +821,34 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "EINVALID",
+            "description": "<p>TOTP value invalid.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EDONE",
+            "description": "<p>User already authenticated.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "Unauthorized",
-            "description": "<p>The username/password is invalid.</p> "
+            "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
       "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"TOTP value invalid.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EDONE:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"User already authenticated.\"\n  }\n}",
+          "type": "json"
+        },
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
@@ -908,7 +902,7 @@ define({ "api": [
             "type": "<p>String</p> ",
             "optional": false,
             "field": "token",
-            "description": "<p>The id of the user.</p> "
+            "description": "<p>The auth token of the user, uses for futher auth.</p> "
           },
           {
             "group": "Success 200",
@@ -921,22 +915,22 @@ define({ "api": [
             "group": "Success 200",
             "type": "<p>Boolean</p> ",
             "optional": false,
-            "field": "needTFA",
+            "field": "need2FA",
             "description": "<p>If the user needs to authenticate with 2FA after login</p> "
           },
           {
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
-            "field": "TFAuri",
-            "description": "<p>URI of the 2FA login, only exists if needTFA = true</p> "
+            "field": "2FAuri",
+            "description": "<p>URI of the 2FA login, only exists if need2FA = true</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"needTFA\": \"true\",\n  \"TFAuri\": \"/api/v1/2fa/setup\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"need2FA\": \"true\",\n  \"2FAuri\": \"/api/v1/2fa/setup\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]

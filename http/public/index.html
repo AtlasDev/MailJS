@@ -22,10 +22,10 @@
 		<![endif]-->
 	</head>
 	<body class="login-page">
-		<div class="login-box">
+		<div class="login-box" id="login-box">
 			<div class="login-logo">
 				<b>Mail</b>JS
-			</div><!-- /.login-logo -->
+			</div>
 			<div class="login-box-body">
 				<p class="login-box-msg">Sign in to access your mailbox</p>
                 <div class="alert alert-danger hidden" id="error">
@@ -34,7 +34,7 @@
                 <div class="alert alert-info hidden" id="info">
                     <strong>Info: </strong><div id="infoMsg"></div>
                 </div>
-				<form action="#" name="login">
+				<form action="#" id="login" name="login">
 					<div class="form-group has-feedback">
 						<input id="username" type="text" class="form-control" placeholder="Username"/>
 						<span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -45,9 +45,26 @@
 					</div>
 					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
 				</form>
-
-			</div><!-- /.login-box-body -->
-		</div><!-- /.login-box -->
+			</div>
+		</div>
+		<div class="login-box" style="display:none" id="2fa-box">
+			<div class="login-logo">
+				<b>Mail</b>JS
+			</div>
+			<div class="login-box-body">
+				<p class="login-box-msg">Welcome <b id="name"></b>! Please fill in your 2fa code to proceed</p>
+                <div class="alert alert-danger hidden" id="error">
+                    <strong>Login failed: </strong><div id="errorMsg"></div>
+                </div>
+				<form action="#" id="2fa" name="2fa">
+					<div class="form-group has-feedback">
+						<input id="code" type="text" class="form-control" placeholder="Code"/>
+						<span class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+				</form>
+			</div>
+		</div>
 
 		<!-- jQuery 2.1.4 -->
 		<script src="js/jQuery-2.1.4.min.js" type="text/javascript"></script>

@@ -14,7 +14,7 @@
  *       "password": "supersecretpassword"
  *     }
  *
- * @apiSuccess {String} token The id of the user.
+ * @apiSuccess {String} token The auth token of the user, uses for futher auth.
  * @apiSuccess {Array} user User object of the user logged in.
  * @apiSuccess {Boolean} need2FA If the user needs to authenticate with 2FA after login
  * @apiSuccess {String} 2FAuri URI of the 2FA login, only exists if need2FA = true
@@ -62,45 +62,46 @@
  */
 
 /**
- * @api {post} /login Login
+ * @api {patch} /login 2FA Login
  * @apiVersion 0.1.0
- * @apiName LoginUser
+ * @apiName 2faLoginUser
  * @apiGroup Login
  *
- * @apiDescription Login on a user account, it returns a token which is valid for 24 hours.
+ * @apiDescription Log in to the user account if 2fa is needed. need to have a token already which still needs 2fa auth.
  *
- * @apiParam {String} username Username of the user.
- * @apiParam {String} password Password which belongs to the username.
+ * @apiParam {String} code TOTP code got from the 2fa authenticator
  * @apiParamExample {json} Login to a user:
  *     {
- *       "username": "AtlasDev",
- *       "password": "supersecretpassword"
+ *       "code": "2194832"
  *     }
  *
- * @apiSuccess {String} token The id of the user.
- * @apiSuccess {Array} user User object of the user logged in.
- * @apiSuccess {Boolean} needTFA If the user needs to authenticate with 2FA after login
- * @apiSuccess {String} TFAuri URI of the 2FA login, only exists if needTFA = true
+ * @apiSuccess {String} token The auth token of the user, uses for futher auth.
  * @apiSuccessExample {json} Success response:
  *     HTTP/1.1 200 OK
  *     {
  *       "token": "0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh",
- *       "needTFA": "true",
- *       "TFAuri": "/api/v1/2fa/setup",
- *       "user": {
- *         "_id": "55e06be7650cf63410cdf8ad",
- *         "username": "admin",
- *         "group": "55e06be7650cf63410cdf8aa",
- *         "__v": 0,
- *         "mailboxes": [
- *           "55e06be7650cf63410cdf8af"
- *         ]
+ *       "success": "true"
+ *     }
+ *
+ * @apiError EINVALID TOTP value invalid.
+ * @apiErrorExample {json} EINVALID:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EINVALID",
+ *         "message": "TOTP value invalid."
  *       }
  *     }
  *
- * @apiError Unauthorized The username/password is invalid.
+ * @apiError EDONE User already authenticated.
+ * @apiErrorExample {json} EDONE:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EINVALID",
+ *         "message": "User already authenticated."
+ *       }
+ *     }
  *
- * @apiErrorExample {json} Unauthorized:
- *     HTTP/1.1 401 Unauthorized
- *     Unauthorized
+ * @apiUse AuthError
  */
