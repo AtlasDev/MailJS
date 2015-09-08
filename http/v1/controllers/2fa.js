@@ -47,9 +47,8 @@ exports.postTFA = function (req, res) {
 }
 
 exports.getLogin = function (req, res) {
-    console.log(req.session);
-    if(req.session.finishTFA == true) {
-        return res.status(400).json({error: {name: "EINVALID", message: "2FA already done or not enabled."}});
+    if(req.session.finishTFA == false) {
+        return res.render('2fa', { username: req.user.username });
     }
-    return res.render('2fa', { username: req.user.username });
+    return res.status(400).json({error: {name: "EINVALID", message: "2FA already done or not enabled."}});
 }
