@@ -7,18 +7,18 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 	$rootScope.mails = [];
 	$rootScope.mailboxes = [];
     $rootScope.currentMailbox = "";
+    $rootScope.sid;
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
     $scope.user = {};
     $scope.user.firstName = "Loading...";
     $scope.user.group = 0;
-    $scope.sid;
 
 	$scope.logout = function logout(){
         $http({
             method: 'DELETE',
             url: '/api/v1/login',
             headers: {
-                'x-token': $scope.sid
+                'x-token': $rootScope.sid
             }
         }).then(function(res) {
             $cookies.remove('session');
@@ -177,6 +177,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         $scope.user.lastName = data.lastName;
         $scope.user.firstName = data.firstName;
         $scope.sid = data.sid;
+        $rootScope.$emit('tokenLoaded');
         if($rootScope.isInit == false) {
             if($rootScope.mailboxes[0]) {
                 $rootScope.currentMailbox = $rootScope.mailboxes[0];
@@ -193,7 +194,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
                 $rootScope.isInit = true;
             	$('body').addClass('preloaded');
             }, function(res) {
-                $cookies.remove('session');
+                $cookies.remove('MailJS');
                 if(res.status == 401) {
                     return $window.location.href = '/index.html?msg=Token%20invalid.';
                 }

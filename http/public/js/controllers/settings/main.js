@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
-    $rootScope.isLoading = false;
+app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http) {
+    $rootScope.isLoading = true;
     $scope.notifyToggle = $scope.checkNotify();
     $scope.hasNotiApi = ("Notification" in window);
     $scope.notifyTimeout = parseInt(localStorage.getItem('notifyTimeout'))/1000;
@@ -52,5 +52,29 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate) {
             $rootScope.isLoading = true;
         }
     }
-
+    $scope.loadTFA = function () {
+        $http({
+            method: 'GET',
+            url: '/api/v1/2fa',
+            headers: {
+                'x-token': $scope.sid
+            }
+        }).then(function(res) {
+            $scope.TFAactivated = false;
+            $scope.QRdata = res.data.uri
+            $scope.key = res.data.key
+        }, function(res) {
+            if(res.status == 401) {
+                $cookies.remove('MailJS');
+                return $window.location.href = '/index.html?msg=Token%20invalid.';
+            } else if(res.status == 400) {
+                $scope.TFAactivated = true;
+            } else {
+                $scope.sendNotification('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+            }
+        });
+    }
+    $rootScope.$on('tokenLoaded', function() {
+        $scope.loadTFA();
+    });
 });

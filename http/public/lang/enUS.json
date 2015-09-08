@@ -47,7 +47,8 @@
                 "status": "2FA is currently",
                 "show": "Show the QR code.",
                 "qrTitle": "QR code",
-                "verificationTitle": "Verification number"
+                "verificationTitle": "Verification number",
+                "altKey": "Or fill in"
             }
         },
         "mailbox": {
