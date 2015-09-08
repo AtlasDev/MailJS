@@ -27,9 +27,6 @@ router.route('/2fa')
   .get(authController.isSessionAuthenticated, authController.checkTFA, tfaController.getTFA)
   .post(authController.isSessionAuthenticated, authController.checkTFA, tfaController.postTFA);
 
-router.route('/2fa/login')
-  .get(authController.isSessionAuthenticated, tfaController.getLogin);
-
 router.route('/user/:user')
   .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
 

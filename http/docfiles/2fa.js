@@ -118,30 +118,3 @@
  * @apiUse AuthError
  * @apiUse UserAuthHeader
  */
-
- /**
-  * @api {get} /2fa/login Get 2FA login page
-  * @apiVersion 0.1.0
-  * @apiName GetLogin
-  * @apiGroup 2FA
-  *
-  * @apiDescription Get the 2FA login page
-  *
-  * @apiSuccess {String} message Success message.
-  * @apiSuccessExample {html} Created response:
-  *     HTTP/1.1 200 OK
-  *     <html>...</html>
-  *
-  * @apiError EINVALID 2FA already done or not enabled.
-  * @apiErrorExample {json} EINVALID:
-  *     HTTP/1.1 400 Bad Request
-  *     {
-  *       "error": {
-  *         "name": "EINVALID",
-  *         "message": "2FA already done or not enabled."
-  *       }
-  *     }
-  *
-  * @apiUse AuthError
-  * @apiUse UserAuthHeader
-  */

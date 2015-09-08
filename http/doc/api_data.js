@@ -300,87 +300,6 @@ define({ "api": [
     }
   },
   {
-    "type": "get",
-    "url": "/2fa/login",
-    "title": "Get 2FA login page",
-    "version": "0.1.0",
-    "name": "GetLogin",
-    "group": "2FA",
-    "description": "<p>Get the 2FA login page</p> ",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "message",
-            "description": "<p>Success message.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n<html>...</html>",
-          "type": "html"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "EINVALID",
-            "description": "<p>2FA already done or not enabled.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"2FA already done or not enabled.\"\n  }\n}",
-          "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "./docfiles/2fa.js",
-    "groupTitle": "2FA",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-token",
-            "description": "<p>User session token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Session Header:",
-          "content": "\"x-token\": \"{token}\"",
-          "type": "String"
-        }
-      ]
-    }
-  },
-  {
     "type": "post",
     "url": "/clients",
     "title": "Create a new client",
@@ -620,6 +539,34 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
+    "name": ""
   },
   {
     "type": "get",
@@ -892,6 +839,104 @@ define({ "api": [
         {
           "title": "Success response:",
           "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"need2FA\": \"true\",\n  \"2FAuri\": \"/api/v1/2fa/setup\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The username/password is invalid.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/login.js",
+    "groupTitle": "Login"
+  },
+  {
+    "type": "post",
+    "url": "/login",
+    "title": "Login",
+    "version": "0.1.0",
+    "name": "LoginUser",
+    "group": "Login",
+    "description": "<p>Login on a user account, it returns a token which is valid for 24 hours.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Username of the user.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password which belongs to the username.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Login to a user:",
+          "content": "{\n  \"username\": \"AtlasDev\",\n  \"password\": \"supersecretpassword\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "token",
+            "description": "<p>The id of the user.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>User object of the user logged in.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "needTFA",
+            "description": "<p>If the user needs to authenticate with 2FA after login</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "TFAuri",
+            "description": "<p>URI of the 2FA login, only exists if needTFA = true</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"needTFA\": \"true\",\n  \"TFAuri\": \"/api/v1/2fa/setup\",\n  \"user\": {\n    \"_id\": \"55e06be7650cf63410cdf8ad\",\n    \"username\": \"admin\",\n    \"group\": \"55e06be7650cf63410cdf8aa\",\n    \"__v\": 0,\n    \"mailboxes\": [\n      \"55e06be7650cf63410cdf8af\"\n    ]\n  }\n}",
           "type": "json"
         }
       ]
@@ -1500,34 +1545,6 @@ define({ "api": [
         }
       ]
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "name": ""
   },
   {
     "type": "get",
