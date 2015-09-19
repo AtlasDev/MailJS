@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http) {
-    $rootScope.isLoading = true;
+    $rootScope.isLoading = false;
     $scope.notifyToggle = $scope.checkNotify();
     $scope.hasNotiApi = ("Notification" in window);
     $scope.notifyTimeout = parseInt(localStorage.getItem('notifyTimeout'))/1000;
@@ -49,7 +49,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
     }
     $scope.checkVerify = function () {
         if($scope.verifyCode.length == 9) {
-            $rootScope.isLoading = true;
+            //$rootScope.isLoading = true;
         }
     }
     $scope.loadTFA = function () {
@@ -60,6 +60,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 'x-token': $scope.sid
             }
         }).then(function(res) {
+            $scope.isLoading = false;
             $scope.TFAactivated = false;
             $scope.QRdata = res.data.uri
             $scope.key = res.data.key
@@ -74,7 +75,11 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             }
         });
     }
-    $rootScope.$on('tokenLoaded', function() {
-        $scope.loadTFA();
-    });
+    if($scope.sid) {
+        $scope.loadTFA;
+    } else {
+        $rootScope.$on('tokenLoaded', function() {
+            $scope.loadTFA();
+        });
+    }
 });

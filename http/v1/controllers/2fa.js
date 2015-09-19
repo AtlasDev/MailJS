@@ -24,11 +24,13 @@ exports.postTFA = function (req, res) {
     }
     var user = req.user;
     var key = user.tfaToken;
-    var code = parseInt(req.body.code, 10);
-    if(code.length != 7) {
+    var code = req.body.code
+    console.log(code);
+    if(code.length != 6) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }
     var serverCode = speakeasy.totp({key: key});
+    console.log(serverCode);
     if(serverCode != code) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }

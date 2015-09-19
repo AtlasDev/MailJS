@@ -1,5 +1,7 @@
 'use strict';
 
+var token;
+
 $(document).ready(function() {
     if(getCookie('MailJS') != "") {
         window.location.replace("app.html");
@@ -27,6 +29,7 @@ $("#login").submit(function(event) {
     request.done(function(data) {
         console.log(data);
         if(data.needTFA != true) {
+            token = data.token;
             setName(data.user.firstName + ' ' + data.user.lastName);
             showTFA();
         } else {
@@ -51,6 +54,9 @@ $("#2fa").submit(function(event) {
         url: '/api/v1/login',
         dataType: 'json',
         cache: false,
+        headers: {
+            "x-token": token
+        },
         data: {
 			code: $("#code").val()
 		}

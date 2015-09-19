@@ -69,21 +69,19 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <div ng-show="!TFAactivated">
-                                            <label for="QRcode">
-                                                {{'settings.main.2fa.qrTitle' | translate}}
-                                                <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="{{QRdata}}" id="qr" ng-class="{blur: !showQR}"></qrcode>
-                                            </label>
-                                            <b>{{'settings.main.2fa.altKey' | translate}}:</b>
+                                            <h5><b>{{'settings.main.2fa.qrTitle' | translate}}:</h5></b>
+                                            <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="{{QRdata}}" id="qr" ng-class="{blur: !showQR}"></qrcode>
+                                            <h5><b>{{'settings.main.2fa.altKey' | translate}}:</b></h5>
                                             {{key}}
                                         </div>
                                         <label for="verifyCode">
-                                            {{'settings.main.2fa.verificationTitle' | translate}}
+                                            <h5><b>{{'settings.main.2fa.verificationTitle' | translate}}:</b></h5>
                                             <input type="text" class="form-control" name="verifyCode" mask="999-999-9" restrict="reject" ng-change="checkVerify()" ng-model="verifyCode"></input>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <p><b>{{'settings.main.2fa.status' | translate}} {{$scope.user.tfa}}</b></p>
+                                    <h5><b>{{'settings.main.2fa.status' | translate}} {{$scope.user.tfa}}</b></h5>
                                     <p>{{'settings.main.2fa.message' | translate}}</p>
                                     <div class="checkbox">
                                         <label>

@@ -72,14 +72,13 @@
  * @apiParam {String} code TOTP code got from the 2fa authenticator
  * @apiParamExample {json} Login to a user:
  *     {
- *       "code": "2194832"
+ *       "code": "219832"
  *     }
  *
- * @apiSuccess {String} token The auth token of the user, uses for futher auth.
+ * @apiSuccess {Boolean} success Success bool.
  * @apiSuccessExample {json} Success response:
  *     HTTP/1.1 200 OK
  *     {
- *       "token": "0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh",
  *       "success": "true"
  *     }
  *

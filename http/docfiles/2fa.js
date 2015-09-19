@@ -40,7 +40,7 @@
  * @apiParam {Int} code A valid TOTP value with the key send with the last key request.
  * @apiParamExample {json} Valid TOTP value:
  *     {
- *       "code": "3294815"
+ *       "code": "329415"
  *     }
  *
  * @apiSuccess {String} message Success message.
@@ -85,7 +85,7 @@
  * @apiParam {Int} code One last time the TOTP value, to validate the disable request.
  * @apiParamExample {json} Valid TOTP value:
  *     {
- *       "code": "3294815"
+ *       "code": "329415"
  *     }
  *
  * @apiSuccess {String} message Success message.

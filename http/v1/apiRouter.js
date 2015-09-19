@@ -11,7 +11,8 @@ var tfaController = require('./controllers/2fa.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
-  .delete(authController.isSessionAuthenticated, loginController.deleteLogin);
+  .delete(authController.isSessionAuthenticated, loginController.deleteLogin)
+  .patch(authController.isSessionAuthenticated, loginController.patchLogin);
 
 router.route('/group')
   .get(authController.isAuthenticated, authController.checkTFA, groupController.getGroups);
