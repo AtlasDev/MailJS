@@ -26,6 +26,7 @@ router.route('/user')
 
 router.route('/2fa')
   .get(authController.isSessionAuthenticated, authController.checkTFA, tfaController.getTFA)
+  .delete(authController.isSessionAuthenticated, authController.checkTFA, tfaController.deleteTFA)
   .post(authController.isSessionAuthenticated, authController.checkTFA, tfaController.postTFA);
 
 router.route('/user/:user')

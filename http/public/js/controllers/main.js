@@ -171,9 +171,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     //User handling
     socket.on('user:info', function (data) {
         $rootScope.mailboxes = data.mailboxes;
-        $scope.user.firstName = data.firstName;
-        $scope.user.lastName = data.lastName;
-        $scope.user.firstName = data.firstName;
+        $scope.user = data;
         $scope.sid = data.sid;
         if($rootScope.isInit == false) {
             $rootScope.$emit('tokenLoaded');

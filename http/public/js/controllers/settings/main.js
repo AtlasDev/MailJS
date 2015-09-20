@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http) {
+app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window) {
     $rootScope.isLoading = false;
     $scope.notifyToggle = $scope.checkNotify();
     $scope.hasNotiApi = ("Notification" in window);
@@ -45,11 +45,57 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         }
     }
     $scope.updateTimeout = function () {
+        if($scope.notifyTimeout < 1) {
+            $scope.notifyTimeout = localStorage.getItem('notifyTimeout')/1000;
+        }
         localStorage.setItem('notifyTimeout', Math.round($scope.notifyTimeout*1000));
     }
     $scope.checkVerify = function () {
-        if($scope.verifyCode.length == 9) {
-            //$rootScope.isLoading = true;
+        if($scope.verifyCode.length == 7) {
+            $rootScope.isLoading = true;
+            var code = $scope.verifyCode.replace('-', "");
+            if($scope.TFAactivated == true) {
+                $http({
+                    method: 'DELETE',
+                    url: '/api/v1/2fa',
+                    headers: {
+                        'x-token': $scope.sid
+                    },
+                    data: {
+                        'code': code
+                    }
+                }).then(function(res) {
+                    return $window.location.href = '/index.html?msg=2FA%20successfull%disabled!%20Please%20login%20again.&info=true';
+                }, function(res) {
+                    $rootScope.isLoading = false;
+                    if(res.status == 400) {
+                        $scope.sendNotification('Invalid Code', 'The given code was invalid, please try again.', 'error');
+                    } else {
+                        $scope.sendNotification('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+                    }
+                });
+                $rootScope.isLoading = false;
+            } else {
+                $http({
+                    method: 'POST',
+                    url: '/api/v1/2fa',
+                    headers: {
+                        'x-token': $scope.sid
+                    },
+                    data: {
+                        'code': code
+                    }
+                }).then(function(res) {
+                    return $window.location.href = '/index.html?msg=2FA%20successfull%20enabled!%20Please%20login%20again.&info=true';
+                }, function(res) {
+                    $rootScope.isLoading = false;
+                    if(res.status == 400) {
+                        $scope.sendNotification('Invalid Code', 'The given code was invalid, please try again.', 'error');
+                    } else {
+                        $scope.sendNotification('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+                    }
+                });
+            }
         }
     }
     $scope.loadTFA = function () {
@@ -62,8 +108,8 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         }).then(function(res) {
             $scope.isLoading = false;
             $scope.TFAactivated = false;
-            $scope.QRdata = res.data.uri
-            $scope.key = res.data.key
+            $scope.QRdata = res.data.uri;
+            $scope.key = res.data.key;
         }, function(res) {
             if(res.status == 401) {
                 $cookies.remove('MailJS');

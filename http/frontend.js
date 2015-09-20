@@ -41,6 +41,7 @@ io.on('connection', function(socket) {
     }
     var userObject = util.copyObject(socket.data.user);
     userObject.password = undefined;
+    userObject.tfaToken = undefined;
     userObject.mailboxes = [];
     userObject.sid = socket.data.sid;
     for (var i = 0; i < socket.data.user.mailboxes.length; i++) {

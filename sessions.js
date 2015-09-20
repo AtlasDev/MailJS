@@ -46,8 +46,9 @@ sessions.prototype.create = function(username, ip, other, callback) {
 }
 
 sessions.prototype.getSessions = function (id, cb) {
+    var _this = this;
     _this.sessions.soid({
-            app: this.appName,
+            app: _this.appName,
             id: id
         },
         function(err, resp) {
@@ -58,6 +59,7 @@ sessions.prototype.getSessions = function (id, cb) {
 }
 
 sessions.prototype.killSession = function (token, cb) {
+    var _this = this;
     this.sessions.kill({
             app: _this.appName,
             token: token
@@ -70,8 +72,9 @@ sessions.prototype.killSession = function (token, cb) {
 }
 
 sessions.prototype.killAll = function (user, cb) {
+    var _this = this;
     this.sessions.killsoid({
-        app: this.appname,
+        app: _this.appName,
         id: user
     }, function (err, resp) {
         return cb(err, resp);

@@ -22,7 +22,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Valid TOTP value:",
-          "content": "{\n  \"code\": \"3294815\"\n}",
+          "content": "{\n  \"code\": \"329415\"\n}",
           "type": "json"
         }
       ]
@@ -128,7 +128,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Valid TOTP value:",
-          "content": "{\n  \"code\": \"3294815\"\n}",
+          "content": "{\n  \"code\": \"329415\"\n}",
           "type": "json"
         }
       ]
@@ -541,34 +541,6 @@ define({ "api": [
     }
   },
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "groupTitle": "D__Projects_Git_Clones_MailJS_http_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "get",
     "url": "/group/:groupid",
     "title": "Get a specific group",
@@ -790,7 +762,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Login to a user:",
-          "content": "{\n  \"code\": \"2194832\"\n}",
+          "content": "{\n  \"code\": \"219832\"\n}",
           "type": "json"
         }
       ]
@@ -800,17 +772,17 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "<p>String</p> ",
+            "type": "<p>Boolean</p> ",
             "optional": false,
-            "field": "token",
-            "description": "<p>The auth token of the user, uses for futher auth.</p> "
+            "field": "success",
+            "description": "<p>Success bool.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"token\": \"0TXlLAtzDPSIwiWQ93VnFMB5UHkbCUTTv43JICXXSEmxtqhJTiPVPosZidvpxshh\",\n  \"success\": \"true\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"success\": \"true\"\n}",
           "type": "json"
         }
       ]

@@ -76,14 +76,14 @@
                                         </div>
                                         <label for="verifyCode">
                                             <h5><b>{{'settings.main.2fa.verificationTitle' | translate}}:</b></h5>
-                                            <input type="text" class="form-control" name="verifyCode" mask="999-999-9" restrict="reject" ng-change="checkVerify()" ng-model="verifyCode"></input>
+                                            <input type="text" class="form-control" name="verifyCode" mask="999-999" restrict="reject" ng-change="checkVerify()" ng-model="verifyCode"></input>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h5><b>{{'settings.main.2fa.status' | translate}} {{$scope.user.tfa}}</b></h5>
+                                    <h5><b>{{'settings.main.2fa.status' | translate}} {{user.tfa}}</b></h5>
                                     <p>{{'settings.main.2fa.message' | translate}}</p>
-                                    <div class="checkbox">
+                                    <div class="checkbox" ng-hide="TFAactivated">
                                         <label>
                                             <input type="checkbox" ng-model="showQR">
                                                 {{'settings.main.2fa.show' | translate}}
