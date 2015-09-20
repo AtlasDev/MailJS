@@ -46,9 +46,8 @@ sessions.prototype.create = function(username, ip, other, callback) {
 }
 
 sessions.prototype.getSessions = function (id, cb) {
-    var _this = this;
     _this.sessions.soid({
-            app: _this.appName,
+            app: this.appName,
             id: id
         },
         function(err, resp) {
@@ -72,7 +71,7 @@ sessions.prototype.killSession = function (token, cb) {
 
 sessions.prototype.killAll = function (user, cb) {
     this.sessions.killsoid({
-        app: rsapp,
+        app: this.appname,
         id: user
     }, function (err, resp) {
         return cb(err, resp);

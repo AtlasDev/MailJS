@@ -4,7 +4,7 @@ var sessions = require('../../../sessions.js');
 var speakeasy = require('speakeasy');
 
 exports.getTFA = function (req, res) {
-    var key = speakeasy.generate_key({length: 15});
+    var key = speakeasy.generate_key({length: 20});
     var user = req.user;
     user.tfaToken = key.base32;
     user.save(function (err) {
@@ -24,13 +24,11 @@ exports.postTFA = function (req, res) {
     }
     var user = req.user;
     var key = user.tfaToken;
-    var code = req.body.code
-    console.log(code);
+    var code = req.body.code;
     if(code.length != 6) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }
-    var serverCode = speakeasy.totp({key: key});
-    console.log(serverCode);
+    var serverCode = speakeasy.totp({key: key, encoding: 'base32'});
     if(serverCode != code) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }

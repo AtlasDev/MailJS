@@ -29,7 +29,7 @@ exports.deleteLogin = function(req, res, next) {
 }
 
 exports.patchLogin = function (req, res) {
-    if(req.user.tfa == true && req.authinfo.type == 'session') {
+    if(req.user.tfa == true && req.authInfo.type == 'session') {
         if(req.session.finishTFA == true) {
             return req.status(400).json({error: {
                 "name": "EINVALID",
@@ -44,8 +44,7 @@ exports.patchLogin = function (req, res) {
     if(req.body.code.length != 6) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }
-    var serverCode = speakeasy.totp({key: req.user.tfaToken});
-    console.log(serverCode);
+    var serverCode = speakeasy.totp({key: req.user.tfaToken, encoding: 'base32'});
     if(serverCode != code) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }

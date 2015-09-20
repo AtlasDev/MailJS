@@ -76,9 +76,9 @@ passport.use(new BearerStrategy(
 ));
 
 exports.checkTFA = function (req, res, next) {
-    if(req.user.tfa == true && req.authinfo.type == 'session') {
+    if(req.user.tfa == true && req.authInfo.type == 'session') {
         if(req.session.finishTFA != true) {
-            return req.status(401).end('Unauthorized');
+            return res.status(401).end('Unauthorized');
         }
         return next();
     }

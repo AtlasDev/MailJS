@@ -7,7 +7,7 @@ $(document).ready(function() {
         window.location.replace("app.html");
     }
     if(get.msg && get.info != 'true') {
-        showError(get.msg);
+        showLoginError(get.msg);
     }
 	if(get.info == 'true' && get.msg) {
 		showInfo(get.msg);
@@ -27,8 +27,7 @@ $("#login").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        console.log(data);
-        if(data.needTFA != true) {
+        if(data.needTFA == true) {
             token = data.token;
             setName(data.user.firstName + ' ' + data.user.lastName);
             showTFA();
@@ -38,11 +37,11 @@ $("#login").submit(function(event) {
     });
     request.fail(function(data) {
         if(data.status == 401) {
-            showError('Username/password incorrect!');
+            showLoginError('Username/password incorrect!');
         } else if (data.status == 400) {
-            showError('Username/password not filled in!');
+            showLoginError('Username/password not filled in!');
         } else {
-            showError(JSON.parse(data.responseText).error.message);
+            showLoginError(JSON.parse(data.responseText).error.message);
         }
     });
 });
@@ -62,12 +61,7 @@ $("#2fa").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        if(data.needTFA != true) {
-            setName(data.user.firstName + ' ' + data.user.lastName);
-            showTFA();
-        } else {
-            window.location.replace("app.html");
-        }
+        window.location.replace("app.html");
     });
     request.fail(function(data) {
         if(data.status == 401) {
@@ -77,9 +71,9 @@ $("#2fa").submit(function(event) {
         if(text.error.name == 'EDONE') {
             window.location.replace("app.html");
         } else if(text.error.name == 'EINVALID') {
-            showError('Code invalid!');
+            show2faError('Code invalid!');
         } else {
-            showError(text.error.message);
+            show2faError(text.error.message);
         }
     });
 });
@@ -98,9 +92,14 @@ var setName = function (name) {
     $('#name').text(name);
 }
 
-var showError = function showError(msg) {
-    $("#errorMsg").text(msg);
-    $("#error").removeClass('hidden');
+var showLoginError = function showError(msg) {
+    $("#loginErrorMsg").text(msg);
+    $("#loginError").removeClass('hidden');
+};
+
+var show2faError = function showError(msg) {
+    $("#TFAerrorMsg").text(msg);
+    $("#TFAerror").removeClass('hidden');
 };
 
 var showInfo = function showInfo(msg) {
