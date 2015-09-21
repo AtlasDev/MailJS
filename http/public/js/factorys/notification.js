@@ -40,7 +40,7 @@ app.factory('notification', function (toastr) {
         if(icon == null) {
             icon = '/favicon-96x96.png';
         }
-        if($scope.checkNotify() == true) {
+        if(this.check() == true) {
             var options = {
                   body: message,
                   icon: icon

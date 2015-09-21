@@ -16,7 +16,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         }
     }
     $scope.askPerms = function () {
-        $scope.notifyToggle = notifications.askPermissions($scope.notifyToggle);
+        $scope.notifyToggle = notification.askPermissions($scope.notifyToggle);
     }
     $scope.checkVerify = function () {
         if($scope.verifyCode.length == 7) {
@@ -37,9 +37,9 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 }, function(res) {
                     $rootScope.isLoading = false;
                     if(res.status == 400) {
-                        $scope.sendNotification('Invalid Code', 'The given code was invalid, please try again.', 'error');
+                        notification.send('Invalid Code', 'The given code was invalid, please try again.', 'error');
                     } else {
-                        $scope.sendNotification('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+                        notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
                     }
                 });
                 $rootScope.isLoading = false;
@@ -58,9 +58,9 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 }, function(res) {
                     $rootScope.isLoading = false;
                     if(res.status == 400) {
-                        $scope.sendNotification('Invalid Code', 'The given code was invalid, please try again.', 'error');
+                        notification.send('Invalid Code', 'The given code was invalid, please try again.', 'error');
                     } else {
-                        $scope.sendNotification('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+                        notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
                     }
                 });
             }
