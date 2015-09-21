@@ -41,20 +41,20 @@
                         </div>
                         <div class="box-body">
                             <p>{{'settings.main.notifications.message' | translate}}</p>
-                            <div class="callout callout-warning" ng-show="!hasNotiApi">
+                            <div class="callout callout-warning" ng-show="!hasAPI">
                                 <h4>{{'settings.main.notifications.noAPI.title' | translate}}</h4>
                                 {{'settings.main.notifications.noAPI.message' | translate}}
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="notifyToggle" ng-change="askPerms()" ng-disabled="!hasNotiApi">
+                                    <input type="checkbox" ng-model="notifyToggle" ng-change="askPerms()" ng-disabled="!hasAPI">
                                         {{'settings.main.notifications.button' | translate}}
                                     </input>
                                 </label>
                             </div>
                             <div class="form-group">
                                 <label for="notifyTimeout">{{'settings.main.notifications.timeoutTitle' | translate}}</label>
-                                <input type="number" class="form-control" ng-model="notifyTimeout" ng-change="updateTimeout()" ng-disabled="!hasNotiApi" id="notifyTimeout" placeholder="{{'settings.main.notifications.timeoutPlaceholder' | translate}}"></input>
+                                <input type="number" class="form-control" ng-model="notifyTimeout" ng-change="updateTimeout()" ng-disabled="!hasAPI" id="notifyTimeout" placeholder="{{'settings.main.notifications.timeoutPlaceholder' | translate}}"></input>
                             </div>
                         </div>
                     </div>

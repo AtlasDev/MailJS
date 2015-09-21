@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, toastr) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = true;
     $rootScope.isInit = false;
@@ -28,51 +28,6 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
             $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
         });
 	}
-
-    $scope.checkNotify = function () {
-        if(("Notification" in window) && (Notification.permission === "granted") && (localStorage.getItem('notifications') == 'true')) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    $scope.sendNotification = function (title, message, type, icon, callback) {
-        if(message.length > 25) {
-            message = message.substring(0,150)+"...";
-        }
-        if(type == 'success') {
-            toastr.success(message, title);
-        } else if(type == 'error') {
-            toastr.error(message, title);
-        } else {
-            toastr.info(message, title);
-        }
-        if(typeof icon == "function") {
-            callback = icon;
-            icon = '/favicon-96x96.png';
-        }
-        if(icon == null) {
-            icon = '/favicon-96x96.png';
-        }
-        if($scope.checkNotify() == true) {
-            var options = {
-                  body: message,
-                  icon: icon
-            }
-            var notification = new Notification(title, options);
-            setTimeout(notification.close.bind(notification), localStorage.getItem('notifyTimeout'));
-            notification.onclick = function(x) {
-                window.focus();
-                if(callback) {
-                    callback();
-                }
-            };
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     $scope.toggleFullScreen = function () {
         if (!$scope.isFullscreen()) {
@@ -104,13 +59,6 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         } else {
             return false;
         }
-    }
-
-    if(localStorage.getItem('notification') == "true" || localStorage.getItem('notification') == "false") {
-        localStorage.setItem('notifications', 'false');
-    }
-    if(localStorage.getItem('notifyTimeout') === null && typeof localStorage.getItem('notifyTimeout') === "object") {
-        localStorage.setItem('notifyTimeout', '10000');
     }
 
     //Socket stuff
