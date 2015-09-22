@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification) {
+app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification, user, $cookies) {
     $rootScope.isLoading = false;
     $scope.lang = $translate.use();
     $scope.TFAactivated = false;
@@ -27,7 +27,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                     method: 'DELETE',
                     url: '/api/v1/2fa',
                     headers: {
-                        'x-token': $scope.sid
+                        'x-token': user.sessionID
                     },
                     data: {
                         'code': code
@@ -48,7 +48,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                     method: 'POST',
                     url: '/api/v1/2fa',
                     headers: {
-                        'x-token': $scope.sid
+                        'x-token': user.sessionID
                     },
                     data: {
                         'code': code
@@ -71,10 +71,10 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             method: 'GET',
             url: '/api/v1/2fa',
             headers: {
-                'x-token': $scope.sid
+                'x-token': user.sessionID
             }
         }).then(function(res) {
-            $scope.isLoading = false;
+            $rootScope.isLoading = false;
             $scope.TFAactivated = false;
             $scope.QRdata = res.data.uri;
             $scope.key = res.data.key;
@@ -89,7 +89,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             }
         });
     }
-    if($scope.sid) {
+    if(user.sessionID) {
         $scope.loadTFA;
     } else {
         $rootScope.$on('userLoaded', function() {

@@ -1,62 +1,33 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user) {
-    $rootScope.socketStatus = 0;
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen) {
 	$rootScope.isLoading = true;
 
+    $scope.socketStatus = socket.getStatus();
     $scope.user = {};
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
 
     $rootScope.$on('userLoaded', function () {
+        $scope.isInit = true;
         $scope.user = user.getUser();
     });
 
+    $rootScope.$on('socketStatusChange', function () {
+        $scope.socketStatus = socket.getStatus();
+    });
+
 	$scope.logout = function logout(){
-        user.logout();
+        return user.logout();
 	}
 
     $scope.toggleFullScreen = function () {
-        if (!$scope.isFullscreen()) {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-        }
+        return fullscreen.toggleFullScreen();
     }
 
     $scope.isFullscreen = function () {
-        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ) {
-            return true;
-        } else {
-            return false;
-        }
+        return fullscreen.isFullscreen();
     }
 
-    //Socket stuff
-    socket.on('connect', function () {
-        $rootScope.socketStatus = 2;
-    });
-    socket.on('disconnect', function () {
-        $rootScope.socketStatus = 0;
-    });
-    socket.on('reconnecting', function (error) {
-        $rootScope.socketStatus = 1;
-    });
     //error handling
     socket.on('error', function (err) {
         if(err.toString() == "Authentication error") {
