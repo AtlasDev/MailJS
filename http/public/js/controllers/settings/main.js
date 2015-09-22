@@ -92,7 +92,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
     if($scope.sid) {
         $scope.loadTFA;
     } else {
-        $rootScope.$on('tokenLoaded', function() {
+        $rootScope.$on('userLoaded', function() {
             $scope.loadTFA();
         });
     }

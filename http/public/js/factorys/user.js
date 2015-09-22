@@ -1,9 +1,16 @@
 'use strict'
 
-app.factory('user', function ($window, $cookies, $http) {
+app.factory('user', function ($window, $cookies, $http, $rootScope) {
     var sessionID = $cookies.get('MailJS');
     var user = {};
     var isInit = false;
+
+    // Events:
+    // userLoaded
+
+    function getUser() {
+        return user;
+    }
 
     (function () {
         var req = {
@@ -26,6 +33,7 @@ app.factory('user', function ($window, $cookies, $http) {
                 user.group = res.data.group;
                 //TODO: translate mailbox id's to actual mailbox box.
                 isInit = true;
+                $rootScope.$emit('userLoaded');
             	$('body').addClass('preloaded');
             }, function(res) {
                 $cookies.remove('MailJS');
@@ -62,7 +70,7 @@ app.factory('user', function ($window, $cookies, $http) {
     return {
         logout: logout,
         sessionID: sessionID,
-        user: user,
+        getUser: getUser,
         isInit: isInit
     }
 });

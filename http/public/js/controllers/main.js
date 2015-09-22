@@ -3,8 +3,13 @@
 app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = true;
-    $rootScope.isInit = false;
+
+    $scope.user = {};
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
+
+    $rootScope.$on('userLoaded', function () {
+        $scope.user = user.getUser();
+    });
 
 	$scope.logout = function logout(){
         user.logout();
