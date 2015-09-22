@@ -183,27 +183,31 @@
  */
 
 /**
- * @api {get} /user/setup Get setup page
+ * @api {get} /user/current Get current user
  * @apiVersion 0.1.0
- * @apiName GetUserSetup
+ * @apiName GetCurrentUser
  * @apiGroup User
  *
- * @apiDescription Get a setup page for adding the first mailbox to a user. This page is diffrent per user.
+ * @apiDescription Get the user current logged in with the session key.
  *
- * @apiSuccessExample {html} Created response:
+ * @apiSuccess {Object} user The user found.
+ * @apiSuccessExample {json} Created response:
  *     HTTP/1.1 200 OK
- *     <html>...</html>
- *
- * @apiError EINVALID Account has already been setup.
- * @apiErrorExample {json} EINVALID:
- *     HTTP/1.1 400 Bad Request
  *     {
- *       "error": {
- *         "name": "EINVALID",
- *         "message": "Account has already been setup."
+ *       {
+ *         "user": {
+ *           "__v": 0,
+ *           "username": "AtlasDev",
+ *           "group": "55e40dc8cf8dbadb0c352304",
+ *           "firstName": "Dany",
+ *           "lastName": "Sluijk",
+ *           "_id": "55e415b46e0c093119a0748c",
+ *           "mailboxes": []
+ *         }
  *       }
  *     }
  *
  * @apiUse AuthError
  * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
  */

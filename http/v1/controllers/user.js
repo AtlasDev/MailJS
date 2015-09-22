@@ -26,22 +26,11 @@ exports.postUser = function(req, res) {
     });
 };
 
-exports.setupUser = function (req, res) {
-    if(req.user.mailboxes.length > 0) {
-        return res.status(400).json({error: {name: 'EINVALID', message: 'Account has already been setup.'}});
-    }
-    sys.group.getGroup(req.user.group, function (err, group) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
-        sys.domain.getDomains(function (err, domains) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message}});
-            }
-            var canCreate = (group.permissions.indexOf('mailbox.create') > -1) ? true : false;
-            res.render('setup', { username: req.user.username, canCreate: canCreate, domains: domains });
-        })
-    })
+exports.currentUser = function (req, res) {
+    var user = req.user;
+    user.password = undefined;
+    user.tfaToken = undefined;
+    return res.json({user: user});
 }
 
 exports.getUser = function(req, res) {
@@ -71,7 +60,7 @@ exports.getUser = function(req, res) {
             });
         } else {
             if (!req.params.user.toString().match(/^[0-9a-fA-F]{24}$/)) {
-                res.status(500).json({error: {name: 'EINVALID', message: 'Invalid user ID!'}});
+                return res.status(500).json({error: {name: 'EINVALID', message: 'Invalid user ID!'}});
             }
             sys.user.find(req.params.user, function (err, user) {
                 if(err) {

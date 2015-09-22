@@ -1,32 +1,13 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user) {
     $rootScope.socketStatus = 0;
 	$rootScope.isLoading = true;
     $rootScope.isInit = false;
-	$rootScope.mails = [];
-	$rootScope.mailboxes = [];
-    $rootScope.currentMailbox = "";
-    $rootScope.sid;
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
-    $scope.user = {};
-    $scope.user.firstName = "Loading...";
-    $scope.user.group = 0;
 
 	$scope.logout = function logout(){
-        $http({
-            method: 'DELETE',
-            url: '/api/v1/login',
-            headers: {
-                'x-token': $rootScope.sid
-            }
-        }).then(function(res) {
-            $cookies.remove('MailJS');
-            $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
-        }, function(res) {
-            $cookies.remove('MailJS');
-            $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
-        });
+        user.logout();
 	}
 
     $scope.toggleFullScreen = function () {
@@ -114,36 +95,6 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 				delete $rootScope.mails[i];
                 break;
             }
-        }
-    });
-    //User handling
-    socket.on('user:info', function (data) {
-        $rootScope.mailboxes = data.mailboxes;
-        $scope.user = data;
-        $scope.sid = data.sid;
-        if($rootScope.isInit == false) {
-            $rootScope.$emit('tokenLoaded');
-            if($rootScope.mailboxes[0]) {
-                $rootScope.currentMailbox = $rootScope.mailboxes[0];
-            }
-            var req = {
-                method: 'GET',
-                url: '/api/v1/group/'+data.group,
-                headers: {
-                    'x-token': $scope.sid
-                }
-            };
-            $http(req).then(function(res) {
-                $scope.user.group = res.data.group;
-                $rootScope.isInit = true;
-            	$('body').addClass('preloaded');
-            }, function(res) {
-                $cookies.remove('MailJS');
-                if(res.status == 401) {
-                    return $window.location.href = '/index.html?msg=Token%20invalid.';
-                }
-                $window.location.href = '/index.html?msg='+JSON.parse(res.data).error.message;
-            });
         }
     });
 });

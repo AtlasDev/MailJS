@@ -39,31 +39,6 @@ io.on('connection', function(socket) {
         socket.disconnect();
         return false;
     }
-    var userObject = util.copyObject(socket.data.user);
-    userObject.password = undefined;
-    userObject.tfaToken = undefined;
-    userObject.mailboxes = [];
-    userObject.sid = socket.data.sid;
-    for (var i = 0; i < socket.data.user.mailboxes.length; i++) {
-        socket.join(socket.data.user.mailboxes[i]);
-        sys.mailbox.find(socket.data.user.mailboxes[i], function (err, mailbox) {
-            if(err) {
-                socket.emit('error:dberror');
-                socket.disconnect();
-                return false;
-            }
-            if(mailbox == false) {
-                socket.emit('error:nomailbox');
-                socket.disconnect();
-                return false;
-            }
-            userObject.mailboxes.push(mailbox);
-            if(i >= socket.data.user.mailboxes.length) {
-                socket.join(socket.data.user._id);
-                socket.emit('user:info', userObject);
-            }
-        });
-    }
 });
 
 };

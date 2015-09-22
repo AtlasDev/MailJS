@@ -29,11 +29,11 @@ router.route('/2fa')
   .delete(authController.isSessionAuthenticated, authController.checkTFA, tfaController.deleteTFA)
   .post(authController.isSessionAuthenticated, authController.checkTFA, tfaController.postTFA);
 
+router.route('/user/current')
+  .get(authController.isAuthenticated, authController.checkTFA, userController.currentUser);
+
 router.route('/user/:user')
   .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
-
-router.route('/user/setup')
-  .get(authController.isSessionAuthenticated, authController.checkTFA, userController.setupUser);
 
 router.route('/client')
   .post(authController.isSessionAuthenticated, authController.checkTFA, clientController.postClient)

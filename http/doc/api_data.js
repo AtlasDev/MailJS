@@ -1001,6 +1001,88 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/user/current",
+    "title": "Get current user",
+    "version": "0.1.0",
+    "name": "GetCurrentUser",
+    "group": "User",
+    "description": "<p>Get the user current logged in with the session key.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>The user found.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"user\": {\n      \"__v\": 0,\n      \"username\": \"AtlasDev\",\n      \"group\": \"55e40dc8cf8dbadb0c352304\",\n      \"firstName\": \"Dany\",\n      \"lastName\": \"Sluijk\",\n      \"_id\": \"55e415b46e0c093119a0748c\",\n      \"mailboxes\": []\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/user.js",
+    "groupTitle": "User",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/user/:user",
     "title": "Get a specific user",
     "version": "0.1.0",
@@ -1146,76 +1228,6 @@ define({ "api": [
         {
           "title": "OAuth Header:",
           "content": "\"Authorization\": \"Bearer {token}\"",
-          "type": "String"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
-    "url": "/user/setup",
-    "title": "Get setup page",
-    "version": "0.1.0",
-    "name": "GetUserSetup",
-    "group": "User",
-    "description": "<p>Get a setup page for adding the first mailbox to a user. This page is diffrent per user.</p> ",
-    "success": {
-      "examples": [
-        {
-          "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n<html>...</html>",
-          "type": "html"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "EINVALID",
-            "description": "<p>Account has already been setup.</p> "
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Account has already been setup.\"\n  }\n}",
-          "type": "json"
-        },
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "./docfiles/user.js",
-    "groupTitle": "User",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-token",
-            "description": "<p>User session token</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Session Header:",
-          "content": "\"x-token\": \"{token}\"",
           "type": "String"
         }
       ]
@@ -1511,6 +1523,34 @@ define({ "api": [
         }
       ]
     }
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "name": ""
   },
   {
     "type": "get",
