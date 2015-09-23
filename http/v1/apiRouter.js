@@ -9,6 +9,7 @@ var oauth2Controller = require('./controllers/oauth2.js');
 var groupController = require('./controllers/group.js');
 var tfaController = require('./controllers/2fa.js');
 var mailboxController = require('./controllers/mailbox.js');
+var sessionController = require('./controllers/session.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
@@ -32,6 +33,9 @@ router.route('/2fa')
 
 router.route('/user/current')
   .get(authController.isAuthenticated, authController.checkTFA, userController.currentUser);
+
+router.route('/user/session')
+  .get(authController.isAuthenticated, authController.checkTFA, sessionController.getSessions);
 
 router.route('/user/:user')
   .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);

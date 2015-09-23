@@ -18,6 +18,7 @@ exports.postLogin = function(req, res, next) {
             } else {
                 req.session.finishTFA = true;
             }
+            req.session.useragent = req.headers['user-agent'];
             return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
         });
     });
