@@ -14,6 +14,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 
     $rootScope.$on('socketStatusChange', function () {
         $scope.socketStatus = socket.getStatus();
+        $scope.$apply();
     });
 
 	$scope.logout = function logout(){

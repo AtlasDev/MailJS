@@ -15,7 +15,7 @@ app.factory('socket', function ($rootScope) {
         status = 0;
         $rootScope.$emit('socketStatusChange');
     });
-    socket.on('reconnecting', function (error) {
+    socket.on('reconnecting', function () {
         status = 1;
         $rootScope.$emit('socketStatusChange');
     });
