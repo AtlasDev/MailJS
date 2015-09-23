@@ -541,6 +541,34 @@
     }
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_MailJS_http_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "get",
     "url": "/group/:groupid",
     "title": "Get a specific group",
@@ -994,6 +1022,99 @@
         {
           "title": "Session Header:",
           "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/mailbox",
+    "title": "Get mailboxes meta.",
+    "version": "0.1.0",
+    "name": "GetMailboxes",
+    "group": "Mailbox",
+    "description": "<p>Get the mailboxes the user has access to.</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "mailboxes",
+            "description": "<p>A list of mailboxes.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"mailboxes\": [\n    {\n      \"_id\": \"55e40dc8cf8dbadb0c352305\",\n      \"username\": \"admin\",\n      \"group\": \"55e40dc8cf8dbadb0c352302\",\n      \"firstName\": \"Admin\",\n      \"lastName\": \"Adminius\",\n      \"__v\": 0,\n      \"mailboxes\": [\n        \"55e40dc8cf8dbadb0c352307\"\n      ]\n    },\n    {\n      ....\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ENOTFOUND",
+            "description": "<p>User has no mailboxes.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"User has no mailboxes.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/mailbox.js",
+    "groupTitle": "Mailbox",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
           "type": "String"
         }
       ]
@@ -1523,34 +1644,6 @@
         }
       ]
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "name": ""
   },
   {
     "type": "get",
