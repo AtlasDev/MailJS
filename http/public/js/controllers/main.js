@@ -1,10 +1,12 @@
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox) {
 	$rootScope.isLoading = true;
 
     $scope.socketStatus = socket.getStatus();
     $scope.user = {};
+	$scope.mailboxes = [];
+	$scope.currentMailbox = {};
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
 
     $rootScope.$on('userLoaded', function () {
@@ -16,6 +18,18 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         $scope.socketStatus = socket.getStatus();
         $scope.$apply();
     });
+
+    $rootScope.$on('currentMailboxChange', function (event, mailbox) {
+        $scope.currentMailbox = mailbox;
+    });
+
+    $rootScope.$on('mailboxesChange', function (event, mailboxes) {
+        $scope.mailboxes = mailboxes;
+    });
+
+	$scope.changeMailbox = function (id) {
+		mailbox.changeMailbox(id);
+	}
 
 	$scope.logout = function logout(){
         return user.logout();

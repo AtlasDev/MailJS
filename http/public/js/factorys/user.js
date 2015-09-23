@@ -31,10 +31,7 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
             };
             $http(req).then(function(res) {
                 user.group = res.data.group;
-                //TODO: translate mailbox id's to actual mailbox box.
-                isInit = true;
                 $rootScope.$emit('userLoaded');
-            	$('body').addClass('preloaded');
             }, function(res) {
                 $cookies.remove('MailJS');
                 if(res.status == 401) {
@@ -67,10 +64,16 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         });
     }
 
+    function setInit(newValue) {
+        isInit = newValue;
+        return;
+    }
+
     return {
         logout: logout,
         sessionID: sessionID,
         getUser: getUser,
-        isInit: isInit
+        isInit: isInit,
+        setInit: setInit
     }
 });
