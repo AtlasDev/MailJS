@@ -9,7 +9,7 @@ $(document).ready(function() {
     if(get.msg && get.info != 'true') {
         showLoginError(get.msg);
     }
-	if(get.info == 'true' && get.msg) {
+	if(get.info == "true" && get.msg) {
 		showInfo(get.msg);
 	}
 });

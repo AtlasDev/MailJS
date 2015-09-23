@@ -25,6 +25,9 @@ exports.getTFA = function (req, res) {
 }
 
 exports.postTFA = function (req, res) {
+    if(req.user.tfa == true) {
+        return res.status(400).json({error: {name: 'EINVALID', message: '2FA already enabled.'}});
+    }
     if(!req.body.code) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value missing.'}});
     }

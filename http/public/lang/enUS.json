@@ -19,7 +19,9 @@
         "page": "page",
         "mailboxes": "mailboxes",
         "signout": "sign out",
-        "hello": "hello"
+        "hello": "hello",
+        "enabled": "enabled",
+        "disabled": "disabled"
     },
     "settings": {
         "settings": "settings",

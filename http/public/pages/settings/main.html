@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <div ng-show="!TFAactivated">
+                                        <div ng-hide="user.tfa == true">
                                             <h5><b>{{'settings.main.2fa.qrTitle' | translate}}:</h5></b>
                                             <qrcode version="4" error-correction-level="L" name="QRcode" size="166" data="{{QRdata}}" id="qr" ng-class="{blur: !showQR}"></qrcode>
                                             <h5><b>{{'settings.main.2fa.altKey' | translate}}:</b></h5>
@@ -81,9 +81,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h5><b>{{'settings.main.2fa.status' | translate}} {{user.tfa}}</b></h5>
+                                    <h5><b>{{'settings.main.2fa.status' | translate}} {{ user.tfa ? ('common.enabled' | translate) : ('common.disabled' | translate) }}.</b></h5>
                                     <p>{{'settings.main.2fa.message' | translate}}</p>
-                                    <div class="checkbox" ng-hide="TFAactivated">
+                                    <div class="checkbox" ng-hide="user.tfa == true">
                                         <label>
                                             <input type="checkbox" ng-model="showQR">
                                                 {{'settings.main.2fa.show' | translate}}
