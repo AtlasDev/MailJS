@@ -1,7 +1,15 @@
 'use strict'
 
 app.factory('notification', function (toastr) {
-    var notifyTimeout = localStorage.getItem('notifyTimeout');
+    var notifyTimeout = localStorage.getItem('notifyTimeout') | 10000;
+    var screenFocus = true;
+
+    window.onfocus = function () {
+        screenFocus = true;
+    };
+	window.onblur = function () {
+        screenFocus = false;
+	};
 
     if(localStorage.getItem('notification') == "true" || localStorage.getItem('notification') == "false") {
         localStorage.setItem('notifications', 'false');
@@ -40,7 +48,7 @@ app.factory('notification', function (toastr) {
         if(icon == null) {
             icon = '/favicon-96x96.png';
         }
-        if(this.check() == true) {
+        if(this.check() == true && screenFocus == false) {
             var options = {
                   body: message,
                   icon: icon
@@ -60,12 +68,15 @@ app.factory('notification', function (toastr) {
     }
 
     function setTimeout(timeout) {
-        var roundTimeout =  Math.round(timeout*1000);
-        if(roundTimeout > 1) {
-            return false;
+        var timeout = parseInt(timeout);
+        if(timeout*1000 < 1) {
+            localStorage.setItem('notifyTimeout', 1000);
+            notifyTimeout = 1;
+            return 1;
         }
-        localStorage.setItem('notifyTimeout', roundTimeout);
-        notifyTimeout = roundTimeout;
+        localStorage.setItem('notifyTimeout', timeout*1000);
+        notifyTimeout = timeout;
+        return timeout;
     }
 
 
@@ -80,8 +91,8 @@ app.factory('notification', function (toastr) {
             } else {
                 Notification.requestPermission(function (perm) {
                     if (perm === "granted") {
+                        console.log('asdsa');
                         localStorage.setItem('notifications', true);
-                        return true;
                         var options = {
                               body: 'The notification system works! You will get a notification everytime you get a new E-mail. You can always disable it in the settings if it gets annoying.',
                               icon: '/favicon-96x96.png'

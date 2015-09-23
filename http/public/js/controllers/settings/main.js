@@ -3,9 +3,9 @@
 app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification, user, $cookies) {
     $rootScope.isLoading = false;
     $scope.lang = $translate.use();
-    $scope.verifyCode = "";
-    $scope.notifyTimeout = parseInt(notification.notifyTimeout);
+    $scope.notifyTimeout = parseInt(notification.notifyTimeout/1000);
     $scope.hasAPI = notification.hasAPI;
+    $scope.notifyToggle = notification.check();
 
     $scope.changeLanguage = function changeLanguage() {
         $translate.use($scope.lang);
