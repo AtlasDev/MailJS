@@ -570,6 +570,234 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/domain",
+    "title": "Get domains",
+    "version": "0.1.0",
+    "name": "GetDomains",
+    "group": "Domain",
+    "description": "<p>Get all domains openly avalible</p> ",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Array</p> ",
+            "optional": false,
+            "field": "domains",
+            "description": "<p>A list of domains.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"domains\": [\n    {\n      \"_id\": \"55e40dc8cf8dbadb0c352305\",\n      \"domain\": \"example.com\",\n      \"disabled\": \"false\",\n      \"__v\": 0\n    },\n    {\n      ....\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/domain.js",
+    "groupTitle": "Domain",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/domain",
+    "title": "Create domain",
+    "version": "0.1.0",
+    "name": "PostDomain",
+    "group": "Domain",
+    "permission": [
+      {
+        "name": "domain.create"
+      }
+    ],
+    "description": "<p>Create a new domain.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "domain",
+            "description": "<p>Domain to be registerd (e.g. <code>example.com</code>)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "disabled",
+            "description": "<p>(optional) Disable the domain for registrations, default to false</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Create a new disabled domain:",
+          "content": "{\n  \"domain\": \"mailjs.net\",\n  \"disabled\": \"true\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Create a new enabled domain:",
+          "content": "{\n  \"domain\": \"mailjs.net\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "user",
+            "description": "<p>The new user.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"domain\": {\n      \"__v\": 0,\n      \"domain\": \"mailjs.net\",\n      \"disabled\": \"true\",\n      \"_id\": \"55e415b46e0c093119a0748c\",\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>Domain missing</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMS",
+            "description": "<p>The permission level of the user is not high enough.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Domain missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Invalid disabled value.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EPERMS:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/domain.js",
+    "groupTitle": "Domain",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/group/:groupid",
     "title": "Get a specific group",
     "version": "0.1.0",
@@ -1694,88 +1922,6 @@ define({ "api": [
     },
     "filename": "./docfiles/user.js",
     "groupTitle": "User",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-token",
-            "description": "<p>User session token</p> "
-          },
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>OAuth access token.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Session Header:",
-          "content": "\"x-token\": \"{token}\"",
-          "type": "String"
-        },
-        {
-          "title": "OAuth Header:",
-          "content": "\"Authorization\": \"Bearer {token}\"",
-          "type": "String"
-        }
-      ]
-    }
-  },
-  {
-    "type": "get",
-    "url": "/domain",
-    "title": "Get domains",
-    "version": "0.1.0",
-    "name": "GetDomains",
-    "group": "domain",
-    "description": "<p>Get all domains openly avalible</p> ",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>Array</p> ",
-            "optional": false,
-            "field": "domains",
-            "description": "<p>A list of domains.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"domains\": [\n    {\n      \"_id\": \"55e40dc8cf8dbadb0c352305\",\n      \"domain\": \"example.com\",\n      \"disabled\": \"false\",\n      \"__v\": 0\n    },\n    {\n      ....\n    }\n  ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "./docfiles/domain.js",
-    "groupTitle": "domain",
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "Unauthorized",
-            "description": "<p>The user is not authorized.</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Unauthorized:",
-          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
-        }
-      ]
-    },
     "header": {
       "fields": {
         "Header": [
