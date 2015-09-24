@@ -54,6 +54,24 @@ a:hover {
 	-ms-filter: blur(8px);
 }
 
+.secret {
+	filter: blur(4px);
+	-webkit-filter: blur(4px);
+	-moz-filter: blur(4px);
+	-o-filter: blur(4px);
+	-ms-filter: blur(4px);
+}
+
+.secret:hover {
+	transition: 0.5s;
+	-webkit-transition: 0.5s;
+	filter: none;
+	-webkit-filter: none;
+	-moz-filter: none;
+	-o-filter: none;
+	-ms-filter: none;
+}
+
 #qr {
 	width: 100%;
 	height: 100%;

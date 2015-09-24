@@ -65,6 +65,23 @@
                 "smtpToken": "SMTP password",
                 "admins": "Admins",
                 "actions": "Actions"
+            },
+            "code": {
+                "title": "Fill in transfer code",
+                "description": "Fill here in the transfer code gain from an admin of the mail address to gain access to that specific mail address.",
+                "placeholder": "Transfer code",
+                "submit": "Transfer!"
+            },
+            "createMailbox": {
+                "title": "Create a new mailbox",
+                "placeholder": "Fill in desired local address",
+                "select": "-- Please select --",
+                "submit": "Create"
+            },
+            "createDomain": {
+                "title": "Create a new domain",
+                "placeholder": "Enter domain (E.G. example.com)",
+                "submit": "Create"
             }
         },
         "sessions": {

@@ -21,7 +21,6 @@ app.factory('mailbox', function ($http, user, $rootScope) {
             $rootScope.$emit('mailboxesChange', res.data.mailboxes);
             current = mailboxes[0];
             $rootScope.$emit('currentMailboxChange', current);
-            user.setInit(true);
             $('body').addClass('preloaded');
         }, function (res) {
             $cookies.remove('MailJS');

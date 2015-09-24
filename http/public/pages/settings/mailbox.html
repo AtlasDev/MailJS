@@ -32,9 +32,9 @@
                                     </tr>
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
-                                        <td></td>
+                                        <td class="secret"></td>
                                         <td>{{mailbox.transferable}}</td>
-                                        <td><input type="checkbox" ng-change="toggleCode(mailbox._id)" ng-model="blurCode[mailbox._id]"></input> <span ng-class="{'blur': blurCode.indexOf(mailbox._id) != -1}">{{mailbox.transferCode}}<span></td>
+                                        <td class="secret">{{mailbox.transferCode}}</td>
                                         <td>{{mailbox.admins.length}}</td>
                                         <td></td>
                                     </tr>
@@ -46,28 +46,60 @@
                 <div class="col-md-4">
                     <div class="box box-danger">
                         <div class="box-header">
-                            <h3 class="box-title">{{'settings.mailbox.boxTitle' | translate | capitalize}}</h3>
+                            <h3 class="box-title">{{'settings.mailbox.code.title' | translate | capitalize}}</h3>
                         </div>
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr>
-                                        <th>{{'settings.mailbox.tableTitles.address' | translate}}</th>
-                                        <th>{{'settings.mailbox.tableTitles.smtpToken' | translate}}</th>
-                                        <th>{{'settings.mailbox.tableTitles.transferable' | translate}}</th>
-                                        <th>{{'settings.mailbox.tableTitles.transferToken' | translate}}</th>
-                                        <th>{{'settings.mailbox.tableTitles.actions' | translate}}</th>
-                                    </tr>
-                                    <tr ng-repeat="session in sessions">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="box-body">
+                            <p>{{'settings.mailbox.code.description' | translate | capitalize}}</p>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                <input type="text" class="form-control" placeholder="{{'settings.mailbox.code.placeholder' | translate | capitalize}}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger btn-flat" type="button">{{'settings.mailbox.code.submit' | translate}}</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box-danger" ng-show="showMailboxCreateForm">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'settings.mailbox.createMailbox.title' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <form role="form">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="localAddress" placeholder="{{'settings.mailbox.createMailbox.placeholder' | translate}}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>@</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option value="">{{'settings.mailbox.createMailbox.select' | translate}}</option>
+                                                <option ng-repeat="domain in domains" value="{{domain._id}}">{{domain.domain}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createMailbox.submit' | translate}}</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="box box-danger" ng-show="showDomainCreateForm">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'settings.mailbox.createDomain.title' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="localAddress" placeholder="{{'settings.mailbox.createDomain.placeholder' | translate}}" />
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createDomain.submit' | translate}}</button>
+                            </form>
                         </div>
                     </div>
                 </div>

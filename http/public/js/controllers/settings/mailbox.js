@@ -1,20 +1,39 @@
 'use strict';
 
-app.controller("mailboxSettingsCtrl", function($scope, $rootScope, mailbox) {
-    $rootScope.isLoading = false;
-    $scope.blurCode = [];
+app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification) {
+    $rootScope.isLoading = true;
+    $scope.showMailboxCreateForm = false;
+    $scope.showDomainCreateForm = false;
+    $scope.domains = [];
 
-    $rootScope.$on('mailboxesChange', function () {
-        $scope.blurCode = [];
-        for(var i = 0; i<mailbox.getMailboxes().length; i++) {
-            $scope.blurCode.push(mailbox.getMailboxes()[i]._id);
+    var init = function () {
+        var req = {
+            method: 'GET',
+            url: '/api/v1/domain',
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            $rootScope.isLoading = false;
+            $scope.domains = res.data.domains;
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Could not get domains.', res.data.message, 'error');
+        });
+        if(user.getUser().group.permissions.indexOf('mailbox.create') > -1) {
+            $scope.showMailboxCreateForm = true;
         }
-    })
-    $scope.toggleCode = function (id) {
-        if($scope.blurCode.indexOf(id) == -1) {
-            $scope.blurCode.push(id);
-        } else {
-            $scope.blurCode.splice($scope.blurCode.indexOf(id), 1);
+        if(user.getUser().group.permissions.indexOf('domain.create') > -1) {
+            $scope.showDomainCreateForm = true;
         }
+    }
+
+    if(!user.getUser().username) {
+        $rootScope.$on('userLoaded', function () {
+            init();
+        });
+    } else {
+        init();
     }
 });

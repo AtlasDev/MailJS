@@ -3,7 +3,6 @@
 app.factory('user', function ($window, $cookies, $http, $rootScope) {
     var sessionID = $cookies.get('MailJS');
     var user = {};
-    var isInit = false;
 
     // Events:
     // userLoaded
@@ -64,16 +63,9 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         });
     }
 
-    function setInit(newValue) {
-        isInit = newValue;
-        return;
-    }
-
     return {
         logout: logout,
         sessionID: sessionID,
-        getUser: getUser,
-        isInit: isInit,
-        setInit: setInit
+        getUser: getUser
     }
 });
