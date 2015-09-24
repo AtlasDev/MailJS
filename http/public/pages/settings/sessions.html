@@ -30,16 +30,14 @@
                                 <th>IDLE time</th>
                                 <th>Reads</th>
                                 <th>Writes</th>
-                                <th>Actions</th>
                             </tr>
                             <tr ng-repeat="session in sessions">
                                 <td>{{getOS(session.userAgent)}}</td>
                                 <td><img ng-src="./img/browsers/{{getBrowser(session.userAgent)}}.png" alt="{{getBrowser(session.userAgent)}}" /></td>
                                 <td>{{session.ip}}</td>
-                                <td>{{session.idle}}</td>
+                                <td>{{session.idle}} {{'common.seconds' | translate}}</td>
                                 <td>{{session.reads}}</td>
                                 <td>{{session.writes}}</td>
-                                <td></td>
                             </tr>
                         </tbody>
                     </table>

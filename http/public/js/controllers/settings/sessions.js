@@ -25,7 +25,6 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user)
     }
     $scope.getOS = function (ua) {
         var os = new UAParser().setUA(ua).getResult().os;
-        console.log(os);
     }
     $scope.getBrowser = function (ua) {
         var browser = new UAParser().setUA(ua).getResult().browser;

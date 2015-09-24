@@ -21,7 +21,8 @@
         "signout": "sign out",
         "hello": "hello",
         "enabled": "enabled",
-        "disabled": "disabled"
+        "disabled": "disabled",
+        "seconds": "seconds"
     },
     "settings": {
         "settings": "settings",
@@ -59,7 +60,7 @@
         },
         "sessions": {
             "title": "session settings",
-            "explanation": "Here you can view the current existing sessions and kill them if you need to."
+            "explanation": "Here you can view the current active sessions."
         },
         "general": {
             "title": "General Settings",
