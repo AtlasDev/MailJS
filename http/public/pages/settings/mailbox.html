@@ -13,6 +13,65 @@
         <div class="tab-content">
             <b>{{'common.hello' | translate | capitalize}} {{user.firstName}} {{user.lastName}}!</b>
             <p>{{'settings.mailbox.explanation' | translate}}</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="box box-danger">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'settings.mailbox.list.title' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th>{{'settings.mailbox.list.address' | translate}}</th>
+                                        <th>{{'settings.mailbox.list.smtpToken' | translate}}</th>
+                                        <th>{{'settings.mailbox.list.transferable' | translate}}</th>
+                                        <th>{{'settings.mailbox.list.transferToken' | translate}}</th>
+                                        <th>{{'settings.mailbox.list.admins' | translate}}
+                                        <th>{{'settings.mailbox.list.actions' | translate}}</th>
+                                    </tr>
+                                    <tr ng-repeat="mailbox in mailboxes">
+                                        <td>{{mailbox.address}}</td>
+                                        <td></td>
+                                        <td>{{mailbox.transferable}}</td>
+                                        <td><input type="checkbox" ng-change="toggleCode(mailbox._id)" ng-model="blurCode[mailbox._id]"></input> <span ng-class="{'blur': blurCode.indexOf(mailbox._id) != -1}">{{mailbox.transferCode}}<span></td>
+                                        <td>{{mailbox.admins.length}}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="box box-danger">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'settings.mailbox.boxTitle' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th>{{'settings.mailbox.tableTitles.address' | translate}}</th>
+                                        <th>{{'settings.mailbox.tableTitles.smtpToken' | translate}}</th>
+                                        <th>{{'settings.mailbox.tableTitles.transferable' | translate}}</th>
+                                        <th>{{'settings.mailbox.tableTitles.transferToken' | translate}}</th>
+                                        <th>{{'settings.mailbox.tableTitles.actions' | translate}}</th>
+                                    </tr>
+                                    <tr ng-repeat="session in sessions">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

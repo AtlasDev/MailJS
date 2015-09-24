@@ -56,11 +56,29 @@
         },
         "mailbox": {
             "title": "mailbox settings",
-            "explanation": "Here you can add new mailboxes, manage existing ones and pair mailboxes to SMTP clients."
+            "explanation": "Here you can add new mailboxes, manage existing ones and pair mailboxes to SMTP clients.",
+            "list": {
+                "title": "Mailboxes",
+                "address": "Address",
+                "transferToken": "Transfer token",
+                "transferable": "Transferable",
+                "smtpToken": "SMTP password",
+                "admins": "Admins",
+                "actions": "Actions"
+            }
         },
         "sessions": {
             "title": "session settings",
-            "explanation": "Here you can view the current active sessions."
+            "explanation": "Here you can view the current active sessions.",
+            "boxTitle": "sessions",
+            "tableTitles": {
+                "os": "OS",
+                "browser": "Browser",
+                "ip": "IP",
+                "idle": "IDLE time",
+                "reads": "Reads",
+                "writes": "Writes"
+            }
         },
         "general": {
             "title": "General Settings",

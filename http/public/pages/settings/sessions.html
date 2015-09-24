@@ -15,7 +15,7 @@
             <p>{{'settings.sessions.explanation' | translate}}</p>
             <div class="box box-danger">
                 <div class="box-header">
-                    <h3 class="box-title">Sessions</h3>
+                    <h3 class="box-title">{{'settings.sessions.boxTitle' | translate | capitalize}}</h3>
                     <div class="box-tools">
                         <a ng-click="reloadSessions()" title="Refresh"><i class="fa fa-refresh pointer"></i></a>
                     </div>
@@ -24,12 +24,12 @@
                     <table class="table table-hover">
                         <tbody>
                             <tr>
-                                <th>OS</th>
-                                <th>Browser</th>
-                                <th>IP</th>
-                                <th>IDLE time</th>
-                                <th>Reads</th>
-                                <th>Writes</th>
+                                <th>{{'settings.sessions.tableTitles.os' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.browser' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.ip' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.idle' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.reads' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.writes' | translate}}</th>
                             </tr>
                             <tr ng-repeat="session in sessions">
                                 <td>{{getOS(session.userAgent)}}</td>

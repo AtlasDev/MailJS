@@ -38,6 +38,10 @@ app.factory('mailbox', function ($http, user, $rootScope) {
         }
     }
 
+    function getMailboxes() {
+        return mailboxes;
+    }
+
     $rootScope.$on('userLoaded', function () {
         init();
     })
@@ -45,7 +49,7 @@ app.factory('mailbox', function ($http, user, $rootScope) {
     return {
         init: init,
         current: current,
-        mailboxes: mailboxes,
-        changeMailbox: changeMailbox
+        changeMailbox: changeMailbox,
+        getMailboxes: getMailboxes
     }
 });

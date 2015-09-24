@@ -11,7 +11,6 @@ exports.getMailbox = function (req, res) {
             if(mailbox == false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
-            mailbox.transferCode = undefined;
             foundMailboxes.push(mailbox);
             if(mailboxes.length == i) {
                 return res.json({mailboxes: foundMailboxes});
