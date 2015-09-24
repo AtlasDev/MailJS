@@ -32,7 +32,7 @@
                                 <th>{{'settings.sessions.tableTitles.writes' | translate}}</th>
                             </tr>
                             <tr ng-repeat="session in sessions">
-                                <td>{{getOS(session.userAgent)}}</td>
+                                <td><img ng-src="./img/os/{{getOS(session.userAgent)}}.png" alt="{{getOS(session.userAgent)}}" /></td>
                                 <td><img ng-src="./img/browsers/{{getBrowser(session.userAgent)}}.png" alt="{{getBrowser(session.userAgent)}}" /></td>
                                 <td>{{session.ip}}</td>
                                 <td>{{session.idle}} {{'common.seconds' | translate}}</td>
