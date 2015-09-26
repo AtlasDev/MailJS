@@ -41,6 +41,11 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         return mailboxes;
     }
 
+    function addMailbox(mailbox) {
+        mailboxes.push(mailbox);
+        $rootScope.$emit('mailboxesChange', mailboxes);
+    }
+
     $rootScope.$on('userLoaded', function () {
         init();
     })
@@ -49,6 +54,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         init: init,
         current: current,
         changeMailbox: changeMailbox,
-        getMailboxes: getMailboxes
+        getMailboxes: getMailboxes,
+        addMailbox: addMailbox
     }
 });
