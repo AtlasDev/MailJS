@@ -43,6 +43,9 @@ router.route('/user/:user')
 
 router.route('/mailbox')
   .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
+  .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailboxes);
+
+router.route('/mailbox/:mailbox')
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailbox);
 
 router.route('/domain')

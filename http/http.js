@@ -48,8 +48,6 @@ app.use(
 
 app.use(passport.initialize());
 
-app.use('/api/v1', v1apiRouter);
-
 app.use(function(err, req, res, next) {
     if(err.name == 'SyntaxError') {
         return res.status(400).json({'EINVALID': 'JSON invalid.'});
@@ -59,6 +57,8 @@ app.use(function(err, req, res, next) {
 });
 
 frontend(http, app);
+
+app.use('/api/v1', v1apiRouter);
 
 http.listen(config.http.port);
 util.log('Http server started at port '+config.http.port, true);

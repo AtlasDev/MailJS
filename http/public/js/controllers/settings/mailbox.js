@@ -87,8 +87,22 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
     }
 
     $scope.viewMailbox = function (id) {
-        $scope.viewingMailbox = mailbox.findMailbox(id);
-        $('#viewModal').modal('show');
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'GET',
+            url: '/api/v1/mailbox/'+id,
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            $scope.viewingMailbox = res.data.mailbox;
+            $rootScope.isLoading = false;
+            $('#viewModal').modal('show');
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot view mailbox!', res.data.error.message, 'error');
+        });
     }
 
     if(typeof user.getUser().group == 'undefined' || typeof user.getUser().group == "string") {
