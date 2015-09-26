@@ -42,6 +42,7 @@ router.route('/user/:user')
   .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
 
 router.route('/mailbox')
+  .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailbox);
 
 router.route('/domain')
@@ -53,9 +54,6 @@ router.route('/client')
   .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
 
 /*
-* router.route('/user/group')
-*   .put(authController.isAuthenticated, userController.updateUserGroup);
-*
 * router.route('/client')
 *   .post(authController.isAuthenticated, clientController.postClients)
 *   .delete(authController.isAuthenticated, clientController.deleteClients)

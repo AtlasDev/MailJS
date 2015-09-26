@@ -56,14 +56,14 @@ var dbstuff = function (group) {
             }
             console.log(' - User created.');
             console.log('Creating first domain..');
-            sys.domain.create(config.install.domain, false, function (err) {
+            sys.domain.create(config.install.domain, false, function (err, domain) {
                 if (err) {
                     console.log(colors.red('Failed to create initial domain: '.red+err));
                     process.exit(1);
                 }
                 console.log('Domain created.');
                 console.log('Creating initial mailbox..');
-                sys.mailbox.create('info@'+config.install.domain, user._id, true, true, function (err, mailbox) {
+                sys.mailbox.create('info', domain._id, user._id, true, true, function (err, mailbox) {
                     if (err) {
                         console.log(colors.red('Failed to create initial mailbox: '.red+err));
                         process.exit(1);

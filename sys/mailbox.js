@@ -9,7 +9,8 @@ var inboxFunc = require('./inbox.js');
  * @name createMailbox
  * @since 0.1.0
  * @version 1
- * @param {string} address Mail address to be registered, in the form of `info@mailjs.net`.
+ * @param {string} local Local part of the mail address to be registered, in the form of `info` for `info@example.com`.
+ * @param {string} domainID ID of the domain to register the mailbox to.
  * @param {string} userID ID of the user to register the mailbox to.
  * @param {string} transferable Set if the mailbox is transferable to other users.
  * @param {string} overwrite Overwrite the disabled check for the domain.
@@ -22,20 +23,20 @@ var inboxFunc = require('./inbox.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
-exports.create = function (address, userID, transferable, overwrite, callback) {
+exports.create = function (local, domainID, userID, transferable, overwrite, callback) {
     if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         return callback(error);
     }
-    var overwrite = overwrite || false;
-    var domain = address.split('@')[1];
-    if(address.split('@')[2] || address.split('.')[2]) {
-        var error = new Error('Mail address invalid.');
+    if (!domainID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid domain ID!');
         error.name = 'EINVALID';
         return callback(error);
     }
-    Domain.findOne({domain: domain}, function (err, domain) {
+    var overwrite = overwrite || false;
+    //TODO: local part validation
+    Domain.findById(domainID, function (err, domain) {
         if(err) {
             return callback(err);
         }
@@ -51,6 +52,7 @@ exports.create = function (address, userID, transferable, overwrite, callback) {
                 return callback(error);
             }
         }
+        var address = local+'@'+domain.domain;
         Mailbox.findOne({address: address}, function (err, resMailbox) {
             if(err) {
                 return callback(err);
@@ -62,6 +64,7 @@ exports.create = function (address, userID, transferable, overwrite, callback) {
             }
             var mailbox = new Mailbox();
             mailbox.address = address;
+            mailbox.domain = domainID;
             mailbox.admins = [ userID ];
             mailbox.transferable = transferable;
             mailbox.generateTransferCode(function () {
