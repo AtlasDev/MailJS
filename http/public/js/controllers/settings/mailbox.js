@@ -5,6 +5,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
     $scope.showMailboxCreateForm = false;
     $scope.showDomainCreateForm = false;
     $scope.domains = [];
+    $scope.viewingMailbox = {};
 
     var init = function () {
         var req = {
@@ -83,6 +84,11 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Domain adding failed!', res.data.error.message, 'error');
         });
+    }
+
+    $scope.viewMailbox = function (id) {
+        $scope.viewingMailbox = mailbox.findMailbox(id);
+        $('#viewModal').modal('show');
     }
 
     if(typeof user.getUser().group == 'undefined' || typeof user.getUser().group == "string") {

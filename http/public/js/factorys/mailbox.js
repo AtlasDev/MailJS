@@ -37,6 +37,15 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         }
     }
 
+    function findMailbox(id) {
+        for(var i = 0; i<mailboxes.length; i++) {
+            if(mailboxes[i]._id == id) {
+                return mailboxes[i];
+                break;
+            }
+        }
+    }
+
     function getMailboxes() {
         return mailboxes;
     }
@@ -55,6 +64,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         current: current,
         changeMailbox: changeMailbox,
         getMailboxes: getMailboxes,
-        addMailbox: addMailbox
+        addMailbox: addMailbox,
+        findMailbox: findMailbox
     }
 });
