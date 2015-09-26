@@ -22,7 +22,9 @@
         "hello": "hello",
         "enabled": "enabled",
         "disabled": "disabled",
-        "seconds": "seconds"
+        "seconds": "seconds",
+        "yes": "yes",
+        "no": "no"
     },
     "settings": {
         "settings": "settings",

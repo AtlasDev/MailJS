@@ -32,8 +32,9 @@
                                     </tr>
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
-                                        <td class="secret"></td>
-                                        <td>{{mailbox.transferable}}</td>
+                                        <td class="secret">{{mailbox.smtpToken}}</td>
+                                        <td ng-if="mailbox.transferable">{{'common.yes' | translate | capitalize}}</td>
+                                        <td ng-if="!mailbox.transferable">{{'common.no' | translate | capitalize}}</td>
                                         <td class="secret">{{mailbox.transferCode}}</td>
                                         <td>{{mailbox.admins.length}}</td>
                                         <td></td>
