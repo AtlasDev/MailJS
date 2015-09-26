@@ -10,10 +10,10 @@ exports.getDomains = function (req, res) {
 }
 
 exports.postDomain = function (req, res) {
-    if(!req.body.domain) {
-        return res.status(400).json({error: {name: 'EINVALID', message: 'Domain missing.'}});
+    if(!req.body.domain || new RegExp(/^([a-z0-9]+\.)?[a-z0-9][a-z0-9-]*\.[a-z]{2,6}$/i).test(req.body.domain)) {
+        return res.status(400).json({error: {name: 'EINVALID', message: 'Domain missing or invalid.'}});
     }
-    if(!req.body.disabled || typeof req.body.disabled != "boolean") {
+    if(req.body.disabled && typeof req.body.disabled != "boolean") {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Invalid disabled value.'}});
     }
     sys.perms.hasPerm('domain.create', req.user.group, req.authInfo, function (err, hasPerm) {

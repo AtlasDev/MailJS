@@ -94,9 +94,9 @@
                             <h3 class="box-title">{{'settings.mailbox.createDomain.title' | translate | capitalize}}</h3>
                         </div>
                         <div class="box-body">
-                            <form role="form">
+                            <form role="form" ng-submit="createDomain()">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="localAddress" placeholder="{{'settings.mailbox.createDomain.placeholder' | translate}}" />
+                                    <input type="text" class="form-control" id="domain" ng-model="domain" placeholder="{{'settings.mailbox.createDomain.placeholder' | translate}}" />
                                 </div>
                                 <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createDomain.submit' | translate}}</button>
                             </form>
