@@ -26,11 +26,19 @@ exports.postMailbox = function (req, res) {
     if(typeof req.body.transferable != "boolean" && req.body.transferable) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Transferable data is invalid.'}});
     }
-    var transferable = req.body.transferable || false;
-    sys.mailbox.create(req.body.local, req.body.domain, req.user._id, transferable, false, function (err, mailbox) {
+    sys.perms.hasPerms('mailbox.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
-        return res.json({mailbox: mailbox});
+        if(hasPerm == false) {
+            return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
+        }
+        var transferable = req.body.transferable || false;
+        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, transferable, false, function (err, mailbox) {
+            if(err) {
+                return res.status(500).json({error: {name: err.name, message: err.message}});
+            }
+            return res.json({mailbox: mailbox});
+        });
     });
 }
