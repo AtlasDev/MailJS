@@ -1257,8 +1257,148 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/mailbox/:mailbox",
+    "title": "Get a specific mailbox",
+    "version": "0.1.0",
+    "name": "GetMailbox",
+    "group": "Mailbox",
+    "permission": [
+      {
+        "name": "mailbox.view"
+      }
+    ],
+    "description": "<p>Get information about a mailbox. Permissions only needed when mailbox is not owned.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "mailbox",
+            "description": "<p>The mailbox ID to find the information about.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Find a user by username:",
+          "content": ".../mailbox/5606e7f49ba75d600a11bc5b",
+          "type": "url"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "mailbox",
+            "description": "<p>The mailbox information.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>Invalid mailbox ID.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ENOTFOUND",
+            "description": "<p>Could not find mailbox.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMS",
+            "description": "<p>The permission level of the user is not high enough.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Invalid mailbox ID.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 404 Not found\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Could not find mailbox.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        },
+        {
+          "title": "EPERMS:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/mailbox.js",
+    "groupTitle": "Mailbox",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
     "url": "/mailbox",
-    "title": "Get mailboxes meta",
+    "title": "Get mailboxes of a user",
     "version": "0.1.0",
     "name": "GetMailboxes",
     "group": "Mailbox",
@@ -1410,7 +1550,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ]\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
