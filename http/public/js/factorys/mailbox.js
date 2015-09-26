@@ -1,6 +1,6 @@
 'use strict'
 
-app.factory('mailbox', function ($http, user, $rootScope) {
+app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
     var current;
     var mailboxes = [];
 

@@ -12,7 +12,7 @@ exports.getMailbox = function (req, res) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
             foundMailboxes.push(mailbox);
-            if(mailboxes.length == i) {
+            if(mailboxes.length == foundMailboxes.length) {
                 return res.json({mailboxes: foundMailboxes});
             }
         });
