@@ -37,6 +37,9 @@ exports.postMailbox = function (req, res) {
         var transferable = req.body.transferable || false;
         sys.mailbox.create(req.body.local, req.body.domain, req.user._id, transferable, false, function (err, mailbox) {
             if(err) {
+                if(err.name == "EOCCUPIED") {
+                    return res.status(400).json({error: {name: err.name, message: err.message}});
+                }
                 return res.status(500).json({error: {name: err.name, message: err.message}});
             }
             return res.json({mailbox: mailbox});

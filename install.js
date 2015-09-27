@@ -97,10 +97,12 @@ var SavePerms = function SavePerms(cb) {
         'user.protected',
         'user.overwrite',
         'user.group.change',
+        'group.list',
         'client.create',
         'client.list',
         'client.delete',
         'mailbox.create',
+        'mailbox.view',
         'domain.create'
     ], false, function (err, adminGroup) {
         if(err) {
@@ -115,10 +117,12 @@ var SavePerms = function SavePerms(cb) {
             'user.create',
             'user.delete',
             'user.protected',
+            'group.list',
             'client.create',
             'client.list',
             'client.delete',
-            'mailbox.create'
+            'mailbox.create',
+            'mailbox.view'
         ], false, function (err, modGroup) {
             if(err) {
                 if (err) {
