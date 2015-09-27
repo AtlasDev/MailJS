@@ -26,7 +26,7 @@ exports.postMailbox = function (req, res) {
     if(typeof req.body.transferable != "boolean" && req.body.transferable) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Transferable data is invalid.'}});
     }
-    sys.perms.hasPerms('mailbox.create', req.user.group, req.authInfo, function (err, hasPerm) {
+    sys.perms.hasPerm('mailbox.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
@@ -70,7 +70,6 @@ function runGetMailbox(req, res) {
         if(mailbox == false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
         }
-        var resolvedAdmins = [];
         for(var i = 0; i<mailbox.admins.length; i++) {
             sys.user.find(mailbox.admins[i], function (err, admin) {
                 if(err) {
@@ -82,9 +81,8 @@ function runGetMailbox(req, res) {
                 admin = admin;
                 admin.password = undefined;
                 admin.tfaToken = undefined;
-                resolvedAdmins.push(admin);
-                if(mailbox.admins.length == resolvedAdmins.length) {
-                    mailbox.admins = resolvedAdmins;
+                mailbox.admins[i-1] = admin;
+                if(mailbox.admins.length == i) {
                     return res.json({mailbox: mailbox});
                 }
             });
