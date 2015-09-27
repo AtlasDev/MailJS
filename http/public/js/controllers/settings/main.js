@@ -96,7 +96,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             });
         }
     }
-    if(!user.getUser().username) {
+    if(typeof user.getUser()._id == "undefined") {
         $rootScope.$on('userLoaded', function () {
             loadTFA();
         });
