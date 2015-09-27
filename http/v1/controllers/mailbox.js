@@ -79,6 +79,7 @@ function runGetMailbox(req, res) {
                     return res.status(500).json({error: {name: 'ENOTFOUND', message: 'One of the admins was not found in the database!'}});
                 }
                 admin = admin;
+                admin.username = undefined;
                 admin.password = undefined;
                 admin.tfaToken = undefined;
                 mailbox.admins[i-1] = admin;

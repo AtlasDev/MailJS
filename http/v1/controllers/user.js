@@ -19,6 +19,7 @@ exports.postUser = function(req, res) {
                 return res.status(500).json({error: {name: err.name, message: err.message}});
             }
             responseUser = user;
+            responseUser.username = undefined;
             responseUser.password = undefined;
             responseUser.tfaToken = undefined;
             return res.json({ message: 'User added!', data: user });
@@ -28,6 +29,7 @@ exports.postUser = function(req, res) {
 
 exports.currentUser = function (req, res) {
     var user = req.user;
+    user.username = undefined;
     user.password = undefined;
     user.tfaToken = undefined;
     return res.json({user: user});
@@ -71,6 +73,7 @@ exports.getUser = function(req, res) {
                 if(user == false) {
                     return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
                 }
+                user.username = undefined
                 user.password = undefined;
                 user.tfaToken = undefined;
                 return res.json({user: user});
@@ -107,6 +110,7 @@ exports.getUsers = function(req, res) {
                 return;
             }
             users.forEach(function (user) {
+                user.username = undefined;
                 user.password = undefined;
                 user.tfaToken = undefined;
             })
