@@ -9,6 +9,9 @@
             <li class="active"><a href="#mainSettings" data-toggle="tab" aria-expanded="true">{{'settings.main.title' | translate | capitalize}}</a></li>
             <li class=""><a href="#mailboxSettings" data-toggle="tab" aria-expanded="false">{{'settings.mailbox.title' | translate | capitalize}}</a></li>
             <li class=""><a href="#sessionSettings" data-toggle="tab" aria-expanded="false">{{'settings.sessions.title' | translate | capitalize}}</a></li>
+            <li class="" ng-if="user.gorup.permissions.indexOf('user.list') != -1">
+                <a href="#userSettings" data-toggle="tab" aria-expanded="false">{{'settings.user.title' | translate | capitalize}}</a>
+            </li>
         </ul>
         <div class="tab-content">
             <b>{{'common.hello' | translate | capitalize}} {{user.firstName}} {{user.lastName}}!</b>

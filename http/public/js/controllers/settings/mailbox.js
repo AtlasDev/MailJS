@@ -48,7 +48,8 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             },
             data: {
                 'local': $scope.localAddress,
-                'domain': $scope.mailboxDomain
+                'domain': $scope.mailboxDomain,
+                'transferable': $scope.mailboxTransferable
             }
         };
         $http(req).then(function(res) {
@@ -73,11 +74,14 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'x-token': user.sessionID
             },
             data: {
-                'domain': $scope.domain
+                'domain': $scope.domain,
+                'disabled': $scope.domainDisabled
             }
         };
         $http(req).then(function(res) {
-            $scope.domains.push(res.data.domain);
+            if(res.data.domain.disabled != true) {
+                $scope.domains.push(res.data.domain);
+            }
             $rootScope.isLoading = false;
             notification.send('Domain added!', 'Domain has been added to the database.', 'success');
         }, function(res) {

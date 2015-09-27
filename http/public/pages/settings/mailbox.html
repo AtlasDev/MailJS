@@ -9,6 +9,9 @@
             <li class=""><a href="#mainSettings" data-toggle="tab" aria-expanded="true">{{'settings.main.title' | translate | capitalize}}</a></li>
             <li class="active"><a href="#mailboxSettings" data-toggle="tab" aria-expanded="false">{{'settings.mailbox.title' | translate | capitalize}}</a></li>
             <li class=""><a href="#sessionSettings" data-toggle="tab" aria-expanded="false">{{'settings.sessions.title' | translate | capitalize}}</a></li>
+            <li class="" ng-if="user.gorup.permissions.indexOf('user.list') != -1">
+                <a href="#userSettings" data-toggle="tab" aria-expanded="false">{{'settings.user.title' | translate | capitalize}}</a>
+            </li>
         </ul>
         <div class="tab-content">
             <b>{{'common.hello' | translate | capitalize}} {{user.firstName}} {{user.lastName}}!</b>
@@ -86,6 +89,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>
+                                            <input ng-model="mailboxTransferable" type="checkbox"> {{'common.transferable' | translate | capitalize}}
+                                        </label>
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createMailbox.submit' | translate}}</button>
                             </form>
                         </div>
@@ -99,6 +109,9 @@
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="domain" ng-model="domain" placeholder="{{'settings.mailbox.createDomain.placeholder' | translate}}" />
                                 </div>
+                                <label>
+                                    <input ng-model="domainDisabled" type="checkbox"> {{'common.disabled' | translate | capitalize}}
+                                </label>
                                 <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createDomain.submit' | translate}}</button>
                             </form>
                         </div>
@@ -167,7 +180,12 @@
                                             <li><b>{{'settings.mailbox.viewMailbox.userCount' | translate}}:</b> {{viewingMailbox.users.length}}</li>
                                             <li><b>{{'settings.mailbox.viewMailbox.adminCount' | translate}}:</b> {{viewingMailbox.admins.length}}</li>
                                             <li><b>{{'common.smtpToken' | translate}}:</b> <span class="secret">{{viewingMailbox.smtpToken}}</span></li>
-                                            <li><b>{{'common.transferable' | translate}}:</b> {{viewingMailbox.transferable}}</li>
+                                            <li ng-if="viewingMailbox.transferable == true">
+                                                <b>{{'common.transferable' | translate}}:</b> {{'common.yes' | translate}}
+                                            </li>
+                                            <li ng-if="viewingMailbox.transferable == false">
+                                                <b>{{'common.transferable' | translate}}:</b> {{'common.no' | translate}}
+                                            </li>
                                             <li><b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span></li>
                                         </ul>
                                     </div>

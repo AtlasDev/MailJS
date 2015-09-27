@@ -24,6 +24,14 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/settings/sessions.html',
 			controller  : 'sessionsSettingsCtrl'
 		})
+		.when('/sessionSettings', {
+			templateUrl : 'pages/settings/sessions.html',
+			controller  : 'sessionsSettingsCtrl'
+		})
+		.when('/userSettings', {
+			templateUrl : 'pages/settings/users.html',
+			controller  : 'userSettingsCtrl'
+		})
 		.otherwise({
 			redirectTo: '/mailbox/inbox'
 		});

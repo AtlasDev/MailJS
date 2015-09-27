@@ -112,6 +112,23 @@
                 "writes": "Writes"
             }
         },
+        "user": {
+            "title": "Users settings",
+            "explanation": "Here you can manage user accounts.",
+            "list": {
+                "title": "Registered users",
+                "username": "Username",
+                "firstName": "First name",
+                "lastName": "Last name",
+                "mailboxAmount": "Amount of mailboxes",
+                "tfa": "2 factor authentication",
+                "group": "Group",
+                "changeGroup": "New group"
+            },
+            "create": {
+                "title": "Create a new user"
+            }
+        },
         "general": {
             "title": "General Settings",
             "language": "Language",
