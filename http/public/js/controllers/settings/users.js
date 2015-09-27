@@ -59,6 +59,10 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         }
     }
 
+    $scope.createUser = function () {
+        
+    }
+
     function loadGroups() {
         var req = {
             method: 'GET',

@@ -57,24 +57,36 @@
                             <h3 class="box-title">{{'settings.user.create.title' | translate | capitalize}}</h3>
                         </div>
                         <div class="box-body">
-                            <form role="form" ng-submit="createMailbox()">
+                            <form role="form" ng-submit="createUser()">
+                                <div class="form-group">
+                                    <label for="username">{{'settings.user.create.username' | translate}}</label>
+                                    <input type="text" class="form-control" id="username" ng-model="username" placeholder="{{'settings.user.create.username' | translate}}" />
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="localAddress" ng-model="localAddress" placeholder="{{'settings.mailbox.createMailbox.placeholder' | translate}}" />
+                                            <label for="firstName">{{'settings.user.create.firstName' | translate}}</label>
+                                            <input type="text" class="form-control" id="firstName" ng-model="firstName" placeholder="{{'settings.user.create.firstName' | translate}}" />
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>@</label>
+                                            <label for="lastName">{{'settings.user.create.lastName' | translate}}</label>
+                                            <input type="text" class="form-control" id="lastName" ng-model="lastName" placeholder="{{'settings.user.create.lastName' | translate}}" />
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <select class="form-control" ng-model="mailboxDomain">
-                                                <option value="">{{'settings.mailbox.createMailbox.select' | translate}}</option>
-                                                <option ng-repeat="domain in domains" value="{{domain._id}}">{{domain.domain}}</option>
-                                            </select>
+                                            <label for="password">{{'settings.user.create.password' | translate}}</label>
+                                            <input type="password" class="form-control" id="password" ng-model="password" placeholder="{{'settings.user.create.password' | translate}}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="repeatPassword">{{'settings.user.create.repeatPassword' | translate}}</label>
+                                            <input type="password" class="form-control" id="repeatPassword" ng-model="repeatPassword" placeholder="{{'settings.user.create.repeatPassword' | translate}}" />
                                         </div>
                                     </div>
                                 </div>

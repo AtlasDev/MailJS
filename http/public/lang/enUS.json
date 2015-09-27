@@ -126,7 +126,12 @@
                 "changeGroup": "New group"
             },
             "create": {
-                "title": "Create a new user"
+                "title": "Create a new user",
+                "username": "Username",
+                "password": "Password",
+                "repeatPassword": "Repeat password",
+                "firstName": "First name",
+                "lastName": "Last name"
             }
         },
         "general": {
