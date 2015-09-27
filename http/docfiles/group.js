@@ -3,6 +3,7 @@
  * @apiVersion 0.1.0
  * @apiName GetGroups
  * @apiGroup Group
+ * @apiPermission group.list
  *
  * @apiDescription Get all groups available
  *
@@ -36,6 +37,7 @@
  *       ]
  *     }
  *
+ * @apiUse PermissionError
  * @apiUse AuthError
  * @apiUse UserAuthHeader
  * @apiUse OAuthHeader

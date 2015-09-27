@@ -1,11 +1,19 @@
 var sys = require('../../../sys/main.js');
 
 exports.getGroups = function (req, res) {
-    sys.group.getGroups(function (err, groups) {
+    sys.perms.hasPerm('group.list', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.json({error: {name: err.name, message: err.message} });
         }
-        return res.json({groups: groups});
+        if(hasPerm == false) {
+            return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
+        }
+        sys.group.getGroups(function (err, groups) {
+            if(err) {
+                return res.json({error: {name: err.name, message: err.message} });
+            }
+            return res.json({groups: groups});
+        });
     });
 }
 

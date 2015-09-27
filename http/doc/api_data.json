@@ -920,6 +920,11 @@
     "version": "0.1.0",
     "name": "GetGroups",
     "group": "Group",
+    "permission": [
+      {
+        "name": "group.list"
+      }
+    ],
     "description": "<p>Get all groups available</p> ",
     "success": {
       "fields": {
@@ -949,12 +954,23 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "EPERMS",
+            "description": "<p>The permission level of the user is not high enough.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "Unauthorized",
             "description": "<p>The user is not authorized.</p> "
           }
         ]
       },
       "examples": [
+        {
+          "title": "EPERMS:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        },
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
