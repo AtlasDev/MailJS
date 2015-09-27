@@ -76,3 +76,11 @@ a:hover {
 	width: 100%;
 	height: 100%;
 }
+
+.admin {
+	color: rgb(208, 30, 30);
+}
+
+.creator {
+	color: rgb(94, 16, 121);
+}

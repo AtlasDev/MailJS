@@ -23,12 +23,12 @@
                             <table class="table table-hover">
                                 <tbody>
                                     <tr>
-                                        <th>{{'settings.mailbox.list.address' | translate}}</th>
-                                        <th>{{'settings.mailbox.list.smtpToken' | translate}}</th>
-                                        <th>{{'settings.mailbox.list.transferable' | translate}}</th>
-                                        <th>{{'settings.mailbox.list.transferToken' | translate}}</th>
-                                        <th>{{'settings.mailbox.list.admins' | translate}}
-                                        <th>{{'settings.mailbox.list.actions' | translate}}</th>
+                                        <th>{{'common.address' | translate}}</th>
+                                        <th>{{'common.smtpToken' | translate}}</th>
+                                        <th>{{'common.transferable' | translate}}</th>
+                                        <th>{{'common.transferToken' | translate}}</th>
+                                        <th>{{'common.admins' | translate}}
+                                        <th>{{'common.actions' | translate}}</th>
                                     </tr>
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
@@ -115,7 +115,67 @@
                 <h4 class="modal-title" id="myModalLabel">{{viewingMailbox.address}}</h4>
             </div>
             <div class="modal-body">
-                {{viewingMailbox}}
+                <div class="modal-body">
+                    <div class="container col-md-12">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="box box-danger">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{{'common.users' | translate | capitalize}}</h3>
+                                    </div>
+                                    <div class="box-body table-responsive no-padding">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Function</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                                <tr ng-repeat="mailboxUser in viewingMailbox.users | orderBy: '-function'">
+                                                    <td>{{mailboxUser.firstName}} {{mailboxUser.lastName}}</td>
+                                                    <td ng-if="mailboxUser.function == 1">{{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}</td>
+                                                    <td ng-if="mailboxUser.function == 2" class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</td>
+                                                    <td ng-if="mailboxUser.function == 3" class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</td>
+                                                    <td>{{'common.actions' | translate}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="box box-danger">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{{'settings.mailbox.viewMailbox.information' | translate | capitalize}}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <ul class="list-unstyled">
+                                            <li><b>{{'common.address' | translate}}:</b> {{viewingMailbox.address}}</li>
+                                            <li><b>{{'common.id' | translate}}:</b> {{viewingMailbox._id}}</li>
+                                            <li ng-if="viewingMailbox.function == 1">
+                                                <b>{{'settings.mailbox.viewMailbox.functionDisplay' | translate}}:</b>
+                                                {{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}
+                                            </li>
+                                            <li ng-if="viewingMailbox.function == 2">
+                                                <b>{{'settings.mailbox.viewMailbox.functionDisplay' | translate}}:</b>
+                                                <span class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</span>
+                                            </li>
+                                            <li ng-if="viewingMailbox.function == 3">
+                                                <b>{{'settings.mailbox.viewMailbox.functionDisplay' | translate}}:</b>
+                                                <span class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</span>
+                                            </li>
+                                            <li><b>{{'settings.mailbox.viewMailbox.userCount' | translate}}:</b> {{viewingMailbox.users.length}}</li>
+                                            <li><b>{{'settings.mailbox.viewMailbox.adminCount' | translate}}:</b> {{viewingMailbox.admins.length}}</li>
+                                            <li><b>{{'common.smtpToken' | translate}}:</b> <span class="secret">{{viewingMailbox.smtpToken}}</span></li>
+                                            <li><b>{{'common.transferable' | translate}}:</b> {{viewingMailbox.transferable}}</li>
+                                            <li><b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

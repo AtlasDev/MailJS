@@ -1,4 +1,5 @@
 var sys = require('../../../sys/main.js');
+var util = require('../../../util.js');
 
 exports.getMailboxes = function (req, res) {
     var mailboxes = req.user.mailboxes;
@@ -70,23 +71,28 @@ function runGetMailbox(req, res) {
         if(mailbox == false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
         }
-        for(var i = 0; i<mailbox.admins.length; i++) {
-            sys.user.find(mailbox.admins[i], function (err, admin) {
-                if(err) {
-                    return res.status(500).json({error: {name: err.name, message: err.message}});
-                }
-                if(!admin) {
-                    return res.status(500).json({error: {name: 'ENOTFOUND', message: 'One of the admins was not found in the database!'}});
-                }
-                admin = admin;
-                admin.username = undefined;
-                admin.password = undefined;
-                admin.tfaToken = undefined;
-                mailbox.admins[i-1] = admin;
-                if(mailbox.admins.length == i) {
+        mailbox = util.copyObject(mailbox);
+        sys.user.findByMailbox(mailbox._id, function (err, users) {
+            if(err) {
+                return res.status(500).json({error: {name: err.name, message: err.message}});
+            }
+            if(users == false) {
+                return res.status(500).json({error: {name: 'ENOTFOUND', message: 'No users found in the database!'}});
+            }
+            mailbox.users = [];
+            for(var i = 0; i<users.length; i++) {
+                var cleanUser = users[i];
+                cleanUser.username = undefined;
+                cleanUser.password = undefined;
+                cleanUser.tfaToken = undefined;
+                cleanUser.mailboxes = undefined;
+                cleanUser.tfa = undefined;
+                cleanUser.group = undefined;
+                mailbox.users[i] = cleanUser;
+                if(users.length == mailbox.users.length) {
                     return res.json({mailbox: mailbox});
                 }
-            });
-        }
+            }
+        })
     });
 }

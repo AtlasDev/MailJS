@@ -24,7 +24,15 @@
         "disabled": "disabled",
         "seconds": "seconds",
         "yes": "yes",
-        "no": "no"
+        "no": "no",
+        "admins": "admins",
+        "users": "users",
+        "id": "ID",
+        "address": "address",
+        "smtpToken": "SMTP password",
+        "transferToken": "Transfer token",
+        "transferable": "Transferable",
+        "actions": "Actions"
     },
     "settings": {
         "settings": "settings",
@@ -60,13 +68,7 @@
             "title": "mailbox settings",
             "explanation": "Here you can add new mailboxes, manage existing ones and pair mailboxes to SMTP clients.",
             "list": {
-                "title": "Mailboxes",
-                "address": "Address",
-                "transferToken": "Transfer token",
-                "transferable": "Transferable",
-                "smtpToken": "SMTP password",
-                "admins": "Admins",
-                "actions": "Actions"
+                "title": "Mailboxes"
             },
             "code": {
                 "title": "Fill in transfer code",
@@ -84,6 +86,17 @@
                 "title": "Create a new domain",
                 "placeholder": "Enter domain (E.G. example.com)",
                 "submit": "Create"
+            },
+            "viewMailbox": {
+                "information": "information",
+                "functionDisplay": "Your function",
+                "userCount": "User count",
+                "adminCount": "Admin count",
+                "functions": {
+                    "user": "user",
+                    "admin": "admin",
+                    "creator": "creator"
+                }
             }
         },
         "sessions": {

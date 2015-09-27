@@ -97,8 +97,28 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         };
         $http(req).then(function(res) {
             $scope.viewingMailbox = res.data.mailbox;
-            $rootScope.isLoading = false;
-            $('#viewModal').modal('show');
+            if(user.getUser()._id == $scope.viewingMailbox.creator) {
+                $scope.viewingMailbox.function = 3;
+            } else if($scope.viewingMailbox.admins.indexOf(user.getUser()._id) != -1) {
+                $scope.viewingMailbox.function = 2;
+            } else {
+                $scope.viewingMailbox.function = 1;
+            }
+            for (var i = 0; i < $scope.viewingMailbox.users.length; i++) {
+                $scope.viewingMailbox.users[i];
+                var userID = $scope.viewingMailbox.users[i]._id;
+                if(userID == $scope.viewingMailbox.creator) {
+                    $scope.viewingMailbox.users[i].function = 3;
+                } else if($scope.viewingMailbox.admins.indexOf(userID) != -1) {
+                    $scope.viewingMailbox.users[i].function = 2;
+                } else {
+                    $scope.viewingMailbox.users[i].function = 1;
+                }
+                if($scope.viewingMailbox.users.length == i+1) {
+                    $rootScope.isLoading = false;
+                    $('#viewModal').modal('show');
+                }
+            }
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Cannot view mailbox!', res.data.error.message, 'error');

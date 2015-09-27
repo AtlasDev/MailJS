@@ -167,6 +167,33 @@ exports.findByUsername = function (username, callback) {
 }
 
 /**
+ * Find a user by mailbox.
+ * @name findByMailboxUser
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID Id of the mailbox to find by.
+ * @param {findByMailboxUserCallback} callback Callback function after finding the user.
+ */
+
+/**
+ * Callback for finding users by mailbox.
+ * @callback findByMailboxUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Array|Boolean} users An array of user objects found, false if non found.
+ */
+exports.findByMailbox = function (mailboxID, callback) {
+    User.find({mailboxes: mailboxID}, function (err, users) {
+        if(err) {
+            return callback(err);
+        }
+        if(!users) {
+            return callback(null, false);
+        }
+        return callback(null, users);
+    })
+}
+
+/**
  * Find all users.
  * @name findAll
  * @since 0.1.0
