@@ -32,7 +32,8 @@
         "smtpToken": "SMTP password",
         "transferToken": "Transfer token",
         "transferable": "Transferable",
-        "actions": "Actions"
+        "actions": "Actions",
+        "title": "Title"
     },
     "settings": {
         "settings": "settings",
@@ -78,7 +79,9 @@
             },
             "createMailbox": {
                 "title": "Create a new mailbox",
-                "placeholder": "Fill in desired local address",
+                "titleName": "Mailbox title",
+                "titlePlaceholder": "Fill in the mailbox title",
+                "localPlaceholder": "Fill in the desired local address",
                 "select": "-- Please select --",
                 "submit": "Create"
             },

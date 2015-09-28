@@ -3,6 +3,7 @@ var util = require('../util.js');
 
 var MailboxSchema = new mongoose.Schema({
     address: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
     admins: {type: [String], default: [] },
     creator: {type: String, required: true},
     domain: {type: String, required: true},

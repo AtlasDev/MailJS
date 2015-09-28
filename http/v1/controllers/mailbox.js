@@ -21,7 +21,7 @@ exports.getMailboxes = function (req, res) {
 }
 
 exports.postMailbox = function (req, res) {
-    if(!req.body.local || !req.body.domain) {
+    if(!req.body.local || !req.body.domain || !req.body.title) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Request data is missing.'}});
     }
     if(typeof req.body.transferable != "boolean" && req.body.transferable) {
@@ -35,7 +35,7 @@ exports.postMailbox = function (req, res) {
             return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
         }
         var transferable = req.body.transferable || false;
-        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, transferable, false, function (err, mailbox) {
+        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, transferable, false, function (err, mailbox) {
             if(err) {
                 if(err.name == "EOCCUPIED") {
                     return res.status(400).json({error: {name: err.name, message: err.message}});

@@ -27,6 +27,7 @@
                                 <tbody>
                                     <tr>
                                         <th>{{'common.address' | translate}}</th>
+                                        <th>{{'common.title' | translate}}</th>
                                         <th>{{'common.smtpToken' | translate}}</th>
                                         <th>{{'common.transferable' | translate}}</th>
                                         <th>{{'common.transferToken' | translate}}</th>
@@ -35,6 +36,7 @@
                                     </tr>
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
+                                        <td>{{mailbox.title}}</td>
                                         <td class="secret">{{mailbox.smtpToken}}</td>
                                         <td ng-if="mailbox.transferable">{{'common.yes' | translate | capitalize}}</td>
                                         <td ng-if="!mailbox.transferable">{{'common.no' | translate | capitalize}}</td>
@@ -71,24 +73,18 @@
                         </div>
                         <div class="box-body">
                             <form role="form" ng-submit="createMailbox()">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="localAddress" ng-model="localAddress" placeholder="{{'settings.mailbox.createMailbox.placeholder' | translate}}" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <div class="form-group">
-                                            <label>@</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <select class="form-control" ng-model="mailboxDomain">
-                                                <option value="">{{'settings.mailbox.createMailbox.select' | translate}}</option>
-                                                <option ng-repeat="domain in domains" value="{{domain._id}}">{{domain.domain}}</option>
-                                            </select>
-                                        </div>
+                                <div class="form-group">
+                                    <label for="mailboxTitle">{{'settings.mailbox.createMailbox.titleName' | translate}}</label>
+                                    <input type="text" class="form-control" id="mailboxTitle" ng-model="mailboxTitle" placeholder="{{'settings.mailbox.createMailbox.titlePlaceholder' | translate}}" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="localAddress" ng-model="localAddress" placeholder="{{'settings.mailbox.createMailbox.localPlaceholder' | translate}}" />
+                                        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                        <select class="form-control" ng-model="mailboxDomain">
+                                            <option value="">{{'settings.mailbox.createMailbox.select' | translate}}</option>
+                                            <option ng-repeat="domain in domains" value="{{domain._id}}">{{domain.domain}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -166,6 +162,7 @@
                                     <div class="box-body">
                                         <ul class="list-unstyled">
                                             <li><b>{{'common.address' | translate}}:</b> {{viewingMailbox.address}}</li>
+                                            <li><b>{{'common.title' | translate}}:</b> {{viewingMailbox.title}}</li>
                                             <li><b>{{'common.id' | translate}}:</b> {{viewingMailbox._id}}</li>
                                             <li ng-if="viewingMailbox.function == 1">
                                                 <b>{{'settings.mailbox.viewMailbox.functionDisplay' | translate}}:</b>

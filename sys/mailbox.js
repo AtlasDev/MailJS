@@ -12,6 +12,7 @@ var inboxFunc = require('./inbox.js');
  * @param {string} local Local part of the mail address to be registered, in the form of `info` for `info@example.com`.
  * @param {string} domainID ID of the domain to register the mailbox to.
  * @param {string} userID ID of the user to register the mailbox to.
+ * @param {string} title Title of the mailbox, used as name when sending emails.
  * @param {string} transferable Set if the mailbox is transferable to other users.
  * @param {string} overwrite Overwrite the disabled check for the domain.
  * @param {createMailboxCallback} callback Callback function after creating the mailbox.
@@ -23,7 +24,7 @@ var inboxFunc = require('./inbox.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
-exports.create = function (local, domainID, userID, transferable, overwrite, callback) {
+exports.create = function (local, domainID, userID, title, transferable, overwrite, callback) {
     if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
@@ -66,6 +67,7 @@ exports.create = function (local, domainID, userID, transferable, overwrite, cal
             mailbox.address = address;
             mailbox.domain = domainID;
             mailbox.admins = [ userID ];
+            mailbox.title = title;
             mailbox.creator = userID;
             mailbox.transferable = transferable;
             mailbox.generateTransferCode(function () {

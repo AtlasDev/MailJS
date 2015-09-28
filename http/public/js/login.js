@@ -126,8 +126,12 @@ $("#setupCreate").submit(function(event) {
     event.preventDefault();
     var local = $("#localCreate").val();
     var domain = $("#domainCreate").val();
+    var title = $("#titleCreate").val();
     if(local == "") {
         return showSetupError('Please fill in a local part.');
+    }
+    if(title == "") {
+        return showSetupError('Please fill in a mailbox title.');
     }
     if(domain == "") {
         return showSetupError('Please select a domain.');
@@ -142,7 +146,8 @@ $("#setupCreate").submit(function(event) {
         },
         data: {
             'local': local,
-            'domain': domain
+            'domain': domain,
+            'title': title
         }
     });
     request.done(function(data) {

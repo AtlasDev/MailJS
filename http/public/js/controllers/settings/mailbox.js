@@ -56,15 +56,16 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
     }
 
     $scope.createMailbox = function () {
-        $rootScope.isLoading = true;
-        if(typeof $scope.localAddress == "undefined") {
-            $rootScope.isLoading = false;
+        if(typeof $scope.localAddress == "undefined" || !$scope.localAddress) {
             return notification.send('Mailbox creation failed!', 'Local part empty.', 'error');
         }
-        if(typeof $scope.mailboxDomain == "undefined") {
-            $rootScope.isLoading = false;
+        if(typeof $scope.mailboxDomain == "undefined" || !$scope.mailboxDomain) {
             return notification.send('Mailbox creation failed!', 'Please select a domain.', 'error');
         }
+        if(typeof $scope.mailboxTitle == "undefined" || !$scope.mailboxTitle) {
+            return notification.send('Mailbox creation failed!', 'Please fill in a mailbox title.', 'error');
+        }
+        $rootScope.isLoading = true;
         var req = {
             method: 'POST',
             url: '/api/v1/mailbox',
@@ -74,6 +75,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             data: {
                 'local': $scope.localAddress,
                 'domain': $scope.mailboxDomain,
+                'title': $scope.mailboxTitle,
                 'transferable': $scope.mailboxTransferable
             }
         };
