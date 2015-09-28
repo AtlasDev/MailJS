@@ -48,7 +48,10 @@ exports.postMailbox = function (req, res) {
 }
 
 exports.patchMailbox = function (req, res) {
-    sys.mailbox.claimMailbox(req.body.mailbox, req.body.transfercode, req.user._id, function (err, mailbox) {
+    if(!req.body.transfercode) {
+        return res.status(400).json({error: {name: 'EMISSING', message: 'Request data is missing.'}});
+    }
+    sys.mailbox.claimMailbox(req.body.transfercode, req.user._id, function (err, mailbox) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }

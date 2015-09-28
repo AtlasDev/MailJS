@@ -54,13 +54,15 @@
                         </div>
                         <div class="box-body">
                             <p>{{'settings.mailbox.code.description' | translate | capitalize}}</p>
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
-                                <input type="text" class="form-control" placeholder="{{'settings.mailbox.code.placeholder' | translate | capitalize}}">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-danger btn-flat" type="button">{{'settings.mailbox.code.submit' | translate}}</button>
-                                </span>
-                            </div>
+                            <form role="form" ng-submit="claimMailbox()">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                                    <input type="text" class="form-control" ng-model="transferCode" placeholder="{{'settings.mailbox.code.placeholder' | translate | capitalize}}"></input>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger btn-flat" ng-clicktype="button">{{'settings.mailbox.code.submit' | translate}}</button>
+                                    </span>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="box box-danger" ng-show="showMailboxCreateForm">

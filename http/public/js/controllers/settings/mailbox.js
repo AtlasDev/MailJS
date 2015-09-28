@@ -30,6 +30,31 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         }
     }
 
+    $scope.claimMailbox = function () {
+        if(!$scope.transferCode || typeof $scope.transferCode == "undefined") {
+            return notification.send('Cannot claim mailbox!', 'Transfer code not filled in.', 'error');
+        }
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'PATCH',
+            url: '/api/v1/mailbox',
+            headers: {
+                'x-token': user.sessionID
+            },
+            data: {
+                'transfercode': $scope.transferCode
+            }
+        };
+        $http(req).then(function(res) {
+            mailbox.addMailbox(res.data.mailbox);
+            $rootScope.isLoading = false;
+            notification.send('Mailbox claimed!', 'Mailbox has been added to your account.', 'success');
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot claim mailbox!', res.data.error.message, 'error');
+        });
+    }
+
     $scope.createMailbox = function () {
         $rootScope.isLoading = true;
         if(typeof $scope.localAddress == "undefined") {

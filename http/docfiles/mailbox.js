@@ -179,11 +179,9 @@
  * @apiDescription Claim an existing mailbox with an transfer code.
  *
  * @apiParam {String} transfercode Transfer code gain from an existing admin.
- * @apiParam {String} mailbox Mailbox ID of the claiming mailbox
  * @apiParamExample {json} Claim mailbox:
  *     {
- *       "transfercode": "2fHq5afM",
- *       "mailbox": "5606e7f49ba75d600a11bc5b"
+ *       "transfercode": "2fHq5afM"
  *     }
  *
  * @apiSuccess {Object} mailbox The claimed mailbox.
@@ -237,13 +235,13 @@
  *       }
  *     }
  *
- * @apiError EINVALID Transfer code invalid
- * @apiErrorExample {json} EINVALID:
+ * @apiError EOCCUPIED User already member of the mailbox
+ * @apiErrorExample {json} EDENIED:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVALID",
- *         "message": "Transfer code invalid."
+ *         "name": "EOCCUPIED",
+ *         "message": "User already member of the mailbox."
  *       }
  *     }
  *

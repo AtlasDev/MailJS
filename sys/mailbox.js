@@ -135,7 +135,6 @@ exports.find = function (mailboxID, callback) {
  * @name claimMailbox
  * @since 0.1.0
  * @version 1
- * @param {string} mailboxID ID of the mailbox to claim.
  * @param {string} transferCode TransferCode to check.
  * @param {string} userID User ID of the user to add the mailbox to.
  * @param {claimMailboxCallback} callback Callback function after claiming the mailbox.
@@ -147,17 +146,12 @@ exports.find = function (mailboxID, callback) {
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the claimed mailbox.
  */
-exports.claimMailbox = function (mailboxID, transferCode, userID, callback) {
-    if (!mailboxID.toString().match(/^[0-9a-fA-F]{24}$/)) {
-        var error = new Error('Invalid mailbox ID!');
-        error.name = 'EINVALID';
-        return callback(error);
-    }
-    this.find(mailboxID, function (err, mailbox) {
+exports.claimMailbox = function (transferCode, userID, callback) {
+    Mailbox.findOne({transferCode: transferCode}, function (err, mailbox) {
         if(err) {
             return callback(err);
         }
-        if(mailbox == false) {
+        if(!mailbox) {
             var error = new Error('Mailbox not found.');
             error.name = 'ENOTFOUND';
             return callback(error);
@@ -167,22 +161,23 @@ exports.claimMailbox = function (mailboxID, transferCode, userID, callback) {
             error.name = 'EDENIED';
             return callback(error);
         }
-        if(mailbox.transferCode != transferCode) {
-            var error = new Error('Transfer code invalid.');
-            error.name = 'EINVALID';
-            return callback(error);
-        }
-        User.findByIdAndUpdate(
-            userID,
-            {$push: {"mailboxes": mailbox._id}},
-            {safe: true, upsert: true},
-            function(err, user) {
+        User.findById(userID, function (err, user) {
+            if(err) {
+                return callback(err);
+            }
+            if(user.mailboxes.indexOf(mailbox._id) > -1) {
+                var error = new Error('User already member of the mailbox.');
+                error.name = 'EOCCUPIED';
+                return callback(error);
+            }
+            user.mailboxes.push(mailbox._id);
+            user.save(function (err) {
                 if(err) {
                     return callback(err);
                 }
                 util.log('`'+user.username+'` claimed `'+mailbox.address+'`.')
                 return callback(null, mailbox);
-            }
-        );
+            })
+        })
     })
 }

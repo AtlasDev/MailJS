@@ -1294,7 +1294,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Claim mailbox:",
-          "content": "{\n  \"transfercode\": \"2fHq5afM\",\n  \"mailbox\": \"5606e7f49ba75d600a11bc5b\"\n}",
+          "content": "{\n  \"transfercode\": \"2fHq5afM\"\n}",
           "type": "json"
         }
       ]
@@ -1325,8 +1325,26 @@ define({ "api": [
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVALID",
+            "field": "EMISSING",
             "description": "<p>Request data is missing.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ENOTFOUND",
+            "description": "<p>Mailbox not found</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EDENIED",
+            "description": "<p>Mailbox not transferable</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EOCCUPIED",
+            "description": "<p>User already member of the mailbox</p> "
           },
           {
             "group": "Error 4xx",
@@ -1338,18 +1356,23 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
+          "title": "EMISSING:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EMISSING\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
           "type": "json"
         },
         {
           "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Mailbox ID invalid.\"\n  }\n}",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"ENOTFOUND\",\n    \"message\": \"Mailbox not found.\"\n  }\n}",
           "type": "json"
         },
         {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Transfer code invalid.\"\n  }\n}",
+          "title": "EDENIED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EDENIED\",\n    \"message\": \"Mailbox not transferable.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EDENIED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EOCCUPIED\",\n    \"message\": \"User already member of the mailbox.\"\n  }\n}",
           "type": "json"
         },
         {
