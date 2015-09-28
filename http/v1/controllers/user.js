@@ -19,7 +19,6 @@ exports.postUser = function(req, res) {
                 return res.status(500).json({error: {name: err.name, message: err.message}});
             }
             responseUser = user;
-            responseUser.username = undefined;
             responseUser.password = undefined;
             responseUser.tfaToken = undefined;
             return res.json({ message: 'User added!', data: user });

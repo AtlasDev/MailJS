@@ -34,7 +34,7 @@
                                         <th>{{'settings.user.list.group' | translate}}</th>
                                         <th>{{'settings.user.list.changeGroup' | translate}}</th>
                                     </tr>
-                                    <tr ng-repeat="userList in users">
+                                    <tr ng-repeat="userList in users | orderBy : username : true">
                                         <td>{{userList.username}}</td>
                                         <td>{{userList.firstName}}</td>
                                         <td>{{userList.lastName}}</td>

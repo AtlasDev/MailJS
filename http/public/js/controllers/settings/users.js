@@ -60,7 +60,47 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
     }
 
     $scope.createUser = function () {
-        
+        console.log($scope.lastName);
+        if(typeof $scope.username == "undefined" || !$scope.username) {
+            return notification.send('Cannot create user!', 'Username empty.', 'error');
+        }
+        if(typeof $scope.firstName == "undefined" || !$scope.firstName) {
+            return notification.send('Cannot create user!', 'First name empty.', 'error');
+        }
+        if(typeof $scope.lastName == "undefined" || !$scope.lastName) {
+            return notification.send('Cannot create user!', 'Last name empty.', 'error');
+        }
+        if(typeof $scope.password == "undefined" || !$scope.password) {
+            return notification.send('Cannot create user!', 'Password empty.', 'error');
+        }
+        if(typeof $scope.repeatPassword == "undefined" || !$scope.repeatPassword) {
+            return notification.send('Cannot create user!', 'Repeat password empty.', 'error');
+        }
+        if($scope.password != $scope.repeatPassword) {
+            return notification.send('Cannot create user!', 'Passwords do not match', 'error');
+        }
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'POST',
+            url: '/api/v1/user',
+            headers: {
+                'x-token': user.sessionID
+            },
+            data: {
+                'username': $scope.username,
+                'password': $scope.password,
+                'firstName': $scope.firstName,
+                'lastName': $scope.lastName
+            }
+        };
+        $http(req).then(function(res) {
+            $scope.users.push(res.data.data);
+            notification.send('User created', 'User `'+$scope.username+'` has been created.', 'success');
+            $rootScope.isLoading = false;
+        }, function(res) {
+            notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+            $rootScope.isLoading = false;
+        });
     }
 
     function loadGroups() {
@@ -87,7 +127,7 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         }
     }
 
-    if(typeof user.getUser()._id == "undefined") {
+    if(typeof user.getUser()._id == "undefined" || typeof user.getUser().group.permissions == "undefined") {
         $rootScope.$on('userLoaded', function () {
             checkPerms();
             loadGroups();
