@@ -3,7 +3,7 @@
 var token;
 
 $(document).ready(function() {
-    if(getCookie('MailJS') != "") {
+    if(getCookie('MailJS') != "" && !get.setup) {
         window.location.replace("app.html");
     }
     if(get.msg && get.info != 'true') {
@@ -12,6 +12,26 @@ $(document).ready(function() {
 	if(get.info == "true" && get.msg) {
 		showInfo(get.msg);
 	}
+    if(get.setup == "true" && getCookie('MailJS')) {
+        var request = $.ajax({
+            type: 'GET',
+            url: '/api/v1/user/current',
+            dataType: 'json',
+            cache: false,
+            headers: {
+    			'x-token': getCookie('MailJS')
+    		}
+        });
+        request.done(function(data) {
+            var user = data.user;
+            setName(user.firstName+' '+user.lastName);
+            showSetup();
+        });
+        request.fail(function(data) {
+            $.removeCookie('MailJS', { path: '/' });
+            showLogin();
+        });
+    }
 });
 
 $("#login").submit(function(event) {
@@ -27,12 +47,15 @@ $("#login").submit(function(event) {
 		}
     });
     request.done(function(data) {
+        console.log('etst');
+        console.log(data);
+        console.log('etst');
         if(data.needTFA == true) {
             token = data.token;
             setName(data.user.firstName + ' ' + data.user.lastName);
             showTFA();
         } else {
-            window.location.replace("app.html");
+            //window.location.replace("app.html");
         }
     });
     request.fail(function(data) {
@@ -79,17 +102,25 @@ $("#2fa").submit(function(event) {
 });
 
 var showTFA = function () {
-    $('#login-box').hide();
     $('#2fa-box').show();
+    $('#login-box').hide();
+    $('#setup-box').hide();
 }
 
 var showLogin = function () {
     $('#2fa-box').hide();
     $('#login-box').show();
+    $('#setup-box').hide();
+}
+
+var showSetup = function () {
+    $('#2fa-box').hide();
+    $('#login-box').hide();
+    $('#setup-box').show();
 }
 
 var setName = function (name) {
-    $('#name').text(name);
+    $('.name').text(name);
 }
 
 var showLoginError = function showError(msg) {
@@ -101,6 +132,12 @@ var show2faError = function showError(msg) {
     $("#TFAerrorMsg").text(msg);
     $("#TFAerror").removeClass('hidden');
 };
+
+var showSetupError = function showError(msg) {
+    $("#setupErrorMsg").text(msg);
+    $("#setupError").removeClass('hidden');
+};
+
 
 var showInfo = function showInfo(msg) {
     $("#infoMsg").text(msg);

@@ -46,7 +46,11 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
             if(res.status == 401) {
                 return $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
             }
-            $window.location.href = '/index.html?msg='+res.data.error.message;
+            if(res.data.error) {
+                $window.location.href = '/index.html?msg='+res.data.error.message;
+            } else {
+                $window.location.href = '/index.html?msg=Authentication%20error.';
+            }
         });
     })();
 

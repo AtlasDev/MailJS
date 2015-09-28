@@ -62,7 +62,32 @@
 				</form>
 			</div>
 		</div>
-
+		<div class="login-box" style="display:none" id="setup-box">
+			<div class="login-logo">
+				<b>Mail</b>JS
+			</div>
+			<div class="login-box-body">
+				<p class="login-box-msg">Welcome <b class="name"></b>!</p>
+				<div class="alert alert-danger hidden" id="SetupError">
+					<strong>Creating mailbox failed: </strong><div id="setupErrorMsg"></div>
+				</div>
+				<form action="#" id="setup" name="setup">
+					<div class="form-group has-feedback">
+						<input id="code" type="text" class="form-control" placeholder="Code"/>
+						<span class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+				</form>
+				<p class="text-center">- OR -</p>
+				<form action="#" id="setup" name="setup">
+					<div class="form-group has-feedback">
+						<input id="code" type="text" class="form-control" placeholder="Code"/>
+						<span class="glyphicon glyphicon-asterisk form-control-feedback"></span>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+				</form>
+			</div>
+		</div>
 		<!-- jQuery 2.1.4 -->
 		<script src="js/other/jQuery-2.1.4.min.js" type="text/javascript"></script>
 		<!-- Bootstrap 3.3.2 JS -->
