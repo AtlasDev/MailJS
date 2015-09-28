@@ -115,7 +115,7 @@ exports.create = function (local, domainID, userID, transferable, overwrite, cal
  */
 exports.find = function (mailboxID, callback) {
     if (!mailboxID.toString().match(/^[0-9a-fA-F]{24}$/)) {
-        var error = new Error('Invalid user ID!');
+        var error = new Error('Invalid mailbox ID!');
         error.name = 'EINVALID';
         return callback(error);
     }
@@ -128,4 +128,61 @@ exports.find = function (mailboxID, callback) {
         }
         return callback(null, mailbox);
     });
+}
+
+/**
+ * Claim a mailbox with a transfer code.
+ * @name claimMailbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID ID of the mailbox to claim.
+ * @param {string} transferCode TransferCode to check.
+ * @param {string} userID User ID of the user to add the mailbox to.
+ * @param {claimMailboxCallback} callback Callback function after claiming the mailbox.
+ */
+
+/**
+ * Callback for claiming a mailbox.
+ * @callback claimMailboxCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} mailbox Mailbox object of the claimed mailbox.
+ */
+exports.claimMailbox = function (mailboxID, transferCode, userID, callback) {
+    if (!mailboxID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EINVALID';
+        return callback(error);
+    }
+    this.find(mailboxID, function (err, mailbox) {
+        if(err) {
+            return callback(err);
+        }
+        if(mailbox == false) {
+            var error = new Error('Mailbox not found.');
+            error.name = 'ENOTFOUND';
+            return callback(error);
+        }
+        if(mailbox.transferable == false) {
+            var error = new Error('Mailbox not transferable.');
+            error.name = 'EDENIED';
+            return callback(error);
+        }
+        if(mailbox.transferCode != transferCode) {
+            var error = new Error('Transfer code invalid.');
+            error.name = 'EINVALID';
+            return callback(error);
+        }
+        User.findByIdAndUpdate(
+            userID,
+            {$push: {"mailboxes": mailbox._id}},
+            {safe: true, upsert: true},
+            function(err, user) {
+                if(err) {
+                    return callback(err);
+                }
+                util.log('`'+user.username+'` claimed `'+mailbox.address+'`.')
+                return callback(null, mailbox);
+            }
+        );
+    })
 }

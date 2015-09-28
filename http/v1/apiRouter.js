@@ -43,6 +43,7 @@ router.route('/user/:user')
 
 router.route('/mailbox')
   .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
+  .patch(authController.isAuthenticated, authController.checkTFA, mailboxController.patchMailbox)
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailboxes);
 
 router.route('/mailbox/:mailbox')

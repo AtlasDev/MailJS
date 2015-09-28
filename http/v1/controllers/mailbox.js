@@ -47,6 +47,15 @@ exports.postMailbox = function (req, res) {
     });
 }
 
+exports.patchMailbox = function (req, res) {
+    sys.mailbox.claimMailbox(req.body.mailbox, req.body.transfercode, req.user._id, function (err, mailbox) {
+        if(err) {
+            return res.status(500).json({error: {name: err.name, message: err.message}});
+        }
+        return res.json({mailbox: mailbox});
+    });
+}
+
 exports.getMailbox = function (req, res) {
     if (!req.params.mailbox.toString().match(/^[0-9a-fA-F]{24}$/)) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Invalid mailbox ID!'}});

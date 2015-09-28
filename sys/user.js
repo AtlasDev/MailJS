@@ -207,7 +207,7 @@ exports.findByMailbox = function (mailboxID, callback) {
  * Callback for finding the users.
  * @callback findAllCallback
  * @param {Error} err Error object, should be undefined.
- * @param {array} clients Found users in a array.
+ * @param {array} users Found users in a array.
  */
 exports.findAll = function (limitBy, skip, callback) {
     limitBy = limitBy || 20;

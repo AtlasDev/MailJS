@@ -124,18 +124,22 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         if(user.getUser().group.permissions.indexOf('user.list') == -1) {
             notification.send('Cannot visit page!', 'Permissions denied.', 'error')
             $location.path('/mainSettings');
+            return false;
         }
+        return true;
     }
 
     if(typeof user.getUser()._id == "undefined" || typeof user.getUser().group.permissions == "undefined") {
         $rootScope.$on('userLoaded', function () {
-            checkPerms();
-            loadGroups();
-            loadUsers(1);
+            if(checkPerms()) {
+                loadGroups();
+                loadUsers(1);
+            }
         });
     } else {
-        checkPerms();
-        loadGroups();
-        loadUsers(1);
+        if(checkPerms()) {
+            loadGroups();
+            loadUsers(1);
+        }
     }
 });

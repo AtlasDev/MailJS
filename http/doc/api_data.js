@@ -1272,6 +1272,129 @@ define({ "api": [
     }
   },
   {
+    "type": "patch",
+    "url": "/mailbox",
+    "title": "Claim mailbox",
+    "version": "0.1.0",
+    "name": "ClaimMailbox",
+    "group": "Mailbox",
+    "description": "<p>Claim an existing mailbox with an transfer code.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "transfercode",
+            "description": "<p>Transfer code gain from an existing admin.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Claim mailbox:",
+          "content": "{\n  \"transfercode\": \"2fHq5afM\",\n  \"mailbox\": \"5606e7f49ba75d600a11bc5b\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "mailbox",
+            "description": "<p>The claimed mailbox.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EINVALID",
+            "description": "<p>Request data is missing.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Mailbox ID invalid.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EINVALID:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Transfer code invalid.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/mailbox.js",
+    "groupTitle": "Mailbox",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
     "type": "get",
     "url": "/mailbox/:mailbox",
     "title": "Get a specific mailbox",
@@ -1558,7 +1681,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "<p>Object</p> ",
             "optional": false,
-            "field": "user",
+            "field": "mailbox",
             "description": "<p>The new mailbox.</p> "
           }
         ]

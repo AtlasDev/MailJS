@@ -62,7 +62,7 @@
  *       "transferable": "true"
  *     }
  *
- * @apiSuccess {Object} user The new mailbox.
+ * @apiSuccess {Object} mailbox The new mailbox.
  * @apiSuccessExample {json} Created response:
  *     HTTP/1.1 200 OK
  *     {
@@ -166,6 +166,88 @@
  *
  * @apiUse AuthError
  * @apiUse PermissionError
+ * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
+ */
+
+/**
+ * @api {patch} /mailbox Claim mailbox
+ * @apiVersion 0.1.0
+ * @apiName ClaimMailbox
+ * @apiGroup Mailbox
+ *
+ * @apiDescription Claim an existing mailbox with an transfer code.
+ *
+ * @apiParam {String} transfercode Transfer code gain from an existing admin.
+ * @apiParam {String} mailbox Mailbox ID of the claiming mailbox
+ * @apiParamExample {json} Claim mailbox:
+ *     {
+ *       "transfercode": "2fHq5afM",
+ *       "mailbox": "5606e7f49ba75d600a11bc5b"
+ *     }
+ *
+ * @apiSuccess {Object} mailbox The claimed mailbox.
+ * @apiSuccessExample {json} Created response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       {
+ *         "mailbox": {
+ *           "__v": 0,
+ *           "transferCode": "hqYqUPs9ce",
+ *           "smtpToken": "afr6UPs9ce",
+ *           "domain": "5606e7f49ba75d600a11bc5b",
+ *           "address": "myname@example.com",
+ *           "_id": "5606e83d33753cc40c80f8d8",
+ *           "transferable": false,
+ *           "admins": [
+ *             "5606e7f49ba75d600a11bc5a"
+ *           ],
+ *           "owner": "5606e7f49ba75d600a11bc5a"
+ *         }
+ *       }
+ *     }
+ *
+ * @apiError EMISSING Request data is missing.
+ * @apiErrorExample {json} EMISSING:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EMISSING",
+ *         "message": "Request data is missing."
+ *       }
+ *     }
+ *
+ * @apiError ENOTFOUND Mailbox not found
+ * @apiErrorExample {json} EINVALID:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "ENOTFOUND",
+ *         "message": "Mailbox not found."
+ *       }
+ *     }
+ *
+ * @apiError EDENIED Mailbox not transferable
+ * @apiErrorExample {json} EDENIED:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EDENIED",
+ *         "message": "Mailbox not transferable."
+ *       }
+ *     }
+ *
+ * @apiError EINVALID Transfer code invalid
+ * @apiErrorExample {json} EINVALID:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EINVALID",
+ *         "message": "Transfer code invalid."
+ *       }
+ *     }
+ *
+ * @apiUse AuthError
  * @apiUse UserAuthHeader
  * @apiUse OAuthHeader
  */
