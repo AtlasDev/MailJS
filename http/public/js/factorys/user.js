@@ -21,7 +21,7 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         };
         $http(req).then(function(res) {
             if(res.data.user.mailboxes.length == 0) {
-                $window.location.href = '/index.html?setup=true';
+                return $window.location.href = '/index.html?setup=true';
             }
             user = res.data.user;
             var req = {

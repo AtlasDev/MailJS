@@ -1,37 +1,56 @@
 'use strict';
 
 var token;
+var user = {};
+var domains = [];
+var canCreate;
+var group = {};
 
 $(document).ready(function() {
-    if(getCookie('MailJS') != "" && !get.setup) {
-        window.location.replace("app.html");
-    }
     if(get.msg && get.info != 'true') {
         showLoginError(get.msg);
     }
 	if(get.info == "true" && get.msg) {
 		showInfo(get.msg);
 	}
-    if(get.setup == "true" && getCookie('MailJS')) {
+    if(get.setup == "true" && Cookies.get('MailJS')) {
         var request = $.ajax({
             type: 'GET',
             url: '/api/v1/user/current',
             dataType: 'json',
             cache: false,
             headers: {
-    			'x-token': getCookie('MailJS')
+    			'x-token': Cookies.get('MailJS')
     		}
         });
         request.done(function(data) {
-            var user = data.user;
-            setName(user.firstName+' '+user.lastName);
+            user = data.user;
             showSetup();
         });
         request.fail(function(data) {
-            $.removeCookie('MailJS', { path: '/' });
+            Cookies.remove('MailJS');
             showLogin();
         });
+    } else if(Cookies.get('MailJS')) {
+        window.location.replace("app.html");
     }
+});
+
+$(".logout").click(function() {
+    var request = $.ajax({
+        type: 'DELETE',
+        url: '/api/v1/login',
+        dataType: 'json',
+        cache: false
+    });
+    request.done(function(data) {
+        Cookies.remove('MailJS');
+        showLogin();
+    });
+    request.fail(function(data) {
+        Cookies.remove('MailJS');
+        showLogin();
+    });
 });
 
 $("#login").submit(function(event) {
@@ -47,15 +66,17 @@ $("#login").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        console.log('etst');
-        console.log(data);
-        console.log('etst');
         if(data.needTFA == true) {
             token = data.token;
             setName(data.user.firstName + ' ' + data.user.lastName);
             showTFA();
         } else {
-            //window.location.replace("app.html");
+            if(data.user.mailboxes.length == 0) {
+                user = data.user;
+                showSetup();
+            } else {
+                window.location.replace("app.html");
+            }
         }
     });
     request.fail(function(data) {
@@ -101,6 +122,37 @@ $("#2fa").submit(function(event) {
     });
 });
 
+$("#setupCreate").submit(function(event) {
+    event.preventDefault();
+    var local = $("#localCreate").val();
+    var domain = $("#domainCreate").val();
+    if(local == "") {
+        return showSetupError('Please fill in a local part.');
+    }
+    if(domain == "") {
+        return showSetupError('Please select a domain.');
+    }
+    var request = $.ajax({
+        type: 'POST',
+        url: '/api/v1/mailbox',
+        dataType: 'json',
+        cache: false,
+        headers: {
+            'x-token': Cookies.get('MailJS')
+        },
+        data: {
+            'local': local,
+            'domain': domain
+        }
+    });
+    request.done(function(data) {
+        window.location.replace("app.html");
+    });
+    request.fail(function(data) {
+        showSetupError(JSON.parse(data.responseText).error.message);
+    });
+});
+
 var showTFA = function () {
     $('#2fa-box').show();
     $('#login-box').hide();
@@ -114,6 +166,47 @@ var showLogin = function () {
 }
 
 var showSetup = function () {
+    setName(user.firstName+' '+user.lastName);
+    var request = $.ajax({
+        type: 'GET',
+        url: '/api/v1/group/'+user.group,
+        dataType: 'json',
+        cache: false,
+        headers: {
+            'x-token': Cookies.get('MailJS')
+        }
+    });
+    request.done(function(data) {
+        group = data.group;
+        if(group.permissions.indexOf('mailbox.create') != -1) {
+            var request = $.ajax({
+                type: 'GET',
+                url: '/api/v1/domain',
+                dataType: 'json',
+                cache: false,
+                headers: {
+                    'x-token': Cookies.get('MailJS')
+                }
+            });
+            request.done(function(data) {
+                $.each(data.domains, function(key, value) {
+                     $('#domainCreate')
+                         .append($("<option></option>")
+                         .attr("value",value._id)
+                         .text(value.domain));
+                });
+                $('#setupCreate').show();
+            });
+            request.fail(function(data) {
+                user = {};
+                showLogin();
+            });
+        }
+    });
+    request.fail(function(data) {
+        user = {};
+        showLogin();
+    });
     $('#2fa-box').hide();
     $('#login-box').hide();
     $('#setup-box').show();
@@ -157,14 +250,3 @@ var get = (function(a) {
     }
     return b;
 })(window.location.search.substr(1).split('&'));
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
-    }
-    return "";
-}
