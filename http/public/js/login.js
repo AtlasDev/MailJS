@@ -153,6 +153,29 @@ $("#setupCreate").submit(function(event) {
     });
 });
 
+$("#setupTransfer").submit(function(event) {
+    event.preventDefault();
+    var code = $("#transferCode").val();
+    var request = $.ajax({
+        type: 'PATCH',
+        url: '/api/v1/mailbox',
+        dataType: 'json',
+        cache: false,
+        headers: {
+            'x-token': Cookies.get('MailJS')
+        },
+        data: {
+            'transfercode': code
+        }
+    });
+    request.done(function(data) {
+        window.location.replace("app.html");
+    });
+    request.fail(function(data) {
+        showSetupError(JSON.parse(data.responseText).error.message);
+    });
+});
+
 var showTFA = function () {
     $('#2fa-box').show();
     $('#login-box').hide();
