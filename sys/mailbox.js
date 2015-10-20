@@ -38,7 +38,7 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
         error.type = 400;
         return callback(error);
     }
-    var localRegex = new Regex(/^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*/i);
+    var localRegex = new RegExp(/^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*/i);
     if(!localRegex.test(local) || local.length >= 65) {
         var error = new Error('Invalid local part!');
         error.name = 'EVALIDATION';

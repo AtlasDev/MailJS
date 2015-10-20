@@ -1,5 +1,6 @@
 var Domain = require('../models/domain.js');
 var util = require('../util.js');
+var validator = require('validator');
 
 /**
  * Create a new domain.
@@ -25,7 +26,7 @@ exports.create = function (domain, disabled, callback) {
         error.type = 400;
         return callback(error);
     }
-    var domainRegex = new Regex(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
+    var domainRegex = new RegExp(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
     if(!domainRegex.test(domain) || domain.length >= 265) {
         var error = new Error('Invalid domain!');
         error.name = 'EVALIDATION';
