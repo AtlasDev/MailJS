@@ -23,9 +23,25 @@
  *
  * @apiError Unauthorized The user is not authorized.
  *
- * @apiErrorExample {json} Unauthorized:
+ * @apiErrorExample {HTTP} Unauthorized:
  *     HTTP/1.1 401 Unauthorized
  *     Unauthorized
+ */
+
+/**
+ * @apiDefine ValidationError
+ * @apiVersion 0.1.0
+ *
+ * @apiError EVALIDATION Data validation failed.
+ *
+ * @apiErrorExample {json} EVALIDATION:
+ *     HTTP/1.1 {{status}}
+ *     {
+ *       "error": {
+ *         "name": "EVALIDATION",
+ *         "message": "{{message}}"
+ *       }
+ *     }
  */
 
 // ------------------------------------------------------------------------------------------

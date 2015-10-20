@@ -1,5 +1,6 @@
 var Inbox = require('../models/inbox.js');
 var util = require('../util.js');
+var validator = require('validator');
 
 /**
  * Create default inboxes for a mailbox
@@ -16,6 +17,12 @@ var util = require('../util.js');
  * @param {Error} err Error object, should be undefined.
  */
 exports.createDefaults = function (mailboxID, callback) {
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     var inbox = new Inbox();
     inbox.name = 'Inbox';
     inbox.mailbox = mailboxID;

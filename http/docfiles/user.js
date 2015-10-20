@@ -99,16 +99,17 @@
  *       }
  *     }
  *
- * @apiError EINVALID Request data is missing.
- * @apiErrorExample {json} EINVALID:
+ * @apiError EMISSING Request data is missing.
+ * @apiErrorExample {json} EMISSING:
  *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "name": "EINVALID",
+ *         "name": "EMISSING",
  *         "message": "Request data is missing."
  *       }
  *     }
  *
+ * @apiUse ValidationError
  * @apiUse PermissionError
  * @apiUse AuthError
  * @apiUse UserAuthHeader

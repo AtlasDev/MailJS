@@ -78,7 +78,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -184,7 +184,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -272,7 +272,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -406,7 +406,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -501,7 +501,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -613,7 +613,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -757,7 +757,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -874,7 +874,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -974,7 +974,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1096,7 +1096,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1246,7 +1246,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1378,7 +1378,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1513,7 +1513,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         },
         {
           "title": "EPERMS:",
@@ -1611,7 +1611,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1729,6 +1729,18 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "EDISABLED",
+            "description": "<p>Specified domain has been disabled for registrations.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EOCCUPIED",
+            "description": "<p>Address already registered</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "EPERMS",
             "description": "<p>The permission level of the user is not high enough.</p> "
           },
@@ -1747,6 +1759,16 @@
           "type": "json"
         },
         {
+          "title": "EDISABLED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EDISABLED\",\n    \"message\": \"Specified domain has been disabled for registrations.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EOCCUPIED:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EOCCUPIED\",\n    \"message\": \"Address already registered.\"\n  }\n}",
+          "type": "json"
+        },
+        {
           "title": "EINVALID:",
           "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Transferable data is invalid.\"\n  }\n}",
           "type": "json"
@@ -1759,7 +1781,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1843,7 +1865,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -1925,7 +1947,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },
@@ -2070,7 +2092,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         },
         {
           "title": "EPERMS:",
@@ -2211,7 +2233,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         },
         {
           "title": "EPERMS:",
@@ -2335,8 +2357,14 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "EINVALID",
+            "field": "EMISSING",
             "description": "<p>Request data is missing.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EVALIDATION",
+            "description": "<p>Data validation failed.</p> "
           },
           {
             "group": "Error 4xx",
@@ -2354,8 +2382,13 @@
       },
       "examples": [
         {
-          "title": "EINVALID:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EINVALID\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
+          "title": "EMISSING:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EMISSING\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EVALIDATION:",
+          "content": "HTTP/1.1 {{status}}\n{\n  \"error\": {\n    \"name\": \"EVALIDATION\",\n    \"message\": \"{{message}}\"\n  }\n}",
           "type": "json"
         },
         {
@@ -2366,7 +2399,7 @@
         {
           "title": "Unauthorized:",
           "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
-          "type": "json"
+          "type": "HTTP"
         }
       ]
     },

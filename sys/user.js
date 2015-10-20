@@ -2,12 +2,13 @@ var util = require('../util.js');
 var User = require('../models/user.js');
 var clientFunc = require('./client.js');
 var groupFunc = require('./group.js');
+var validator = require('validator');
 
 /**
  * Create a new user.
  * @name createUser
  * @since 0.1.0
- * @version 1
+ * @version 2
  * @param {string} username Username to use.
  * @param {string} password Password to use.
  * @param {string} firstName First name of the user.
@@ -22,13 +23,27 @@ var groupFunc = require('./group.js');
  * @param {Object} user User object of the new created user.
  */
 exports.create = function (username, password, firstName, lastName, callback) {
+    if(username.length < 5) {
+        var error = new Error('Username does not meet the requirements!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if(password.length < 7 || validator.isAlpha(password) || !/[a-z]/g.test(password) || !/[A-Z]/g.test(password)) {
+        var error = new Error('Password does not meet the requirements!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     groupFunc.getDefaultGroup(function (err, group) {
         if(err) {
+            err.type = 500;
             return callback(err);
         }
         if(!group) {
             var error = new Error('No default group found!');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         }
         var user = new User({
@@ -41,6 +56,7 @@ exports.create = function (username, password, firstName, lastName, callback) {
         });
         user.save(function(err) {
             if (err) {
+                err.type = 500;
                 return callback(err, null);
             }
             util.log('User `'+user.username+'` created.');
@@ -53,7 +69,7 @@ exports.create = function (username, password, firstName, lastName, callback) {
  * Replace the current group of a user with a new one.
  * @name setGroup
  * @since 0.1.0
- * @version 1
+ * @version 2
  * @param {string} userID UserID of the user to replace the group from.
  * @param {string} groupID ID of the new group.
  * @param {SetGroupCallback} callback Callback function after replacing the group.
@@ -66,15 +82,16 @@ exports.create = function (username, password, firstName, lastName, callback) {
  * @param {Object} user User object of user of which the group was replaced.
  */
 exports.setGroup = function (userID, groupID, callback) {
-    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
-        console.log('fail');
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
-    if (!groupID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(groupID)) {
         var error = new Error('Invalid group ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
     groupFunc.getGroup(groupID, function (err, group) {
@@ -84,6 +101,7 @@ exports.setGroup = function (userID, groupID, callback) {
         if(!group) {
             var error = new Error('Group not found!');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         }
         exports.find(userID, function (err, user) {
@@ -93,6 +111,7 @@ exports.setGroup = function (userID, groupID, callback) {
             if(!user) {
                 var error = new Error('User not found!');
                 error.name = 'ENOTFOUND';
+                error.type = 404;
                 return callback(error);
             }
             user.group = groupID;
@@ -123,9 +142,10 @@ exports.setGroup = function (userID, groupID, callback) {
  * @param {Object} user User object of the found user.
  */
 exports.find = function (userID, callback) {
-    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
     User.findById(userID, function (err, user) {
@@ -182,6 +202,12 @@ exports.findByUsername = function (username, callback) {
  * @param {Array|Boolean} users An array of user objects found, false if non found.
  */
 exports.findByMailbox = function (mailboxID, callback) {
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     User.find({mailboxes: mailboxID}, function (err, users) {
         if(err) {
             return callback(err);
@@ -212,6 +238,18 @@ exports.findByMailbox = function (mailboxID, callback) {
 exports.findAll = function (limitBy, skip, callback) {
     limitBy = limitBy || 20;
     skip = skip || 0;
+    if (!validator.isInt(limitBy)) {
+        var error = new Error('Invalid limitBy value!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if (!validator.isInt(userID)) {
+        var error = new Error('Invalid skip value!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     User.find({})
     .limit(limitBy)
     .skip(skip)
@@ -240,9 +278,10 @@ exports.findAll = function (limitBy, skip, callback) {
  * @param {Array} users Array of user objects, returns false if none.
  */
 exports.findByGroup = function (groupID, callback) {
-    if (!groupID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(groupID)) {
         var error = new Error('Invalid group ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
     User.find({group: groupID}, function (err, users) {
@@ -305,9 +344,10 @@ exports.verify = function (username, password, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.delete = function (userID, callback) {
-    if (!userID.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
+        error.type = 400;
         return callback(error);
     }
     User.findByIdAndRemove(userID, function(err, user) {
@@ -317,6 +357,7 @@ exports.delete = function (userID, callback) {
         if(user == null) {
             var error = new Error('The given id was not found.');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         } else {
             clientFunc.deleteUser(userID, function (err) {

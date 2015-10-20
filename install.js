@@ -51,7 +51,7 @@ var dbstuff = function (group) {
         }
         sys.user.setGroup(user._id, group._id, function (err, user) {
             if (err) {
-                console.log(colors.red('Failed to create initial user: '.red+err));
+                console.log(colors.red('Failed to set the group of the initial user: '.red+err));
                 process.exit(1);
             }
             console.log(' - User created.');

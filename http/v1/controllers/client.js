@@ -7,7 +7,7 @@ exports.postClient = function(req, res) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
         if(hasPerm != true) {
-            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+            return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});

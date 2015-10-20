@@ -93,6 +93,26 @@
  *       }
  *     }
  *
+ * @apiError EDISABLED Specified domain has been disabled for registrations.
+ * @apiErrorExample {json} EDISABLED:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EDISABLED",
+ *         "message": "Specified domain has been disabled for registrations."
+ *       }
+ *     }
+ *
+ * @apiError EOCCUPIED Address already registered
+ * @apiErrorExample {json} EOCCUPIED:
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "name": "EOCCUPIED",
+ *         "message": "Address already registered."
+ *       }
+ *     }
+ *
  * @apiError EINVALID Transferable data is invalid
  * @apiErrorExample {json} EINVALID:
  *     HTTP/1.1 400 Bad Request

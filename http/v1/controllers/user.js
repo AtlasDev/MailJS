@@ -8,16 +8,14 @@ exports.postUser = function(req, res) {
             return res.status(500).json({error: {name: err.name, message: err.message}});
         }
         if(hasPerm != true) {
-            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+            return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName) {
-            res.status(400).json({error: {name: "EINVALID", message: 'Request data is missing.'}});
+            res.status(400).json({error: {name: "EMISSING", message: 'Request data is missing.'}});
             return;
         }
         sys.user.create(req.body.username, req.body.password, req.body.firstName, req.body.lastName, function (err, user) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message}});
-            }
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             responseUser = user;
             responseUser.password = undefined;
             responseUser.tfaToken = undefined;
@@ -35,13 +33,9 @@ exports.currentUser = function (req, res) {
 
 exports.getUser = function(req, res) {
     sys.perms.hasPerm('user.list', req.user.group, req.authInfo, function (err, hasPerm) {
-        if (err) {
-            res.status(500).json({error: {name: err.name, message: err.message}});
-            util.error(err, true);
-            return;
-        }
+        if (err) return res.status(500).json({error: {name: err.name, message: err.message}});
         if(hasPerm != true) {
-            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+            return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(req.query.getBy && (!req.query.getBy == 'ID' || !req.query.getBy=='username')) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
@@ -59,15 +53,8 @@ exports.getUser = function(req, res) {
                 return res.json({user: user});
             });
         } else {
-            if (!req.params.user.toString().match(/^[0-9a-fA-F]{24}$/)) {
-                return res.status(500).json({error: {name: 'EINVALID', message: 'Invalid user ID!'}});
-            }
             sys.user.find(req.params.user, function (err, user) {
-                if(err) {
-                    res.status(500).json({error: {name: err.name, message: err.message}});
-                    util.error(err, true);
-                    return;
-                }
+                if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
                 if(user == false) {
                     return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
                 }
@@ -88,7 +75,7 @@ exports.getUsers = function(req, res) {
             return;
         }
         if(hasPerm != true) {
-            return res.status(400).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+            return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(req.query.limitBy) {
             if(isNaN(req.query.limitBy)) {

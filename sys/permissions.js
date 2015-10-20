@@ -1,5 +1,6 @@
 var Group = require('../models/group.js');
 var userFunc = require('./user.js');
+var validator = require('validator');
 
 /**
  * Compare a permission node to a group
@@ -19,6 +20,12 @@ var userFunc = require('./user.js');
  * @param {Boolean} hasPerm Boolean that says if the given has the permission.
  */
 exports.hasPerm = function (node, group, authInfo, callback) {
+    if(!validator.isMongoId(group)) {
+        var error = new Error('Invalid group ID.');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     if(!callback) {
         callback = authInfo;
         authInfo = null;
@@ -35,6 +42,7 @@ exports.hasPerm = function (node, group, authInfo, callback) {
         if(!returnGroup) {
             var error = new Error('Group not found.');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         }
         if(returnGroup.permissions.indexOf(node) > -1) {

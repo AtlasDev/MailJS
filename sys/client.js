@@ -2,6 +2,7 @@ var util = require('../util.js');
 var Client = require('../models/client.js');
 var Code = require('../models/code.js');
 var Token = require('../models/token.js');
+var validator = require('validator');
 
 /**
  * Create a new client.
@@ -62,13 +63,26 @@ exports.create = function (user, name, description, url, scopes, callback) {
  * @param {array} clients Found clients in a array.
  */
 exports.get = function (userID, limitBy, skip, callback) {
-    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
+        error.type = 400;
         return callback(error);
     }
     limitBy = limitBy || 20;
     skip = skip || 0;
+    if (!validator.isInt(limitBy)) {
+        var error = new Error('Invalid limitBy value!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if (!validator.isInt(userID)) {
+        var error = new Error('Invalid skip value!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     var query = (userID) ? {userId: userID} : {};
     Client.find(query)
     .limit(limitBy)
@@ -133,9 +147,10 @@ exports.verify = function (username, password, callback) {
  * @param {Int} removedCodes Amount of deleted codes in the process.
  */
 exports.delete = function (clientID, callback) {
-    if (!clientID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(clientID)) {
         var error = new Error('Invalid client ID!');
         error.name = 'EINVALID';
+        error.type = 400;
         return callback(error);
     }
     Token.find({clientId: clientID}).remove(function (err, removedTokens) {
@@ -153,6 +168,7 @@ exports.delete = function (clientID, callback) {
                 if(client == null) {
                     var error = new Error('The given id was not found.');
                     error.name = 'ENOTFOUND';
+                    error.type = 404;
                     return callback(error);
                 } else {
                     util.log('Client `'+client._id+'` deleted.');
@@ -173,22 +189,21 @@ exports.delete = function (clientID, callback) {
  */
 
 /**
- * Callback for gettting all clients of a user.
+ * Callback for Deleting all clients of an user.
  * @callback deleteClientCallback
  * @param {Error} err Error object, should be undefined.
  */
 exports.deleteUser = function (userID, callback) {
-    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
+        error.type = 400;
         return callback(error);
     }
     Client.find({userId: userID}, function (err, clients) {
         if(err) {
             callback(err);
         }
-        exports.delete()
-        callback();
         deleteUserHelper(0, clients, function (err) {
             if(err) {
                 return callback(err);

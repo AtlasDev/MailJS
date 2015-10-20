@@ -18,7 +18,20 @@ var util = require('../util.js');
  * @param {Object} domain Domain object of the created domain.
  */
 exports.create = function (domain, disabled, callback) {
-    //TODO: generate and save certificates for the domain.
+    //TODO: generate and save certificates for the domain (when Let's Encrypt for nodejs gets released).
+    if(!validator.isBoolean(disabled)) {
+        var error = new Error('Disabled is not a boolean!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    var domainRegex = new Regex(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
+    if(!domainRegex.test(domain) || domain.length >= 265) {
+        var error = new Error('Invalid domain!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     var domain = new Domain({
         domain: domain,
         disabled: disabled

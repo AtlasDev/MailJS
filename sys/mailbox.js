@@ -3,12 +3,13 @@ var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
 var User = require('../models/user.js');
 var inboxFunc = require('./inbox.js');
+var validator = require('validator');
 
 /**
  * Create a new mailbox
  * @name createMailbox
  * @since 0.1.0
- * @version 1
+ * @version 2
  * @param {string} local Local part of the mail address to be registered, in the form of `info` for `info@example.com`.
  * @param {string} domainID ID of the domain to register the mailbox to.
  * @param {string} userID ID of the user to register the mailbox to.
@@ -25,14 +26,23 @@ var inboxFunc = require('./inbox.js');
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
 exports.create = function (local, domainID, userID, title, transferable, overwrite, callback) {
-    if (!userID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
-    if (!domainID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(domainID)) {
         var error = new Error('Invalid domain ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    var localRegex = new Regex(/^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*/i);
+    if(!localRegex.test(local) || local.length >= 65) {
+        var error = new Error('Invalid local part!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
         return callback(error);
     }
     var overwrite = overwrite || false;
@@ -44,12 +54,14 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
         if(!domain) {
             var error = new Error('Domain not found.');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         }
         if(domain.disabled == true) {
             if(overwrite != true) {
                 var error = new Error('Specified domain has been disabled for registrations.');
-                error.name = 'EDENIED';
+                error.name = 'EDISABLED';
+                error.type = 400;
                 return callback(error);
             }
         }
@@ -61,6 +73,7 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
             if(resMailbox) {
                 var error = new Error('Address already registered.');
                 error.name = 'EOCCUPIED';
+                error.type = 400;
                 return callback(error);
             }
             var mailbox = new Mailbox();
@@ -116,9 +129,10 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
  * @param {Object|Boolean} mailbox Mailbox object of the found mailbox, false if not found.
  */
 exports.find = function (mailboxID, callback) {
-    if (!mailboxID.toString().match(/^[0-9a-fA-F]{24}$/)) {
+    if (!validator.isMongoId(mailboxID)) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EINVALID';
+        error.type = 400;
         return callback(error);
     }
     Mailbox.findById(mailboxID, function (err, mailbox) {
@@ -136,7 +150,7 @@ exports.find = function (mailboxID, callback) {
  * Claim a mailbox with a transfer code.
  * @name claimMailbox
  * @since 0.1.0
- * @version 1
+ * @version 2
  * @param {string} transferCode TransferCode to check.
  * @param {string} userID User ID of the user to add the mailbox to.
  * @param {claimMailboxCallback} callback Callback function after claiming the mailbox.
@@ -149,6 +163,12 @@ exports.find = function (mailboxID, callback) {
  * @param {Object} mailbox Mailbox object of the claimed mailbox.
  */
 exports.claimMailbox = function (transferCode, userID, callback) {
+    if (!validator.isMongoId(userID)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EINVALID';
+        error.type = 400;
+        return callback(error);
+    }
     Mailbox.findOne({transferCode: transferCode}, function (err, mailbox) {
         if(err) {
             return callback(err);
@@ -156,11 +176,13 @@ exports.claimMailbox = function (transferCode, userID, callback) {
         if(!mailbox) {
             var error = new Error('Mailbox not found.');
             error.name = 'ENOTFOUND';
+            error.type = 404;
             return callback(error);
         }
         if(mailbox.transferable == false) {
             var error = new Error('Mailbox not transferable.');
             error.name = 'EDENIED';
+            error.type = 400;
             return callback(error);
         }
         User.findById(userID, function (err, user) {
@@ -170,6 +192,7 @@ exports.claimMailbox = function (transferCode, userID, callback) {
             if(user.mailboxes.indexOf(mailbox._id) > -1) {
                 var error = new Error('User already member of the mailbox.');
                 error.name = 'EOCCUPIED';
+                error.type = 400;
                 return callback(error);
             }
             user.mailboxes.push(mailbox._id);
