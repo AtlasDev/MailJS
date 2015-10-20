@@ -14,9 +14,7 @@ exports.getTFA = function (req, res) {
     var user = req.user;
     user.tfaToken = key.base32;
     user.save(function (err) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({
             key: key.base32,
             uri: 'otpauth://totp/MailJS?secret='+key.base32
@@ -43,13 +41,9 @@ exports.postTFA = function (req, res) {
     }
     user.tfa = true;
     user.save(function (err) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         sessions.killAll(user.username, function (err, resp) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message}});
-            }
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({message: "2FA has been enabled."});
         });
     });
@@ -71,13 +65,9 @@ exports.deleteTFA = function (req, res) {
     }
     user.tfa = false;
     user.save(function (err) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         sessions.killAll(user.username, function (err, resp) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message}});
-            }
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({message: "2FA disabled."});
         });
     });

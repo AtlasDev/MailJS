@@ -3,9 +3,7 @@ var sessions = require('../../../sessions.js');
 
 exports.getSessions = function (req, res) {
     sessions.getSessions(req.user.username, function (err, sess) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         var serializedSessions = [];
         for(var i = 0; i<sess.length; i++) {
             var singelSession = {};

@@ -4,9 +4,7 @@ var util = require('../../../util.js');
 
 exports.postUser = function(req, res) {
     sys.perms.hasPerm('user.create', req.user.group, req.authInfo, function (err, hasPerm) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         if(hasPerm != true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
@@ -33,7 +31,7 @@ exports.currentUser = function (req, res) {
 
 exports.getUser = function(req, res) {
     sys.perms.hasPerm('user.list', req.user.group, req.authInfo, function (err, hasPerm) {
-        if (err) return res.status(500).json({error: {name: err.name, message: err.message}});
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         if(hasPerm != true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }

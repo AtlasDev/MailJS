@@ -3,9 +3,7 @@ var util = require('../../../util.js');
 
 exports.postClient = function(req, res) {
     sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
-        if(err) {
-            return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         if(hasPerm != true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
@@ -13,9 +11,7 @@ exports.postClient = function(req, res) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
         }
         sys.client.create(req.user, req.body.name, req.body.description, req.body.url, req.body.scopes, function (err, client) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message}});
-            }
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({ message: 'Client added.', client: client });
         });
     });
@@ -26,9 +22,7 @@ exports.getOwnClients = function(req, res) {
         return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
     }
     sys.client.get(req.user._id, req.param.limitBy, req.param.skip, function (err, clients) {
-        if(err) {
-             return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         for (var i = 0, len = clients.length; i < len; i++) {
             clients[i].secret = undefined;
         }
@@ -43,9 +37,7 @@ exports.deleteClients = function(req, res) {
         return;
     }
     sys.client.remove(req.body.id, function (err) {
-        if(err) {
-             return res.status(500).json({error: {name: err.name, message: err.message}});
-        }
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({message: 'Client deleted.'});
     })
 };
