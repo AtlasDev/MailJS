@@ -1,16 +1,10 @@
-var events = require('events');
 var util = require('util');
-var mongoose = require('mongoose');
 var sys = require('../sys/main.js');
+var expressSession = require('express-session');
 
-var storage = function () {
-    this.ttl = 1000*60*60*2 //2 hours
-    this.interval = 1000*60*10 //10 minutes
-    this.mongoose = mongoose;
-};
+var storage = function () {};
 
-var EventEmitter = events.EventEmitter;
-util.inherits(storage, EventEmitter);
+util.inherits(storage, expressSession.Store);
 
 storage.prototype.destroy = function (sid, cb) {
     sys.sessions.destroy(sid, cb);

@@ -1,6 +1,7 @@
 var Session = require('../models/session.js');
 
 exports.create = function (sid, session, cb) {
+    console.log('created: '+sid);
     Session.findOne({sid: sid}, function (err, sess) {
         if(err) {
             return cb(err);
@@ -35,11 +36,12 @@ exports.upgrade = function (sid, user, cb) {
         if(err) {
             return cb(err);
         }
-        return cb(null, sess.toObject());
+        return cb(null, sess.toObject().session);
     });
 }
 
 exports.get = function (sid, cb) {
+    console.log('gain: '+sid);
     Session.findOne({sid: sid}, function (err, sess) {
         if(err) {
             return cb(err);
@@ -47,7 +49,7 @@ exports.get = function (sid, cb) {
         if(!sess) {
             return cb(null, null);
         }
-        return cb(null, sess.toObject());
+        return cb(null, sess.toObject().session);
     });
 }
 

@@ -4,11 +4,11 @@ var socketio = function(http, app) {
 
 var express = require('express');
 var io = require('socket.io')(http);
-var sessions = require('./sessions.js');
 var util = require('../util.js');
 var config = require('../config.json');
 var sys = require('../sys/main.js');
 var cluster = require('cluster');
+var cookieParser = require('cookie-parser');
 
 io.use(function(socket, next){
     var _this = this;
@@ -20,8 +20,11 @@ io.use(function(socket, next){
         if(cookies[i].split('=')[0]=='MailJS') {
             var token = cookies[i].split('=');
             if(token[1] && token[1] != '') {
-                sessions.get(token[1], function (err, session) {
+                sys.sessions.get(token[1], function (err, session) {
                     if(err) { return next(new Error('Authentication error')); };
+                    if(!session) {
+                        return next(new Error('Authentication error'));
+                    }
                     sys.user.findByUsername(session.id, function (err, user) {
                         if(err) {
                             return next(new Error('Authentication error'));

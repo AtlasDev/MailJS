@@ -14,7 +14,7 @@ var SessionSchema = new mongoose.Schema({
         required: true
     },
     session: {
-        type: []
+        type: mongoose.Schema.Types.Mixed
     }
 });
 
