@@ -11,13 +11,13 @@ var passport = require('passport');
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var ConnectRedisSessions = require('connect-redis-sessions');
 var config = require('../config.json');
 var v1apiRouter = require('./v1/apiRouter.js');
-var frontend = require('./frontend.js');
+var socketio = require('./socketio.js');
 var util = require('../util.js');
-var sessions = require('../sessions.js');
-var redis = require('../redis.js');
+var mongoose = require('mongoose');
+var session = require('express-session');
+var sessions = require('./sessions.js');
 
 var app = express();
 var http = require('http').Server(app);
@@ -29,22 +29,18 @@ app.set('views',__dirname + '/views');
 
 app.use(cookieParser());
 
+app.use(session({
+    name: "MailJS",
+    secret: 'test',
+    resave: false,
+    saveUninitialized: true,
+    store: new sessions(),
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-app.use(
-    ConnectRedisSessions({
-        app: "MailJS",
-        port: config.redis.port,
-        host: config.redis.host,
-        namespace: 'sess',
-        cookie: {
-            httpOnly: false
-        }
-    })
-);
 
 app.use(passport.initialize());
 
@@ -56,7 +52,7 @@ app.use(function(err, req, res, next) {
     res.status(500).send('Internal Server Error');
 });
 
-frontend(http, app);
+socketio(http, app);
 
 app.use('/api/v1', v1apiRouter);
 

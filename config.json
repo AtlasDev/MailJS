@@ -13,10 +13,6 @@
         "port": "27017",
         "database": "mailjs"
     },
-    "redis": {
-        "host": "db1.argon.atlasdev.nl",
-        "port": "6379"
-    },
     "install": {
         "domain": "example.com"
     }

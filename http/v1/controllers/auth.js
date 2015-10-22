@@ -3,7 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var SessionStrategy = require('passport-sessiontoken').Strategy;
-var sessions = require('../../../sessions.js');
+var mongoose = require('mongoose');
 var sys = require('../../../sys/main.js');
 
 passport.serializeUser(function(user, done) {
@@ -30,9 +30,10 @@ passport.use('user', new LocalStrategy(
 
 passport.use('session', new SessionStrategy(
     function(token, done) {
-        sessions.getSession(token, function (err, session) {
+        sys.sessions.get(token, function (err, session) {
             if(err) { return done(err) };
-            if(!session.id) {
+            console.log(session);
+            if(!session.user) {
                 return done(null, false);
             }
             sys.user.findByUsername(session.id, function (err, user) {

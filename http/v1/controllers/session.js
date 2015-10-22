@@ -1,5 +1,5 @@
 var sys = require('../../../sys/main.js');
-var sessions = require('../../../sessions.js');
+//var sessions = require('../../../sessions.js');
 
 exports.getSessions = function (req, res) {
     sessions.getSessions(req.user.username, function (err, sess) {

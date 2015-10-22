@@ -6,21 +6,19 @@ exports.postLogin = function(req, res, next) {
         if(err) {
             return res.json({error: {name: err.name, message: err.message} });
         }
-        req.session.upgrade(req.body.username, 86400, function (err) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message} });
-            }
-            var responseUser = user;
-            responseUser.password = undefined;
-            responseUser.tfaToken = undefined;
-            if(user.tfa == true) {
-                req.session.finishTFA = false;
-            } else {
-                req.session.finishTFA = true;
-            }
-            req.session.useragent = req.headers['user-agent'];
-            return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
-        });
+        if(err) {
+            return res.status(500).json({error: {name: err.name, message: err.message} });
+        }
+        var responseUser = user;
+        responseUser.password = undefined;
+        responseUser.tfaToken = undefined;
+        if(user.tfa == true) {
+            req.session.finishTFA = false;
+        } else {
+            req.session.finishTFA = true;
+        }
+        req.session.useragent = req.headers['user-agent'];
+        return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
     });
 };
 
