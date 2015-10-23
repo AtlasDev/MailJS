@@ -1,6 +1,7 @@
 {
     "configured": "true",
     "process_name": "MailJS",
+    "secret": "test",
     "noinstall": "false",
     "uninstall": "true",
     "maxExits": "10",

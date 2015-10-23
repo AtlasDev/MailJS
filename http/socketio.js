@@ -18,9 +18,9 @@ io.use(function(socket, next){
     var cookies = socket.handshake.headers.cookie.split('; ');
     for (var i = 0; i < cookies.length; i++) {
         if(cookies[i].split('=')[0]=='MailJS') {
-            var token = cookies[i].split('=');
-            if(token[1] && token[1] != '') {
-                sys.sessions.get(token[1], function (err, session) {
+            var token = cookies[i].split('=')[1];
+            if(token && token != '') {
+                sys.sessions.get(token, function (err, session) {
                     if(err) { return next(new Error('Authentication error')); };
                     if(!session) {
                         return next(new Error('Authentication error'));
@@ -31,7 +31,7 @@ io.use(function(socket, next){
                         }
                         socket.data = {};
                         socket.data.user = user;
-                        socket.data.sid = token[1];
+                        socket.data.sid = token;
                         return next();
                     });
                 });

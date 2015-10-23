@@ -1,67 +1,39 @@
 var Session = require('../models/session.js');
+var cookieParser = require('cookie-parser');
+var config = require('../config.json');
 
-exports.create = function (sid, session, cb) {
-    console.log('created: '+sid);
-    Session.findOne({sid: sid}, function (err, sess) {
+exports.create = function (sid, userID, session, cb) {
+    var sess = new Session({
+        sid: sid,
+        session: session,
+        user: userID,
+        lastSeen: Date.now()
+    });
+    sess.save(function (err) {
         if(err) {
             return cb(err);
         }
-        if(!sess){
-            var sess = new Session({
-                sid: sid,
-                session: session,
-                lastSeen: Date.now()
-            });
-            sess.save(function (err) {
-                if(err) {
-                    return cb(err);
-                }
-                return cb();
-            });
-        } else {
-            sess.session = session;
-            sess.lastSeen = Date.now();
-            sess.save(function (err) {
-                if(err) {
-                    return cb(err);
-                }
-                return cb();
-            });
-        }
+        return cb();
     });
 }
 
-exports.upgrade = function (sid, user, cb) {
-    Session.update({sid: sid}, {user: user, lastSeen: Date.now()}, function (err, sess) {
-        if(err) {
-            return cb(err);
-        }
-        return cb(null, sess.toObject().session);
-    });
-}
-
-exports.get = function (sid, cb) {
-    console.log('gain: '+sid);
+exports.get = function (signedID, cb) {
+    if(!signedID) {
+        return cb(new Error('No sessionID given'));
+    }
+    var sid = cookieParser.signedCookie(signedID, config.secret);
+    if(signedID == sid) {
+        return cb(null, null);
+    }
     Session.findOne({sid: sid}, function (err, sess) {
+        console.log(sess);
         if(err) {
             return cb(err);
         }
         if(!sess) {
             return cb(null, null);
         }
-        return cb(null, sess.toObject().session);
-    });
-}
-
-exports.touch = function (sid, cb) {
-    Session.update({sid: sid}, {lastSeen: Date.now()}, function (err, sess) {
-        if(err) {
-            return cb(err);
-        }
-        if(!sess) {
-            return cb(new Error('Session not found.'))
-        }
-        return cb();
+        return cb(null, sess.toObject());
     });
 }
 

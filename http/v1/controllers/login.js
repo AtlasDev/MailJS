@@ -1,11 +1,9 @@
 var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
+var util = require('../../../util.js');
 
 exports.postLogin = function(req, res, next) {
     sys.user.findByUsername(req.body.username, function (err, user) {
-        if(err) {
-            return res.json({error: {name: err.name, message: err.message} });
-        }
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message} });
         }
@@ -18,7 +16,14 @@ exports.postLogin = function(req, res, next) {
             req.session.finishTFA = true;
         }
         req.session.useragent = req.headers['user-agent'];
-        return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
+        req.session.id = util.uid(50);
+        sys.sessions.create(req.session.id, req.user._id, req.session, function (err) {
+            if(err) {
+                return res.status(500).json({error: {name: err.name, message: err.message} });
+            }
+            res.cookie('MailJS', req.session.id, {signed: true});
+            return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
+        });
     });
 };
 

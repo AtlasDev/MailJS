@@ -16,8 +16,8 @@ var v1apiRouter = require('./v1/apiRouter.js');
 var socketio = require('./socketio.js');
 var util = require('../util.js');
 var mongoose = require('mongoose');
-var session = require('express-session');
-var sessions = require('./sessions.js');
+var config = require('../config.json');
+var sys = require('../sys/main.js');
 
 var app = express();
 var http = require('http').Server(app);
@@ -27,21 +27,26 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views',__dirname + '/views');
 
-app.use(cookieParser());
-
-app.use(session({
-    name: "MailJS",
-    secret: 'test',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { path: '/', httpOnly: false, secure: false, maxAge: null },
-    store: new sessions(),
-}));
+app.use(cookieParser(config.secret));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+app.use(function (req, res, next) {
+    if(!req.signedCookies['MailJS']) {
+        return next();
+    }
+    sys.sessions.get(req.signedCookies['MailJS'], function (err, session) {
+        if(err) { return res.status(500).json({error: {name: err.name, message: err.message} }); }
+        if(!session) {
+            return next(new Error('Session invalid.'));
+        }
+        req.session = session.session;
+        return next();
+    });
+});
 
 app.use(passport.initialize());
 
