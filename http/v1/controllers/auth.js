@@ -32,10 +32,10 @@ passport.use('session', new SessionStrategy(
     function(token, done) {
         sys.sessions.get(token, function (err, session) {
             if(err) { return done(err) };
-            if(!session || !session.user) {
+            if(!session) {
                 return done(null, false);
             }
-            sys.user.findByUsername(session.id, function (err, user) {
+            sys.user.find(session.user, function (err, user) {
                 if (err) { return done(err); }
                 if (!user) { return done(null, false); }
                 return done(null, user, { session: false, type: 'session' });

@@ -34,14 +34,16 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+//Do I really need this?
 app.use(function (req, res, next) {
     if(!req.signedCookies['MailJS']) {
         return next();
     }
     sys.sessions.get(req.signedCookies['MailJS'], function (err, session) {
         if(err) { return res.status(500).json({error: {name: err.name, message: err.message} }); }
-        if(!session) {
-            return next(new Error('Session invalid.'));
+        if(!session && !((req.url == "/api/v1/login" || req.url == "/api/v1/login/") && req.method == "POST")) {
+            res.clearCookie('MailJS');
+            return res.status(400).json({error: {name: 'EINVALID', message: 'Session invalid.'}});
         }
         req.session = session.session;
         return next();

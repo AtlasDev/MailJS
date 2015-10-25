@@ -22,9 +22,9 @@ exports.get = function (signedID, cb) {
         return cb(new Error('No sessionID given'));
     }
     var sid = cookieParser.signedCookie(signedID, config.secret);
-    if(signedID == sid) {
-        return cb(null, null);
-    }
+    Session.find({}, function (err, users) {
+        //console.log(users);
+    })
     Session.findOne({sid: sid}, function (err, sess) {
         console.log(sess);
         if(err) {
