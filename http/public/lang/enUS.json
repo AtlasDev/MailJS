@@ -112,7 +112,8 @@
                 "ip": "IP",
                 "idle": "IDLE time",
                 "reads": "Reads",
-                "writes": "Writes"
+                "TFA": "2FA done",
+                "actions": "Actions"
             }
         },
         "user": {

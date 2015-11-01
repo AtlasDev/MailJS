@@ -13,8 +13,6 @@ exports.getSessions = function (req, res) {
             singelSession.finishedTFA = sess[i].session.finishTFA;
             singelSession.userAgent = sess[i].session.useragent;
             serializedSessions.push(singelSession);
-            console.log(sess[0]);
-            console.log(singelSession);
             if(i == sess.length-1) {
                 res.json({session: serializedSessions});
             }

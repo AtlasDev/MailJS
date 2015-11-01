@@ -32,7 +32,8 @@
                                 <th>{{'settings.sessions.tableTitles.ip' | translate}}</th>
                                 <th>{{'settings.sessions.tableTitles.idle' | translate}}</th>
                                 <th>{{'settings.sessions.tableTitles.reads' | translate}}</th>
-                                <th>{{'settings.sessions.tableTitles.writes' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.TFA' | translate}}</th>
+                                <th>{{'settings.sessions.tableTitles.actions' | translate}}</th>
                             </tr>
                             <tr ng-repeat="session in sessions">
                                 <td><img ng-src="./img/os/{{getOS(session.userAgent)}}.png" alt="{{getOS(session.userAgent)}}" /></td>
@@ -40,7 +41,9 @@
                                 <td>{{session.ip}}</td>
                                 <td>{{session.idle}} {{'common.seconds' | translate}}</td>
                                 <td>{{session.reads}}</td>
-                                <td>{{session.writes}}</td>
+                                <td ng-if="session.finishedTFA">{{'common.yes' | translate | capitalize}}</td>
+                                <td ng-if="!session.finishedTFA">{{'common.no' | translate | capitalize}}</td>
+                                <td><a class="fa fa-close" href="" ng-click="killSession(session.id)"></a></td>
                             </tr>
                         </tbody>
                     </table>

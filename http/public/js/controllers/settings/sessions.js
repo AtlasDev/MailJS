@@ -91,4 +91,7 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user)
                 return 'unknown';
         }
     }
+    $scope.killSession = function (id) {
+        console.log(id);
+    }
 });
