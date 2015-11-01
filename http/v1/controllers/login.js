@@ -17,7 +17,7 @@ exports.postLogin = function(req, res, next) {
         }
         req.session.useragent = req.headers['user-agent'];
         req.session.id = util.uid(50);
-        sys.sessions.create(req.session.id, req.user._id, req.session, function (err) {
+        sys.sessions.create(req.session.id, req.user._id, req.ip, req.session, function (err) {
             if(err) {
                 return res.status(500).json({error: {name: err.name, message: err.message} });
             }

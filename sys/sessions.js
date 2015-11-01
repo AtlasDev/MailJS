@@ -2,11 +2,12 @@ var Session = require('../models/session.js');
 var cookieParser = require('cookie-parser');
 var config = require('../config.json');
 
-exports.create = function (sid, userID, session, cb) {
+exports.create = function (sid, userID, ip, session, cb) {
     var sess = new Session({
         sid: sid,
         session: session,
         user: userID,
+        ip: ip,
         lastSeen: Date.now()
     });
     sess.save(function (err) {
@@ -21,19 +22,25 @@ exports.get = function (signedID, cb) {
     if(!signedID) {
         return cb(new Error('No sessionID given'));
     }
+    signedID = signedID.replace('%3A', ':');
+    signedID = signedID.replace('%2B', '+');
+    signedID = signedID.replace('%2F', '/');
     var sid = cookieParser.signedCookie(signedID, config.secret);
-    Session.find({}, function (err, users) {
-        //console.log(users);
-    })
     Session.findOne({sid: sid}, function (err, sess) {
-        console.log(sess);
         if(err) {
             return cb(err);
         }
         if(!sess) {
             return cb(null, null);
         }
-        return cb(null, sess.toObject());
+        sess.reads = sess.reads++;
+        sess.lastSeen = Date.now();
+        sess.save(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, sess.toObject());
+        });
     });
 }
 
@@ -47,19 +54,11 @@ exports.destroy = function (sid, cb) {
 }
 
 exports.sessionsOfUser = function (userID, cb) {
-    Sessions.find({user: userID}, function (err, sessions) {
+    Session.find({user: userID}, function (err, sessions) {
         if(err) {
             return cb(err);
         }
-        var sess = [];
-        for (var i = 0; i < sessions.length; i++) {
-            var session = sessions[i];
-            session.sid = undefined;
-            sess.push(session.toObject());
-            if(i == sessions.length) {
-                return cb(null, sess);
-            }
-        }
+        return cb(null, sessions);
     })
 }
 

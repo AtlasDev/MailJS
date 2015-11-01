@@ -25,7 +25,7 @@ io.use(function(socket, next){
                     if(!session) {
                         return next(new Error('Authentication error'));
                     }
-                    sys.user.findByUsername(session.id, function (err, user) {
+                    sys.user.find(session.user, function (err, user) {
                         if(err) {
                             return next(new Error('Authentication error'));
                         }

@@ -1,19 +1,20 @@
 var sys = require('../../../sys/main.js');
-//var sessions = require('../../../sessions.js');
 
 exports.getSessions = function (req, res) {
-    sessions.getSessions(req.user.username, function (err, sess) {
+    sys.sessions.sessionsOfUser(req.user._id, function (err, sess) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         var serializedSessions = [];
         for(var i = 0; i<sess.length; i++) {
             var singelSession = {};
-            singelSession.reads = sess[i].r;
-            singelSession.writes = sess[i].w;
-            singelSession.idle = sess[i].idle;
+            singelSession.id = sess[i]._id;
+            singelSession.reads = sess[i].reads;
+            singelSession.idle = Date.now() - sess[i].lastSeen;
             singelSession.ip = sess[i].ip;
-            singelSession.finishedTFA = sess[i].d.finishTFA;
-            singelSession.userAgent = sess[i].d.useragent;
+            singelSession.finishedTFA = sess[i].session.finishTFA;
+            singelSession.userAgent = sess[i].session.useragent;
             serializedSessions.push(singelSession);
+            console.log(sess[0]);
+            console.log(singelSession);
             if(i == sess.length-1) {
                 res.json({session: serializedSessions});
             }

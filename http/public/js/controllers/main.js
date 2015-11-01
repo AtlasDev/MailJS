@@ -54,15 +54,11 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     socket.on('error:nodata', function () {
         $cookies.remove('MailJS');
         $window.location.href = '/index.html?msg=Connection%20error!';
-    })
+    });
     socket.on('error:dberror', function () {
         $cookies.remove('MailJS');
         $window.location.href = '/index.html?msg=Database%20error!';
-    })
-    socket.on('error:nodata', function () {
-        $cookies.remove('MailJS');
-        $window.location.href = '/api/v1/user/setup';
-    })
+    });
 	//mail handling
     socket.on('mail:star', function(data){
         for(var i in $rootScope.mails) {

@@ -7,10 +7,19 @@ var SessionSchema = new mongoose.Schema({
         unique: true
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     },
     lastSeen: {
         type: Number,
+        required: true
+    },
+    reads: {
+        type: Number,
+        default: 0
+    },
+    ip: {
+        type: String,
         required: true
     },
     session: {

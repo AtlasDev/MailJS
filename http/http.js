@@ -34,7 +34,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-//Do I really need this?
 app.use(function (req, res, next) {
     if(!req.signedCookies['MailJS']) {
         return next();
