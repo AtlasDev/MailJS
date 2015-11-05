@@ -24,7 +24,6 @@ exports.get = function (signedID, cb) {
         return cb(new Error('No sessionID given'));
     }
     var sid = cookieParser.signedCookie(signedID, config.secret);
-    console.log(sid);
     Session.findOne({sid: sid}, function (err, sess) {
         if(err) {
             return cb(err);
