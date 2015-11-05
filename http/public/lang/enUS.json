@@ -32,7 +32,8 @@
         "transferToken": "Transfer token",
         "transferable": "Transferable",
         "actions": "Actions",
-        "title": "Title"
+        "title": "Title",
+        "editable": "Editable"
     },
     "settings": {
         "settings": "settings",
@@ -87,17 +88,24 @@
             "createDomain": {
                 "title": "Create a new domain",
                 "placeholder": "Enter domain (E.G. example.com)",
-                "submit": "Create"
+                "submit": "Create domain"
             },
             "viewMailbox": {
                 "information": "information",
                 "functionDisplay": "Your function",
                 "userCount": "User count",
                 "adminCount": "Admin count",
+                "delete": "Delete mailbox",
+                "transferable": "Set transferable",
                 "functions": {
                     "user": "user",
                     "admin": "admin",
                     "creator": "creator"
+                },
+                "inboxes": {
+                    "title": "Inboxes",
+                    "create": "Create inbox",
+                    "placeholder": "Inbox title"
                 }
             }
         },

@@ -163,7 +163,7 @@ exports.find = function (mailboxID, callback) {
 exports.claimMailbox = function (transferCode, userID, callback) {
     if (!validator.isMongoId(userID)) {
         var error = new Error('Invalid user ID!');
-        error.name = 'EINVALID';
+        error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
@@ -200,7 +200,70 @@ exports.claimMailbox = function (transferCode, userID, callback) {
                 }
                 util.log('`'+user.username+'` claimed `'+mailbox.address+'`.')
                 return callback(null, mailbox);
-            })
-        })
-    })
+            });
+        });
+    });
+}
+
+/**
+ * Set the transfer boolean of a mailbox.
+ * @name setTransferable
+ * @since 0.1.0
+ * @version 1
+ * @param {boolean} transferable The value of the transfer boolean.
+ * @param {string} mailboxID Mailbox to be changed.
+ * @param {string} userID User to check permissions for.
+ * @param {setTransferableCallback} callback Callback function after changing the boolean
+ */
+
+/**
+ * Callback for setting the transferable boolean.
+ * @callback setTransferableCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} mailbox Mailbox object of the changed mailbox
+ */
+exports.setTransferable = function (transferable, mailboxID, userID, callback) {
+    if (!validator.isBoolean(transferable)) {
+        var error = new Error('transferable is not a boolean!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if (!validator.isMongoId(userID)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    Mailbox.findById(mailboxID, function (err, mailbox) {
+        if(err) {
+            return callback(err);
+        }
+        if(!mailbox) {
+            var error = new Error('Mailbox not found.');
+            error.name = 'ENOTFOUND';
+            error.type = 404;
+            return callback(error);
+        }
+        if(mailbox.creator == userID || mailbox.admins.indexOf(userID) != -1) {
+            mailbox.transferable = transferable;
+            mailbox.save(function (err) {
+                if(err) {
+                    return callback(err);
+                }
+                return callback(null, mailbox);
+            });
+        } else {
+            var error = new Error('Permission denied.');
+            error.name = 'EPERMS';
+            error.type = 403;
+            return callback(error);
+        }
+    });
 }

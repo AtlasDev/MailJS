@@ -127,7 +127,7 @@
                 <div class="modal-body">
                     <div class="container col-md-12">
                         <div class="row">
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <div class="box box-danger">
                                     <div class="box-header">
                                         <h3 class="box-title">{{'common.users' | translate | capitalize}}</h3>
@@ -152,7 +152,44 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-4">
+                                <div class="box box-danger">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.title' | translate | capitalize}}</h3>
+                                    </div>
+                                    <div class="box-body table-responsive no-padding">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                <tr>
+                                                    <th>{{'common.title' | translate | capitalize}}</th>
+                                                    <th>{{'common.editable' | translate | capitalize}}</th>
+                                                    <th>{{'common.actions' | translate | capitalize}}</th>
+                                                </tr>
+                                                <tr ng-repeat="mailboxInbox in viewingMailbox.inboxes | orderBy: '-function'">
+                                                    <td>{{mailboxInbox.name}}</td>
+                                                    <td ng-if="mailboxUser.editable">{{'common.yes' | translate | capitalize}}</td>
+                                                    <td ng-if="!mailboxUser.editable">{{'common.no' | translate | capitalize}}</td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="box box-danger" ng-show="viewingMailbox.function != 1">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.create' | translate | capitalize}}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <form role="form" ng-submit="createInbox()">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="domain" ng-model="inboxTitle" placeholder="{{'settings.mailbox.viewMailbox.inboxes.placeholder' | translate}}" />
+                                            </div>
+                                            <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.inboxes.create' | translate}}</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="box box-danger">
                                     <div class="box-header">
                                         <h3 class="box-title">{{'settings.mailbox.viewMailbox.information' | translate | capitalize}}</h3>
@@ -184,6 +221,23 @@
                                             </li>
                                             <li><b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span></li>
                                         </ul>
+                                    </div>
+                                </div>
+                                <div class="box box-danger" ng-show="viewingMailbox.function == 3">
+                                    <div class="box-header">
+                                        <h3 class="box-title">{{'common.actions' | translate | capitalize}}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <p>
+                                            <form role="form" ng-submit="transferableMailbox(viewingMailbox)">
+                                                <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.transferable' | translate}}</button>
+                                            </form>
+                                        </p>
+                                        <p>
+                                            <form role="form" ng-submit="deleteMailbox(viewingMailbox)">
+                                                <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.delete' | translate}}</button>
+                                            </form>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

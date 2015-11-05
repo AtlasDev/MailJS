@@ -55,7 +55,7 @@
  * @apiParam {String} local Local part of the address, like `myname` for myname@example.com (domain is example.com)
  * @apiParam {String} domain Domain ID of the domain of the to be created domain.
  * @apiParam {Boolean} transferable (Optional) If the mailbox is transferable with a token (default to false).
- * @apiParamExample {json} Create a new user:
+ * @apiParamExample {json} Create a new mailbox:
  *     {
  *       "local": "myname",
  *       "domain": "55e40dc8cf8dbadb0c352302",
@@ -262,6 +262,33 @@
  *       }
  *     }
  *
+ * @apiUse AuthError
+ * @apiUse UserAuthHeader
+ * @apiUse OAuthHeader
+ */
+
+/**
+ * @api {post} /mailbox/:mailbox/transferable Set transferable
+ * @apiVersion 0.1.0
+ * @apiName setMailboxTransferable
+ * @apiGroup Mailbox
+ *
+ * @apiDescription Set the mailbox transferable option, can be set by the creator or a admin.
+ * @apiParam {String} mailbox MailboxID of the mailbox to set.
+ * @apiParam {Boolean} transferable Value to set the mailbox to.
+ * @apiParamExample {json} Set the mailbox transferable option:
+ *     {
+ *       "transferable": "true"
+ *     }
+ *
+ * @apiSuccess {Boolean} transferable The new transferable boolean.
+ * @apiSuccessExample {json} Created response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "transferable": "true"
+ *     }
+ *
+ * @apiUse PermissionError
  * @apiUse AuthError
  * @apiUse UserAuthHeader
  * @apiUse OAuthHeader

@@ -49,9 +49,6 @@ exports.patchMailbox = function (req, res) {
 }
 
 exports.getMailbox = function (req, res) {
-    if (!req.params.mailbox.toString().match(/^[0-9a-fA-F]{24}$/)) {
-        return res.status(400).json({error: {name: 'EINVALID', message: 'Invalid mailbox ID!'}});
-    }
     if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
         sys.perms.hasPerm('mailbox.view', req.user.group, req.authInfo, function (err, hasPerm) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
@@ -96,5 +93,12 @@ function runGetMailbox(req, res) {
                 }
             }
         })
+    });
+}
+
+exports.setTransferable = function (req, res) {
+    sys.mailbox.setTransferable(req.body.transferable, req.params.mailbox, req.user._id, function (err, mailbox) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        return res.json({transferable: mailbox.transferable});
     });
 }

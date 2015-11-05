@@ -84,3 +84,5 @@ a:hover {
 .creator {
 	color: rgb(94, 16, 121);
 }
+
+.modal .modal-dialog { width: 80%; }

@@ -52,6 +52,9 @@ router.route('/mailbox')
 router.route('/mailbox/:mailbox')
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailbox);
 
+router.route('/mailbox/:mailbox/transferable')
+    .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
+
 router.route('/domain')
   .post(authController.isAuthenticated, authController.checkTFA, domainController.postDomain)
   .get(authController.isAuthenticated, authController.checkTFA, domainController.getDomains);

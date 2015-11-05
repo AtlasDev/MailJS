@@ -156,6 +156,44 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         });
     }
 
+    $scope.deleteMailbox = function (mailbox) {
+        if(prompt("Are you sure? Please enter the mail address to confirm deletion.") == mailbox.address) {
+            //TODO
+            notification.send('Mailbox deletion canceled!', 'Not implemented.', 'info');
+        } else {
+            notification.send('Mailbox deletion canceled!', 'Mail addresses do not match.', 'error');
+        }
+    }
+
+    $scope.transferableMailbox = function (mailbox) {
+        $rootScope.isLoading = true;
+        mailbox.transferable = !mailbox.transferable;
+        var req = {
+            method: 'POST',
+            url: '/api/v1/mailbox/'+mailbox._id+'/transferable',
+            headers: {
+                'x-token': user.sessionID
+            },
+            data: {
+                'transferable': mailbox.transferable
+            }
+        };
+        $http(req).then(function(res) {
+            $rootScope.isLoading = false;
+            $scope.viewingMailbox = mailbox;
+            for (var i = 0; i < $scope.mailboxes.length; i++) {
+                if($scope.mailboxes[i]._id == mailbox._id) {
+                    $scope.mailboxes[i] = mailbox;
+                    break;
+                }
+            }
+            notification.send('Transferable option toggled!', 'Transferable is now `'+mailbox.transferable+'`.', 'success');
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot toggle the transferable option!', res.data.error.message, 'error');
+        });
+    }
+
     if(typeof user.getUser().group == 'undefined' || typeof user.getUser().group == "string") {
         $rootScope.$on('userLoaded', function () {
             init();
