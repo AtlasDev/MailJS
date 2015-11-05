@@ -88,7 +88,11 @@ function runGetMailbox(req, res) {
                 cleanUser.group = undefined;
                 mailbox.users[i] = cleanUser;
                 if(users.length == mailbox.users.length) {
-                    return res.json({mailbox: mailbox});
+                    sys.inbox.getInboxes(req.params.mailbox, function (err, inboxes) {
+                        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+                        mailbox.inboxes = inboxes;
+                        return res.json({mailbox: mailbox});
+                    });
                 }
             }
         })

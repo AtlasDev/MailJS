@@ -61,3 +61,32 @@ exports.createDefaults = function (mailboxID, callback) {
         });
     });
 }
+
+/**
+ * Get all inboxes of a mailbox
+ * @name GetInboxes
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID Id of the mailbox to get the mailboxes of.
+ * @param {GetInboxesCallback} callback Callback function after getting all inboxes.
+ */
+
+/**
+ * Callback for getting all mailboxes
+ * @callback GetInboxesCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.getInboxes = function (mailboxID, cb) {
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Inbox.find({mailbox: mailboxID}, function (err, inboxes) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, inboxes);
+    });
+}
