@@ -13,8 +13,5 @@
         "host": "localhost",
         "port": "27017",
         "database": "mailjs"
-    },
-    "install": {
-        "domain": "example.com"
     }
 }

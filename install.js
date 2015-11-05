@@ -4,6 +4,7 @@ var colors = require('colors');
 var pack = require('./package.json');
 var sys = require('./sys/main.js');
 var util = require('./util.js');
+var validator = require('validator');
 
 if(config.noinstall == true) {
     process.exit(0);
@@ -29,6 +30,12 @@ if(!config.configured) {
     process.exit(1);
 }
 
+var setupDomain = process.argv[2];
+if(!setupDomain || !validator.isFQDN(setupDomain)) {
+    console.log('Initial domain not given or not an FQDN!'.red);
+    process.exit(1);
+}
+
 console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
 mongoose.connect(dburl);
@@ -42,7 +49,7 @@ mongoose.connection.on('open', function(){
 var dbstuff = function (group) {
     console.log('Creating first user.');
     console.log(' - Generating password..');
-    var password = util.uid(8);
+    var password = util.uid(12);
     console.log('   - password generated');
     sys.user.create('admin', password, 'Admin', 'Adminius', function (err, user) {
         if (err) {
@@ -56,7 +63,7 @@ var dbstuff = function (group) {
             }
             console.log(' - User created.');
             console.log('Creating first domain..');
-            sys.domain.create(config.install.domain, false, function (err, domain) {
+            sys.domain.create(setupDomain, false, function (err, domain) {
                 if (err) {
                     console.log(colors.red('Failed to create initial domain: '.red+err));
                     process.exit(1);
@@ -70,17 +77,15 @@ var dbstuff = function (group) {
                     }
                     console.log('Initial mailbox created.');
                     console.log('');
-                    console.log('########################################');
-                    console.log('##                                    ##');
-                    console.log('##  Installation Finished!            ##');
-                    console.log('##  Initial account details:          ##');
-                    console.log('##  Username: '+'admin'.cyan+'                   ##');
-                    console.log('##  Password: '+colors.cyan(password)+'                ##');
-                    console.log('##  Mailaddress: '+'info@'.cyan+config.install.domain.cyan+'     ##');
-                    console.log('##  SAVE THIS INFORMATION CAREFULLY!  ##');
-                    console.log('##  It is NOT recoverable!            ##');
-                    console.log('##                                    ##');
-                    console.log('########################################');
+                    console.log('###############');
+                    console.log('##  Installation Finished!');
+                    console.log('##  Initial account details:');
+                    console.log('##  Username: '+'admin'.cyan);
+                    console.log('##  Password: '+colors.cyan(password));
+                    console.log('##  Mailaddress: '+'info@'.cyan+setupDomain.cyan);
+                    console.log('##  SAVE THIS INFORMATION CAREFULLY!');
+                    console.log('##  It is NOT recoverable!');
+                    console.log('###############');
                     process.exit(0);
                 });
             });
