@@ -1,6 +1,7 @@
 var Session = require('../models/session.js');
 var cookieParser = require('cookie-parser');
 var config = require('../config.json');
+var validator = require('validator');
 
 exports.create = function (sid, userID, ip, session, cb) {
     var sess = new Session({
@@ -22,10 +23,8 @@ exports.get = function (signedID, cb) {
     if(!signedID) {
         return cb(new Error('No sessionID given'));
     }
-    signedID = signedID.replace('%3A', ':');
-    signedID = signedID.replace('%2B', '+');
-    signedID = signedID.replace('%2F', '/');
     var sid = cookieParser.signedCookie(signedID, config.secret);
+    console.log(sid);
     Session.findOne({sid: sid}, function (err, sess) {
         if(err) {
             return cb(err);
@@ -44,12 +43,35 @@ exports.get = function (signedID, cb) {
     });
 }
 
-exports.destroy = function (sid, cb) {
-    Session.findOneAndRemove({sid: sid}, function(err){
+exports.destroy = function (sid, user, cb) {
+    if (!validator.isMongoId(sid)) {
+        var error = new Error('Invalid session ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Session.findById(sid, function(err, session){
         if(err) {
             return cb(err);
         }
-        return cb();
+        if(!session) {
+            var error = new Error('Session not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 404;
+            return cb(error);
+        }
+        if(user != session.user && user != null) {
+            var error = new Error('Session not yours!');
+            error.name = 'EDENIED';
+            error.type = 403;
+            return cb(error);
+        }
+        session.remove(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb();
+        })
     });
 }
 

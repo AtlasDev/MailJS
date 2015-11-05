@@ -31,7 +31,7 @@ app.factory('notification', function (toastr) {
     }
 
     function send(title, message, type, icon, callback) {
-        if(message.length > 25) {
+        if(message.length > 150) {
             message = message.substring(0,150)+"...";
         }
         if(type == 'success') {
@@ -91,7 +91,6 @@ app.factory('notification', function (toastr) {
             } else {
                 Notification.requestPermission(function (perm) {
                     if (perm === "granted") {
-                        console.log('asdsa');
                         localStorage.setItem('notifications', true);
                         var options = {
                               body: 'The notification system works! You will get a notification everytime you get a new E-mail. You can always disable it in the settings if it gets annoying.',

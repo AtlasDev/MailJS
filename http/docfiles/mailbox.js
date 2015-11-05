@@ -70,7 +70,6 @@
  *         "mailbox": {
  *           "__v": 0,
  *           "transferCode": "hqYqUPs9ce",
- *           "smtpToken": "afr6UPs9ce",
  *           "domain": "5606e7f49ba75d600a11bc5b",
  *           "address": "myname@example.com",
  *           "_id": "5606e83d33753cc40c80f8d8",
@@ -151,7 +150,6 @@
  *         "mailbox": {
  *           "__v": 0,
  *           "transferCode": "hqYqUPs9ce",
- *           "smtpToken": "afr6UPs9ce",
  *           "domain": "5606e7f49ba75d600a11bc5b",
  *           "address": "myname@example.com",
  *           "_id": "5606e83d33753cc40c80f8d8",
@@ -212,7 +210,6 @@
  *         "mailbox": {
  *           "__v": 0,
  *           "transferCode": "hqYqUPs9ce",
- *           "smtpToken": "afr6UPs9ce",
  *           "domain": "5606e7f49ba75d600a11bc5b",
  *           "address": "myname@example.com",
  *           "_id": "5606e83d33753cc40c80f8d8",

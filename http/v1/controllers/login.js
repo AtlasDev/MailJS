@@ -28,8 +28,10 @@ exports.postLogin = function(req, res, next) {
 };
 
 exports.deleteLogin = function(req, res, next) {
-    req.session.destroy();
-    return res.json({message: 'Logout successfull.'});
+    sys.sessions.destroy(req.session.sessionID, null, function (err) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        return res.json({message: 'Logout successfull.'});
+    });
 }
 
 exports.patchLogin = function (req, res) {

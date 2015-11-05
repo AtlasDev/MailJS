@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user) {
+app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user, notification) {
     $rootScope.isLoading = true;
     $scope.sessions = [];
     var fetchSessions = function () {
@@ -92,6 +92,19 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user)
         }
     }
     $scope.killSession = function (id) {
-        console.log(id);
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'DELETE',
+            url: '/api/v1/user/session/'+id,
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            fetchSessions();
+        }, function(res) {
+            notification.send('An error occured..', res.data.error.message||'The server errored, please report this to your sysadmin.', 'error');
+            $rootScope.isLoading = false;
+        });
     }
 });

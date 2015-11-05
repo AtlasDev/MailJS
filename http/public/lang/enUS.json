@@ -29,7 +29,6 @@
         "users": "users",
         "id": "ID",
         "address": "address",
-        "smtpToken": "SMTP password",
         "transferToken": "Transfer token",
         "transferable": "Transferable",
         "actions": "Actions",

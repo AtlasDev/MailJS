@@ -84,29 +84,27 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
             mailbox.creator = userID;
             mailbox.transferable = transferable;
             mailbox.generateTransferCode(function () {
-                mailbox.generateSMTPToken(function () {
-                    mailbox.save(function (err, mailbox) {
+                mailbox.save(function (err, mailbox) {
+                    if(err) {
+                        return callback(err);
+                    }
+                    inboxFunc.createDefaults(mailbox._id, function (err) {
                         if(err) {
                             return callback(err);
                         }
-                        inboxFunc.createDefaults(mailbox._id, function (err) {
-                            if(err) {
-                                return callback(err);
-                            }
-                            User.findByIdAndUpdate(
-                                userID,
-                                {$push: {"mailboxes": mailbox._id}},
-                                {safe: true, upsert: true},
-                                function(err) {
-                                    if(err) {
-                                        return callback(err);
-                                    }
-                                    util.log('Mailbox `'+mailbox.address+'` created.')
-                                    return callback(null, mailbox);
+                        User.findByIdAndUpdate(
+                            userID,
+                            {$push: {"mailboxes": mailbox._id}},
+                            {safe: true, upsert: true},
+                            function(err) {
+                                if(err) {
+                                    return callback(err);
                                 }
-                            );
-                        })
-                    });
+                                util.log('Mailbox `'+mailbox.address+'` created.')
+                                return callback(null, mailbox);
+                            }
+                        );
+                    })
                 });
             });
         })

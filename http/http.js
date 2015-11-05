@@ -45,6 +45,7 @@ app.use(function (req, res, next) {
             return res.status(400).json({error: {name: 'EINVALID', message: 'Session invalid.'}});
         }
         req.session = session.session;
+        req.session.sessionID = session._id;
         return next();
     });
 });

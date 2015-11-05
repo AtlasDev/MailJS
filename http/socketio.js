@@ -8,7 +8,6 @@ var util = require('../util.js');
 var config = require('../config.json');
 var sys = require('../sys/main.js');
 var cluster = require('cluster');
-var cookieParser = require('cookie-parser');
 
 io.use(function(socket, next){
     var _this = this;
@@ -19,6 +18,16 @@ io.use(function(socket, next){
     for (var i = 0; i < cookies.length; i++) {
         if(cookies[i].split('=')[0]=='MailJS') {
             var token = cookies[i].split('=')[1];
+            token = token.replace('%24', '$');
+            token = token.replace('%26', '&');
+            token = token.replace('%2B', '+');
+            token = token.replace('%2C', ',');
+            token = token.replace('%2F', '/');
+            token = token.replace('%3A', ':');
+            token = token.replace('%3B', ';');
+            token = token.replace('%3D', '=');
+            token = token.replace('%3F', '?');
+            token = token.replace('%40', '@');
             if(token && token != '') {
                 sys.sessions.get(token, function (err, session) {
                     if(err) { return next(new Error('Authentication error')); };

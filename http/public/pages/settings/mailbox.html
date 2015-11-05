@@ -28,7 +28,6 @@
                                     <tr>
                                         <th>{{'common.address' | translate}}</th>
                                         <th>{{'common.title' | translate}}</th>
-                                        <th>{{'common.smtpToken' | translate}}</th>
                                         <th>{{'common.transferable' | translate}}</th>
                                         <th>{{'common.transferToken' | translate}}</th>
                                         <th>{{'common.admins' | translate}}
@@ -37,7 +36,6 @@
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
                                         <td>{{mailbox.title}}</td>
-                                        <td class="secret">{{mailbox.smtpToken}}</td>
                                         <td ng-if="mailbox.transferable">{{'common.yes' | translate | capitalize}}</td>
                                         <td ng-if="!mailbox.transferable">{{'common.no' | translate | capitalize}}</td>
                                         <td class="secret">{{mailbox.transferCode}}</td>
@@ -178,7 +176,6 @@
                                             </li>
                                             <li><b>{{'settings.mailbox.viewMailbox.userCount' | translate}}:</b> {{viewingMailbox.users.length}}</li>
                                             <li><b>{{'settings.mailbox.viewMailbox.adminCount' | translate}}:</b> {{viewingMailbox.admins.length}}</li>
-                                            <li><b>{{'common.smtpToken' | translate}}:</b> <span class="secret">{{viewingMailbox.smtpToken}}</span></li>
                                             <li ng-if="viewingMailbox.transferable == true">
                                                 <b>{{'common.transferable' | translate}}:</b> {{'common.yes' | translate}}
                                             </li>
