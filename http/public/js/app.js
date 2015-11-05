@@ -33,7 +33,7 @@ app.config(function($routeProvider) {
 			controller  : 'userSettingsCtrl'
 		})
 		.otherwise({
-			redirectTo: '/mailbox/inbox'
+			redirectTo: '/'
 		});
 });
 

@@ -33,7 +33,8 @@
         "transferable": "Transferable",
         "actions": "Actions",
         "title": "Title",
-        "editable": "Editable"
+        "editable": "Editable",
+        "inboxes": "Inboxes"
     },
     "settings": {
         "settings": "settings",

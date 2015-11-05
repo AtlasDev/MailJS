@@ -10,10 +10,15 @@ exports.getMailboxes = function (req, res) {
             if(mailbox == false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
-            foundMailboxes.push(mailbox);
-            if(mailboxes.length == foundMailboxes.length) {
-                return res.json({mailboxes: foundMailboxes});
-            }
+            mailbox = util.copyObject(mailbox);
+            sys.inbox.getInboxes(mailbox._id, function (err, inboxes) {
+                if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+                mailbox.inboxes = inboxes;
+                foundMailboxes.push(mailbox);
+                if(mailboxes.length == foundMailboxes.length) {
+                    return res.json({mailboxes: foundMailboxes});
+                }
+            });
         });
     }
 }

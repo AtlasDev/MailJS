@@ -32,6 +32,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         for(var i = 0; i<mailboxes.length; i++) {
             if(mailboxes[i]._id == id) {
                 current = mailboxes[i];
+                $rootScope.$emit('currentMailboxChange', current);
                 break;
             }
         }

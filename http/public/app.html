@@ -110,17 +110,14 @@
 								<img gravatar-src="'{{currentMailbox.address}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 							</div>
 							<div class="pull-left info">
-								<p>{{user.firstName}} {{user.lastName}}</p>
+								<p>{{currentMailbox.title}}</p>
 								{{currentMailbox.address}}
 							</div>
 						</div>
 						<!-- Sidebar Menu -->
 						<ul class="sidebar-menu">
-							<li class="header">{{'common.mailboxes' | translate | uppercase}}</li>
-							<li><a href="#/mailbox/inbox"><i class="fa fa-inbox"></i> <span>Inbox<span class="label label-primary pull-right">12</span></span></a></li>
-							<li><a href="#/mailbox/send"><i class="fa fa-envelope-o"></i> <span>Send</span></a></li>
-							<li><a href="#"><i class="fa fa-filter"></i> <span>Junk<span class="label label-waring pull-right">65</span></span></a></li>
-							<li><a href="#"><i class="fa fa-trash-o"></i> <span>Trash</span></a></li>
+							<li class="header">{{'common.inboxes' | translate | uppercase}}</li>
+							<li ng-repeat="inbox in currentMailbox.inboxes"><a href="#/mailbox/{{inbox._id}}"><i class="fa fa-{{inbox.name | lowercase}}"></i> <span>{{inbox.name}}</span></a></li>
 						</ul>
 						<ul class="sidebar-menu">
 							<li class="header">{{'settings.settings' | translate | uppercase}}</li>
