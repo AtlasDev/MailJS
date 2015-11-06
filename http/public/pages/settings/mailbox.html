@@ -138,14 +138,14 @@
                                                 <tr>
                                                     <th>Name</th>
                                                     <th>Function</th>
-                                                    <th>Actions</th>
+                                                    <th ng-if="viewingMailbox.function > 1">Actions</th>
                                                 </tr>
                                                 <tr ng-repeat="mailboxUser in viewingMailbox.users | orderBy: '-function'">
                                                     <td>{{mailboxUser.firstName}} {{mailboxUser.lastName}}</td>
                                                     <td ng-if="mailboxUser.function == 1">{{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}</td>
                                                     <td ng-if="mailboxUser.function == 2" class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</td>
                                                     <td ng-if="mailboxUser.function == 3" class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</td>
-                                                    <td>{{'common.actions' | translate}}</td>
+                                                    <td ng-if="viewingMailbox.function > 1">{{'common.actions' | translate}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -163,13 +163,13 @@
                                                 <tr>
                                                     <th>{{'common.title' | translate | capitalize}}</th>
                                                     <th>{{'common.editable' | translate | capitalize}}</th>
-                                                    <th>{{'common.actions' | translate | capitalize}}</th>
+                                                    <th ng-if="viewingMailbox.function > 1">{{'common.actions' | translate | capitalize}}</th>
                                                 </tr>
                                                 <tr ng-repeat="mailboxInbox in viewingMailbox.inboxes | orderBy: '-function'">
                                                     <td>{{mailboxInbox.name}}</td>
-                                                    <td ng-if="mailboxUser.editable">{{'common.yes' | translate | capitalize}}</td>
-                                                    <td ng-if="!mailboxUser.editable">{{'common.no' | translate | capitalize}}</td>
-                                                    <td></td>
+                                                    <td ng-if="mailboxInbox.editable">{{'common.yes' | translate | capitalize}}</td>
+                                                    <td ng-if="!mailboxInbox.editable">{{'common.no' | translate | capitalize}}</td>
+                                                    <td ng-if="viewingMailbox.function > 1"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -182,7 +182,7 @@
                                     <div class="box-body">
                                         <form role="form" ng-submit="createInbox()">
                                             <div class="form-group">
-                                                <input type="text" class="form-control" id="domain" ng-model="inboxTitle" placeholder="{{'settings.mailbox.viewMailbox.inboxes.placeholder' | translate}}" />
+                                                <input type="text" class="form-control" id="inboxTitle" ng-model="inboxTitle" placeholder="{{'settings.mailbox.viewMailbox.inboxes.placeholder' | translate}}" />
                                             </div>
                                             <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.inboxes.create' | translate}}</button>
                                         </form>

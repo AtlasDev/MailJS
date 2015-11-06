@@ -157,10 +157,11 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
     }
 
     $scope.deleteMailbox = function (mailbox) {
-        if(prompt("Are you sure? Please enter the mail address to confirm deletion.") == mailbox.address) {
+        var confirmDelete = prompt("Are you sure? Please enter the mail address to confirm deletion.");
+        if(confirmDelete == mailbox.address) {
             //TODO
             notification.send('Mailbox deletion canceled!', 'Not implemented.', 'info');
-        } else {
+        } else if(confirmDelete != null) {
             notification.send('Mailbox deletion canceled!', 'Mail addresses do not match.', 'error');
         }
     }
@@ -191,6 +192,34 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Cannot toggle the transferable option!', res.data.error.message, 'error');
+        });
+    }
+
+    $scope.createInbox = function () {
+        if(typeof $scope.inboxTitle == "undefined" || $scope.inboxTitle == "") {
+            notification.send('Cannot add inbox!', 'No title given.', 'error');
+            return;
+        }
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'POST',
+            url: '/api/v1/inbox',
+            headers: {
+                'x-token': user.sessionID
+            },
+            data: {
+                'mailbox': $scope.viewingMailbox._id,
+                'title': $scope.inboxTitle
+            }
+        };
+        $http(req).then(function(res) {
+            console.log(res);
+            $scope.viewingMailbox.inboxes.push(res.data.inbox);
+            $rootScope.isLoading = false;
+            notification.send('Inbox added!', 'Inbox `'+res.data.inbox.title+'` created successfully.', 'success');
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot add inbox!', res.data.error.message, 'error');
         });
     }
 

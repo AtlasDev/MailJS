@@ -267,3 +267,50 @@ exports.setTransferable = function (transferable, mailboxID, userID, callback) {
         }
     });
 }
+
+/**
+ * Checks if a user is admin or creator of the given mailbox.
+ * @name isAdmin
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID Mailbox to be checked against.
+ * @param {string} userID User to check permissions for.
+ * @param {isAdminCallback} callback Callback function after changing the boolean
+ */
+
+/**
+ * Callback for checking the permissions
+ * @callback isAdminCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Boolean} isAdmin Boolean which gives back if the user is an admin or creator.
+ */
+exports.isAdmin = function (mailboxID, userID, cb) {
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if (!validator.isMongoId(userID)) {
+        var error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    exports.find(mailboxID, function (err, mailbox) {
+        if(err) {
+            return cb(err);
+        }
+        if(mailbox == false) {
+            var error = new Error('Mailbox not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 404;
+            return cb(error);
+        }
+        if(mailbox.creator == userID || mailbox.admins.indexOf(userID) > -1) {
+            return cb(null, true);
+        } else {
+            return cb(null, false);
+        }
+    });
+}

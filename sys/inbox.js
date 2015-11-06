@@ -27,30 +27,30 @@ exports.createDefaults = function (mailboxID, callback) {
     inbox.name = 'Inbox';
     inbox.mailbox = mailboxID;
     inbox.editable = false;
-    var junk = new Inbox();
-    junk.name = 'Junk';
-    junk.mailbox = mailboxID;
-    junk.editable = false;
-    var trash = new Inbox();
-    trash.name = 'Trash';
-    trash.mailbox = mailboxID;
-    trash.editable = false;
-    var send = new Inbox();
-    send.name = 'Send';
-    send.mailbox = mailboxID;
-    send.editable = false;
     inbox.save(function (err) {
         if(err) {
             return callback(err);
         }
+        var junk = new Inbox();
+        junk.name = 'Junk';
+        junk.mailbox = mailboxID;
+        junk.editable = false;
         junk.save(function (err) {
             if(err) {
                 return callback(err);
             }
+            var trash = new Inbox();
+            trash.name = 'Trash';
+            trash.mailbox = mailboxID;
+            trash.editable = false;
             trash.save(function (err) {
                 if(err) {
                     return callback(err);
                 }
+                var send = new Inbox();
+                send.name = 'Send';
+                send.mailbox = mailboxID;
+                send.editable = false;
                 send.save(function (err) {
                     if(err) {
                         return callback(err);
@@ -88,5 +88,46 @@ exports.getInboxes = function (mailboxID, cb) {
             return cb(err);
         }
         return cb(null, inboxes);
+    });
+}
+
+
+/**
+ * Create a inbox
+ * @name createInbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID Id of the mailbox to add the mailbox to.
+ * @param {string} title Title of the inbox.
+ * @param {createInboxCallback} callback Callback function after creating a mailbox.
+ */
+
+/**
+ * Callback for creating a inbox.
+ * @callback createInboxCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.createInbox = function (mailboxID, title, cb) {
+    if (!validator.isMongoId(mailboxID)) {
+        var error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if (!validator.isAscii(title) || title.length < 4 || title.length > 64) {
+        var error = new Error('Invalid inbox title!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    var inbox = new Inbox();
+    inbox.name = title;
+    inbox.mailbox = mailboxID;
+    inbox.editable = true;
+    inbox.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, inbox);
     });
 }

@@ -11,6 +11,7 @@ var tfaController = require('./controllers/2fa.js');
 var mailboxController = require('./controllers/mailbox.js');
 var sessionController = require('./controllers/session.js');
 var domainController = require('./controllers/domain.js');
+var inboxController = require('./controllers/inbox.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
@@ -52,8 +53,11 @@ router.route('/mailbox')
 router.route('/mailbox/:mailbox')
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailbox);
 
+router.route('/inbox')
+  .post(authController.isAuthenticated, authController.checkTFA, inboxController.postInbox);
+
 router.route('/mailbox/:mailbox/transferable')
-    .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
+  .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
 
 router.route('/domain')
   .post(authController.isAuthenticated, authController.checkTFA, domainController.postDomain)

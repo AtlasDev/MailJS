@@ -60,7 +60,6 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
     }
 
     $scope.createUser = function () {
-        console.log($scope.lastName);
         if(typeof $scope.username == "undefined" || !$scope.username) {
             return notification.send('Cannot create user!', 'Username empty.', 'error');
         }
@@ -98,7 +97,7 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             notification.send('User created', 'User `'+$scope.username+'` has been created.', 'success');
             $rootScope.isLoading = false;
         }, function(res) {
-            notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+            notification.send('An error occured!', res.data.error.message || 'The server errored, please report this to your sysadmin.', 'error');
             $rootScope.isLoading = false;
         });
     }

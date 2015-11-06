@@ -1012,6 +1012,126 @@
     }
   },
   {
+    "type": "post",
+    "url": "/inbox",
+    "title": "Create inbox",
+    "version": "0.1.0",
+    "name": "PostInbox",
+    "group": "Inbox",
+    "description": "<p>Create an inbox in the specified mailbox.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>MongodbID</p> ",
+            "optional": false,
+            "field": "mailbox",
+            "description": "<p>ID of the mailbox to add the inbox to.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Title of the new inbox.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Create a new user:",
+          "content": "{\n  \"mailbox\": \"55e415b46e0c093119a0748c\",\n  \"title\": \"Inbox 6\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "inbox",
+            "description": "<p>The new inbox.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"inbox\": {\n    \"__v\": 0,\n    \"username\": \"AtlasDev\",\n    \"group\": \"55e40dc8cf8dbadb0c352304\",\n    \"firstName\": \"Dany\",\n    \"lastName\": \"Sluijk\",\n    \"_id\": \"55e415b46e0c093119a0748c\",\n    \"mailboxes\": []\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/inbox.js",
+    "groupTitle": "Inbox",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EVALIDATION",
+            "description": "<p>Data validation failed.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EVALIDATION:",
+          "content": "HTTP/1.1 {{status}}\n{\n  \"error\": {\n    \"name\": \"EVALIDATION\",\n    \"message\": \"{{message}}\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "HTTP"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
     "type": "patch",
     "url": "/login",
     "title": "2FA Login",
@@ -1314,7 +1434,7 @@
       "examples": [
         {
           "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -1465,7 +1585,7 @@
       "examples": [
         {
           "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -1691,7 +1811,7 @@
       },
       "examples": [
         {
-          "title": "Create a new user:",
+          "title": "Create a new mailbox:",
           "content": "{\n  \"local\": \"myname\",\n  \"domain\": \"55e40dc8cf8dbadb0c352302\",\n  \"transferable\": \"true\"\n}",
           "type": "json"
         }
@@ -1712,7 +1832,7 @@
       "examples": [
         {
           "title": "Created response:",
-          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"smtpToken\": \"afr6UPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"mailbox\": {\n      \"__v\": 0,\n      \"transferCode\": \"hqYqUPs9ce\",\n      \"domain\": \"5606e7f49ba75d600a11bc5b\",\n      \"address\": \"myname@example.com\",\n      \"_id\": \"5606e83d33753cc40c80f8d8\",\n      \"transferable\": false,\n      \"admins\": [\n        \"5606e7f49ba75d600a11bc5a\"\n      ],\n      \"owner\": \"5606e7f49ba75d600a11bc5a\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -1787,6 +1907,250 @@
     },
     "filename": "./docfiles/mailbox.js",
     "groupTitle": "Mailbox",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "post",
+    "url": "/mailbox/:mailbox/transferable",
+    "title": "Set transferable",
+    "version": "0.1.0",
+    "name": "setMailboxTransferable",
+    "group": "Mailbox",
+    "description": "<p>Set the mailbox transferable option, can be set by the creator or a admin.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "mailbox",
+            "description": "<p>MailboxID of the mailbox to set.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "transferable",
+            "description": "<p>Value to set the mailbox to.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Set the mailbox transferable option:",
+          "content": "{\n  \"transferable\": \"true\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Boolean</p> ",
+            "optional": false,
+            "field": "transferable",
+            "description": "<p>The new transferable boolean.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"transferable\": \"true\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/mailbox.js",
+    "groupTitle": "Mailbox",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EPERMS",
+            "description": "<p>The permission level of the user is not high enough.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EPERMS:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "HTTP"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "delete",
+    "url": "/user/session/:sid",
+    "title": "Destroy session",
+    "version": "0.1.0",
+    "name": "DeleteSession",
+    "group": "Sessions",
+    "description": "<p>Destroy a session with the specified id, the session must be yours.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>MongoID</p> ",
+            "optional": false,
+            "field": "sid",
+            "description": "<p>ID of the session (NOT the token).</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Delete a session:",
+          "content": "/user/session/55e40dc8cf8dbadb0c352305",
+          "type": "URI"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Simple success message.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n    \"message\": \"Session deleted.\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EMISSING",
+            "description": "<p>Request data is missing.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EVALIDATION",
+            "description": "<p>Data validation failed.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EMISSING:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"error\": {\n    \"name\": \"EMISSING\",\n    \"message\": \"Request data is missing.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "EVALIDATION:",
+          "content": "HTTP/1.1 {{status}}\n{\n  \"error\": {\n    \"name\": \"EVALIDATION\",\n    \"message\": \"{{message}}\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "HTTP"
+        }
+      ]
+    },
+    "filename": "./docfiles/session.js",
+    "groupTitle": "Sessions",
     "header": {
       "fields": {
         "Header": [
