@@ -145,6 +145,39 @@ exports.find = function (mailboxID, callback) {
 }
 
 /**
+ * Verify a mail address
+ * @name verifyMailbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailAddress address of the mailbox to be verified.
+ * @param {verifyMailboxCallback} callback Callback function after receiving the mailbox.
+ */
+
+/**
+ * Callback for verifying a mail address.
+ * @callback verifyMailboxCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Boolean} doesExists Boolean which gives if the address is valid.
+ */
+exports.verify = function (mailAddress, callback) {
+    if (!validator.isEmail(mailAddress)) {
+        var error = new Error('Invalid mail address!');
+        error.name = 'EINVALID';
+        error.type = 400;
+        return callback(error);
+    }
+    Mailbox.findOne({address: mailAddress}, function (err, mailbox) {
+        if(err) {
+            return callback(err);
+        }
+        if(!mailbox) {
+            return callback(null, false);
+        }
+        return callback(null, true);
+    });
+}
+
+/**
  * Claim a mailbox with a transfer code.
  * @name claimMailbox
  * @since 0.1.0

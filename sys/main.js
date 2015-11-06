@@ -8,3 +8,4 @@ exports.inbox = require('./inbox.js');
 exports.token = require('./token.js');
 exports.group = require('./group.js');
 exports.sessions = require('./sessions.js');
+exports.email = require('./email.js');
