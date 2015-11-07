@@ -1,17 +1,21 @@
 {
-    "configured": "true",
+    "configured": true,
     "process_name": "MailJS",
     "secret": "test",
-    "noinstall": "false",
-    "uninstall": "true",
-    "maxExits": "10",
+    "noinstall": false,
+    "uninstall": true,
+    "maxExits": 10,
+    "sessions": {
+        "cleanerInterval": 5,
+        "timeout": 180
+    },
     "ravenURL": "https://cd0fa88eb40b4ecb877d00de8020b8eb:72d01c0491014645b0e63ae29bdea40a@app.getsentry.com/50149",
     "http": {
-        "port": "3000"
+        "port": 3000
     },
     "db": {
         "host": "localhost",
-        "port": "27017",
+        "port": 27017,
         "database": "mailjs"
     }
 }

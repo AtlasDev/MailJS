@@ -33,7 +33,7 @@ util.log('NodeJS ' + process.version, true);
 util.log('V8 engine v' + process.versions.v8, true);
 console.log('');
 
-if(config.configured != 'true') {
+if(config.configured != true) {
     util.error('MailJS not configured! Please edit config.json!', null, true)
 }
 

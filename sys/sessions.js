@@ -2,6 +2,7 @@ var Session = require('../models/session.js');
 var cookieParser = require('cookie-parser');
 var config = require('../config.json');
 var validator = require('validator');
+var cluster = require('cluster');
 
 exports.create = function (sid, userID, ip, session, cb) {
     var sess = new Session({
@@ -91,3 +92,16 @@ exports.destroyOfUser = function (userID, cb) {
         return cb();
     });
 }
+
+var cleaner = function cleaner() {
+    if(cluster.worker.id == 1) {
+        setInterval(function () {
+            Session.remove({ lastSeen: { $gt: Date.now(), $lt: Date.now() - config.sessions.timeout*60000 } }, function (err) {
+                if(err) {
+                    throw err;
+                }
+            });
+        }, config.sessions.cleanerInterval*60000);
+    }
+};
+cleaner();
