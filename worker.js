@@ -33,7 +33,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 require('./http/http.js')();
-require('./smtp/smtp.js')();
+require('./smtp/smtp.js');
 
 process.on('uncaughtException', function(err) {
     util.error("An uncaught exception has taken place!", err, true);

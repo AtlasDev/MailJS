@@ -13,6 +13,13 @@
     "http": {
         "port": 3000
     },
+    "smtp": {
+        "submission": 465,
+        "msa": 587,
+        "DNSBL": [
+            "zen.spamhaus.org"
+        ]
+    },
     "db": {
         "host": "localhost",
         "port": 27017,
