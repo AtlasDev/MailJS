@@ -86,3 +86,7 @@ a:hover {
 }
 
 .modal .modal-dialog { width: 80%; }
+
+.lrSpacing {
+	margin: 5px 0;
+}

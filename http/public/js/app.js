@@ -8,6 +8,10 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/mailbox.html',
 			controller  : 'mailboxCtrl'
 		})
+		.when('/create', {
+			templateUrl : 'pages/createMail.html',
+			controller  : 'createMailCtrl'
+		})
 		.when('/mail/:uuid', {
 			templateUrl : 'pages/mail.html',
 			controller  : 'mailCtrl'

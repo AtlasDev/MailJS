@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket, toastr) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
 	$scope.mailbox = $routeParams.mailbox;
