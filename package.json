@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "A simple mail system",
   "scripts": {
-    "start": "node app.js",
-    "install": "node install.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",

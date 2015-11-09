@@ -94,7 +94,7 @@ exports.destroyOfUser = function (userID, cb) {
 }
 
 var cleaner = function cleaner() {
-    if(cluster.worker.id == 1) {
+    if(cluster.worker && cluster.worker.id == 1) {
         setInterval(function () {
             Session.remove({ lastSeen: { $gt: Date.now(), $lt: Date.now() - config.sessions.timeout*60000 } }, function (err) {
                 if(err) {
