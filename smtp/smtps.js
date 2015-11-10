@@ -45,13 +45,14 @@ module.exports = function () {
             });
         },
         onData: function(stream, session, cb){
+            var received = "";
             stream.on('data', function (data) {
-                //Does not log the last two chars?
-                console.log(data.toString());
+                received += data.toString();
             });
             stream.on('end', function () {
-                console.log('finished!');
-                cb();
+                var commands = received.split(/\r?\n/);
+                console.log(commands);
+                cb(null, "Message stored as 1.");
             });
         }
     });
