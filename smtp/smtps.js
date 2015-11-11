@@ -3,6 +3,7 @@ var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
 var lookup = require('dnsbl-lookup');
+var os = require('os');
 
 module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
@@ -62,19 +63,40 @@ module.exports = function () {
                 for (var i = 0; i < commands.length; i++) {
                     if(error == false) {
                         if(util.startsWith(commands[i].toUpperCase(), "TO:")) {
-                            mail.to = commands[i].substring(3, commands[i].length);
+                            var content = commands[i].substring(3, commands[i].length);
+                            if(content.charAt(0) == "") {
+                                content = content.substring(1, content.length);
+                            }
+                            mail.to = content;
                         } else if(util.startsWith(commands[i].toUpperCase(), "FROM:")) {
-                            mail.from = commands[i].substring(5, commands[i].length);
+                            var content = commands[i].substring(5, commands[i].length);
+                            if(content.charAt(0) == "") {
+                                content = content.substring(1, content.length);
+                            }
+                            mail.from = content;
                         } else if(util.startsWith(commands[i].toUpperCase(), "SUBJECT:")) {
-                            mail.subject = commands[i].substring(8, commands[i].length);
+                            var content = commands[i].substring(8, commands[i].length);
+                            if(content.charAt(0) == "") {
+                                content = content.substring(1, content.length);
+                            }
+                            mail.subject = content;
                         } else if(util.startsWith(commands[i].toUpperCase(), "DATE:")) {
-                            mail.reportedDate = commands[i].substring(5, commands[i].length);
+                            var content = commands[i].substring(5, commands[i].length);
+                            if(content.charAt(0) == " ") {
+                                content = content.substring(1, content.length);
+                            }
+                            var content = Date.parse(content);
+                            if(isNaN(content)) {
+                                error = true;
+                                return cb('Invalid date string');
+                            }
+                            mail.reportedDate = Date.parse(content);
                         } else {
-                            mail.body = mail.body+commands[i];
+                            mail.body = mail.body+os.EOL+commands[i];
                         }
                         if(i == commands.length - 1) {
                             console.log(mail);
-                            cb(null, "Message stored as 1.");
+                            return cb(null, "Message stored as 1.");
                         }
                     }
                 }
