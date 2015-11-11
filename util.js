@@ -54,3 +54,7 @@ function getRandomInt(min, max) {
 exports.copyObject = function(old) {
 	return JSON.parse(JSON.stringify(old));
 };
+
+exports.startsWith = function (string, prefix) {
+	return string.slice(0, prefix.length) == prefix;
+}

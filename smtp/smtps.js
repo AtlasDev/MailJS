@@ -8,7 +8,7 @@ module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
     //Emails are stored in the database to be opened by there owner.
     var smtp = new SMTPServer({
-        secure: true,
+        secure: false,
         banner: 'MailJS ESMTPS service, welcome.',
         authMethods: [],
         disabledCommands: ['AUTH'],
@@ -51,8 +51,33 @@ module.exports = function () {
             });
             stream.on('end', function () {
                 var commands = received.split(/\r?\n/);
-                console.log(commands);
-                cb(null, "Message stored as 1.");
+                var mail = {
+                    body: "",
+                    reportedDate: "",
+                    from: "",
+                    to: "",
+                    subject: ""
+                }
+                var error = false;
+                for (var i = 0; i < commands.length; i++) {
+                    if(error == false) {
+                        if(util.startsWith(commands[i].toUpperCase(), "TO:")) {
+                            mail.to = commands[i].substring(3, commands[i].length);
+                        } else if(util.startsWith(commands[i].toUpperCase(), "FROM:")) {
+                            mail.from = commands[i].substring(5, commands[i].length);
+                        } else if(util.startsWith(commands[i].toUpperCase(), "SUBJECT:")) {
+                            mail.subject = commands[i].substring(8, commands[i].length);
+                        } else if(util.startsWith(commands[i].toUpperCase(), "DATE:")) {
+                            mail.reportedDate = commands[i].substring(5, commands[i].length);
+                        } else {
+                            mail.body = mail.body+commands[i];
+                        }
+                        if(i == commands.length - 1) {
+                            console.log(mail);
+                            cb(null, "Message stored as 1.");
+                        }
+                    }
+                }
             });
         }
     });
