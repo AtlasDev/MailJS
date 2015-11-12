@@ -15,23 +15,20 @@ module.exports = function () {
         disabledCommands: ['AUTH'],
         logger: false,
         onConnect: function(session, cb) {
-            var blocked = false;
+            //A blocked IP for testing: 2.0.0.127
             var dnsbl = new lookup.dnsbl(session.remoteAddress, config.smtp.DNSBL);
             dnsbl.on('error',function(error,blocklist){
-                util.error('Could not check DNS blacklist on '+blocklist.zone+' for '+session.remoteAddress+'.', error);
+                util.error('Could not check DNS blacklist on '+blocklist+' for '+session.remoteAddress+'.', error);
                 cb(new Error('Internal Server Error.'));
             });
             dnsbl.on('data',function(result,blocklist){
                 if(result.status == "listed") {
                     util.log('Blocked '+session.remoteAddress+'\'s connection on SMTP submission because of a blacklist.');
-                    blocked = true;
-                    return cb(new Error('IP blacklisted by '+blocklist.zone+'.'));
+                    return cb(new Error('IP blacklisted by '+blocklist+'.'));
                 }
             });
             dnsbl.on('done', function(){
-                if(blocked == false) {
-                    return cb();
-                }
+                return cb();
             });
         },
         onRcptTo: function(address, session, cb){
@@ -64,19 +61,19 @@ module.exports = function () {
                     if(error == false) {
                         if(util.startsWith(commands[i].toUpperCase(), "TO:")) {
                             var content = commands[i].substring(3, commands[i].length);
-                            if(content.charAt(0) == "") {
+                            if(content.charAt(0) == " ") {
                                 content = content.substring(1, content.length);
                             }
                             mail.to = content;
                         } else if(util.startsWith(commands[i].toUpperCase(), "FROM:")) {
                             var content = commands[i].substring(5, commands[i].length);
-                            if(content.charAt(0) == "") {
+                            if(content.charAt(0) == " ") {
                                 content = content.substring(1, content.length);
                             }
                             mail.from = content;
                         } else if(util.startsWith(commands[i].toUpperCase(), "SUBJECT:")) {
                             var content = commands[i].substring(8, commands[i].length);
-                            if(content.charAt(0) == "") {
+                            if(content.charAt(0) == " ") {
                                 content = content.substring(1, content.length);
                             }
                             mail.subject = content;
