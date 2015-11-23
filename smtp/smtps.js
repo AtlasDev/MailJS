@@ -54,46 +54,83 @@ module.exports = function () {
                     reportedDate: "",
                     from: "",
                     to: "",
-                    subject: ""
+                    subject: "",
+                    otherData: []
                 }
                 var error = false;
+                var endOfCommands = false;
                 for (var i = 0; i < commands.length; i++) {
                     if(error == false) {
-                        if(util.startsWith(commands[i].toUpperCase(), "TO:")) {
-                            var content = commands[i].substring(3, commands[i].length);
-                            if(content.charAt(0) == " ") {
-                                content = content.substring(1, content.length);
+                        if(commands[i].indexOf(':') > -1 && endOfCommands == false) {
+                            if(util.startsWith(commands[i].toUpperCase(), "TO:")) {
+                                var content = commands[i].substring(3, commands[i].length);
+                                if(content.charAt(0) == " ") {
+                                    content = content.substring(1, content.length);
+                                }
+                                mail.to = content;
+                            } else if(util.startsWith(commands[i].toUpperCase(), "FROM:")) {
+                                var content = commands[i].substring(5, commands[i].length);
+                                if(content.charAt(0) == " ") {
+                                    content = content.substring(1, content.length);
+                                }
+                                mail.from = content;
+                            } else if(util.startsWith(commands[i].toUpperCase(), "SUBJECT:")) {
+                                var content = commands[i].substring(8, commands[i].length);
+                                if(content.charAt(0) == " ") {
+                                    content = content.substring(1, content.length);
+                                }
+                                mail.subject = content;
+                            } else if(util.startsWith(commands[i].toUpperCase(), "DATE:")) {
+                                var content = commands[i].substring(5, commands[i].length);
+                                if(content.charAt(0) == " ") {
+                                    content = content.substring(1, content.length);
+                                }
+                                var content = Date.parse(content);
+                                if(isNaN(content)) {
+                                    error = true;
+                                    return cb('Invalid date string');
+                                }
+                                mail.reportedDate = Date.parse(content);
+                            } else {
+                                mail.otherData.push(commands[i]);
                             }
-                            mail.to = content;
-                        } else if(util.startsWith(commands[i].toUpperCase(), "FROM:")) {
-                            var content = commands[i].substring(5, commands[i].length);
-                            if(content.charAt(0) == " ") {
-                                content = content.substring(1, content.length);
-                            }
-                            mail.from = content;
-                        } else if(util.startsWith(commands[i].toUpperCase(), "SUBJECT:")) {
-                            var content = commands[i].substring(8, commands[i].length);
-                            if(content.charAt(0) == " ") {
-                                content = content.substring(1, content.length);
-                            }
-                            mail.subject = content;
-                        } else if(util.startsWith(commands[i].toUpperCase(), "DATE:")) {
-                            var content = commands[i].substring(5, commands[i].length);
-                            if(content.charAt(0) == " ") {
-                                content = content.substring(1, content.length);
-                            }
-                            var content = Date.parse(content);
-                            if(isNaN(content)) {
-                                error = true;
-                                return cb('Invalid date string');
-                            }
-                            mail.reportedDate = Date.parse(content);
                         } else {
+                            endOfCommands = true;
                             mail.body = mail.body+os.EOL+commands[i];
                         }
                         if(i == commands.length - 1) {
-                            console.log(mail);
-                            return cb(null, "Message stored as 1.");
+                            var saveError = false;
+                            for (var j = 0; j < session.envelope.rcptTo.length; j++) {
+                                if(!saveError) {
+                                    sys.mailbox.verify(session.envelope.rcptTo[j].address, function (err, isValid, mailbox) {
+                                        if(err) {
+                                            saveError = true;
+                                            return cb(err);
+                                        }
+                                        if(!isValid) {
+                                            //Should NEVER happen!
+                                            saveError = true;
+                                            return cb(new Error('invalid mailbox `'+session.envelope.rcptTo[j].address+'`.'));
+                                        }
+                                        sys.email.create(
+                                            mailbox._id,
+                                            mail.from || session.envelope.mailFrom.address,
+                                            mail.subject,
+                                            mail.body,
+                                            function(err, email) {
+                                                if(err) {
+                                                    saveError = true;
+                                                    return cb(err);
+                                                }
+                                                console.log(email);
+                                            }
+                                        );
+                                    });
+                                    if(j == session.envelope.rcptTo.length - 1) {
+                                        return cb(null, "Message stored as 1.");
+                                    }
+                                }
+                            }
                         }
                     }
                 }

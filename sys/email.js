@@ -24,25 +24,25 @@ exports.create = function (mailboxID, sender, subject, content, cb) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     if (!validator.isEmail(sender)) {
         var error = new Error('Invalid sender!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     if (!validator.isAscii(subject)) {
         var error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     if (!validator.isAscii(content)) {
         var error = new Error('Invalid content!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     var email = new Email();
     email.mailbox = mailboxID;

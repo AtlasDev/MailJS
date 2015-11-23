@@ -158,6 +158,7 @@ exports.find = function (mailboxID, callback) {
  * @callback verifyMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} doesExists Boolean which gives if the address is valid.
+ * @param {Object} mailbox The found mailbox. null if mailbox was invalid
  */
 exports.verify = function (mailAddress, callback) {
     if (!validator.isEmail(mailAddress)) {
@@ -173,7 +174,7 @@ exports.verify = function (mailAddress, callback) {
         if(!mailbox) {
             return callback(null, false);
         }
-        return callback(null, true);
+        return callback(null, true, mailbox);
     });
 }
 
