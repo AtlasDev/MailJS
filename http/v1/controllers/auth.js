@@ -29,6 +29,10 @@ passport.use('user', new LocalStrategy(
 ));
 
 passport.use('session', new SessionStrategy(function(token, done) {
+    if(token.length != 64) {
+        // Not sure of correct, assuming it is for now.
+        return done(null, false);
+    }
     sys.sessions.getSession(token, function (err, session) {
         if(err) { return done(err) };
         if(!session) {
