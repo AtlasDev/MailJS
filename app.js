@@ -13,6 +13,7 @@ var pack      = require('./package.json');
 var config    = require('./config.json');
 var util      = require('./util.js');
 var os        = require('os');
+var raven     = require('raven');
 var exitcount = 0;
 
 process.title = config.process_name;
@@ -40,6 +41,12 @@ if(config.configured != true) {
 util.log('Booting workers', true);
 for(var i = 0; i < os.cpus().length; i++) {
     cluster.fork();
+}
+
+if(config.reportErrors == true) {
+    var ravenClient = new raven.Client(config.ravenURL);
+    ravenClient.patchGlobal();
+    util.log('Raven error logger enabled.', true);
 }
 
 cluster.on('exit', function(worker, code, signal) {

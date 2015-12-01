@@ -1,6 +1,5 @@
 var sys = require('../../../sys/main.js');
 var util = require('../../../util.js');
-//var sessions = require('../../sessions.js');
 var speakeasy = require('speakeasy');
 
 exports.getTFA = function (req, res) {
@@ -42,7 +41,7 @@ exports.postTFA = function (req, res) {
     user.tfa = true;
     user.save(function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        sessions.killAll(user.username, function (err, resp) {
+        sys.sessions.killAll(user._id, function (err, resp) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({message: "2FA has been enabled."});
         });
@@ -66,7 +65,7 @@ exports.deleteTFA = function (req, res) {
     user.tfa = false;
     user.save(function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        sessions.killAll(user.username, function (err, resp) {
+        sys.sessions.killAll(user._id, function (err, resp) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({message: "2FA disabled."});
         });

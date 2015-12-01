@@ -1,107 +1,120 @@
-var Session = require('../models/session.js');
-var cookieParser = require('cookie-parser');
 var config = require('../config.json');
-var validator = require('validator');
-var cluster = require('cluster');
+var RedisSessions = require("redis-sessions");
+var redis = require('../redis.js');
+var sys = require('../sys/main.js');
+var mongoose = require('mongoose');
+var cookie = require('cookie');
 
-exports.create = function (sid, userID, ip, session, cb) {
-    var sess = new Session({
-        sid: sid,
-        session: session,
-        user: userID,
-        ip: ip,
-        lastSeen: Date.now()
-    });
-    sess.save(function (err) {
-        if(err) {
-            return cb(err);
-        }
-        return cb();
-    });
-}
+function sessions() {
+    this.sessions = new RedisSessions({client: redis, namespace: 'sess'});
+    this.appName = 'MailJS'
+    var _this = this;
+};
 
-exports.get = function (signedID, cb) {
-    if(!signedID) {
-        return cb(new Error('No sessionID given'));
+sessions.prototype.create = function(username, ip, other, callback) {
+    var _this = this;
+    var options;
+    var cb;
+    if(!callback) {
+        cb = other;
+        options = '{}';
+    } else {
+        cb = callback;
+        options = other;
     }
-    var sid = cookieParser.signedCookie(signedID, config.secret);
-    Session.findOne({sid: sid}, function (err, sess) {
-        if(err) {
-            return cb(err);
-        }
-        if(!sess) {
-            return cb(null, null);
-        }
-        sess.reads = sess.reads++;
-        sess.lastSeen = Date.now();
-        sess.save(function (err) {
-            if(err) {
-                return cb(err);
-            }
-            return cb(null, sess.toObject());
+    sys.user.findByUsername(username, function (err, user) {
+        if(err){ cb(err, null) };
+        options.group = user.group;
+        options.username = user.username;
+        options._id = user._id;
+        options.mailboxes = user.mailboxes;
+        _this.sessions.create({
+            app: _this.appName,
+            id: user._id,
+            ip: ip,
+            ttl: 86400,
+            d: options
+        },
+        function(err, resp) {
+            if(err) { return cb(err, null); }
+            cb(null, resp.token);
         });
-    });
-}
-
-exports.destroy = function (sid, user, cb) {
-    if (!validator.isMongoId(sid)) {
-        var error = new Error('Invalid session ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return cb(error);
-    }
-    Session.findById(sid, function(err, session){
-        if(err) {
-            return cb(err);
-        }
-        if(!session) {
-            var error = new Error('Session not found!');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return cb(error);
-        }
-        if(user != session.user && user != null) {
-            var error = new Error('Session not yours!');
-            error.name = 'EDENIED';
-            error.type = 403;
-            return cb(error);
-        }
-        session.remove(function (err) {
-            if(err) {
-                return cb(err);
-            }
-            return cb();
-        })
-    });
-}
-
-exports.sessionsOfUser = function (userID, cb) {
-    Session.find({user: userID}, function (err, sessions) {
-        if(err) {
-            return cb(err);
-        }
-        return cb(null, sessions);
     })
 }
 
-exports.destroyOfUser = function (userID, cb) {
-    Session.findAndRemove({user: userID}, function(err){
-        if(err) {
-            return cb(err);
+sessions.prototype.getSessions = function (id, cb) {
+    var _this = this;
+    _this.sessions.soid({
+            app: _this.appName,
+            id: id
+        },
+        function(err, resp) {
+            if(err) { return cb(err, null) };
+            cb(null, resp.sessions);
         }
-        return cb();
+    );
+}
+
+sessions.prototype.killSession = function (token, cb) {
+    var _this = this;
+    this.sessions.kill({
+            app: _this.appName,
+            token: token
+        },
+        function(err, resp) {
+            if(err) { return cb(err) };
+            cb();
+        }
+    );
+}
+
+sessions.prototype.killAll = function (user, cb) {
+    var _this = this;
+    this.sessions.killsoid({
+        app: _this.appName,
+        id: user
+    }, function (err, resp) {
+        return cb(err, resp);
     });
 }
 
-var cleaner = function cleaner() {
-    if(cluster.worker && cluster.worker.id == 1) {
-        setInterval(function () {
-            Session.remove({ lastSeen: { $gt: Date.now(), $lt: Date.now() - config.sessions.timeout*60000 } }, function (err) {
-                if(err) {
-                    throw err;
-                }
-            });
-        }, config.sessions.cleanerInterval*60000);
+sessions.prototype.getSession = function (token, cb) {
+    var _this = this;
+    _this.sessions.get({
+            app: _this.appName,
+            token: token
+        },
+        function(err, resp) {
+            if(err) { return cb(err, null) };
+            cb(null, resp);
+        }
+    );
+}
+
+sessions.prototype.socket = function(socket, cb) {
+    var _this = this;
+    if(!socket.handshake.headers.cookie) {
+        return cb(new Error('Authentication error'));
     }
-};
-cleaner();
+    var cookies = socket.handshake.headers.cookie.split('; ');
+    for (var i = 0; i < cookies.length; i++) {
+        if(cookies[i].split('=')[0]=='MailJS') {
+            var token = cookies[i].split('=');
+            if(token[1] && token[1] != '') {
+                _this.getSession(token[1], function (err, session) {
+                    if(err) { return cb(new Error('Authentication error')); };
+                    sys.user.find(session.id, function (err, user) {
+                        if(err) {
+                            return cb(new Error('Authentication error'));
+                        }
+                        return cb(null, user, token[1]);
+                    })
+                })
+            } else {
+                return cb(new Error('Authentication error'));
+            }
+        }
+    }
+}
+
+module.exports = new sessions();

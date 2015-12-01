@@ -18,45 +18,41 @@ var util = require('../util.js');
 var mongoose = require('mongoose');
 var config = require('../config.json');
 var sys = require('../sys/main.js');
+var redisSessions = require("connect-redis-sessions");
 
 var app = express();
 var http = require('http').Server(app);
 
 app.use(express.static(__dirname + '/public'));
 
+app.use(express.query());
+app.use(cookieParser());
+app.use(redisSessions({
+    app: "MailJS",
+    namespace: 'sess',
+    host: config.redis.host,
+    port: config.redis.port,
+    cookie: {
+        httpOnly: false
+    }
+}));
+
 app.set('view engine', 'ejs');
 app.set('views',__dirname + '/views');
-
-app.use(cookieParser(config.secret));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use(function (req, res, next) {
-    if(!req.signedCookies['MailJS']) {
-        return next();
-    }
-    sys.sessions.get(req.signedCookies['MailJS'], function (err, session) {
-        if(err) { return res.status(500).json({error: {name: err.name, message: err.message} }); }
-        if(!session && !((req.url == "/api/v1/login" || req.url == "/api/v1/login/") && req.method == "POST")) {
-            res.clearCookie('MailJS');
-            return res.status(400).json({error: {name: 'EINVALID', message: 'Session invalid.'}});
-        }
-        if(session) {
-            req.session = session.session;
-            req.session.sessionID = session._id;
-        }
-        return next();
-    });
-});
-
 app.use(passport.initialize());
 
 app.use(function(err, req, res, next) {
     if(err.name == 'SyntaxError') {
-        return res.status(400).json({'EINVALID': 'JSON invalid.'});
+        return res.status(400).json({error: {
+            name: 'EINVALID',
+            message: 'JSON invalid.'
+        }});
     }
     util.error('Express errored:', err);
     res.status(500).send('Internal Server Error');

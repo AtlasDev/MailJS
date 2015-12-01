@@ -28,21 +28,19 @@ passport.use('user', new LocalStrategy(
     }
 ));
 
-passport.use('session', new SessionStrategy(
-    function(token, done) {
-        sys.sessions.get(token, function (err, session) {
-            if(err) { return done(err) };
-            if(!session) {
-                return done(null, false);
-            }
-            sys.user.find(session.user, function (err, user) {
-                if (err) { return done(err); }
-                if (!user) { return done(null, false); }
-                return done(null, user, { session: false, type: 'session' });
-            })
-        });
-    }
-));
+passport.use('session', new SessionStrategy(function(token, done) {
+    sys.sessions.getSession(token, function (err, session) {
+        if(err) { return done(err) };
+        if(!session) {
+            return done(null, false);
+        }
+        sys.user.find(session.id, function (err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            return done(null, user, { session: false, type: 'session' });
+        })
+    });
+}));
 
 passport.use('client', new BasicStrategy(
     function(username, password, callback) {

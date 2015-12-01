@@ -2,34 +2,27 @@ var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
 var util = require('../../../util.js');
 
-exports.postLogin = function(req, res, next) {
-    sys.user.findByUsername(req.body.username, function (err, user) {
+exports.postLogin = function(req, res) {
+    req.session.upgrade(req.user._id, 86400, function (err) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message} });
         }
-        var responseUser = user;
+        var responseUser = req.user;
         responseUser.password = undefined;
         responseUser.tfaToken = undefined;
-        if(user.tfa == true) {
+        if(req.user.tfa == true) {
             req.session.finishTFA = false;
         } else {
             req.session.finishTFA = true;
         }
         req.session.useragent = req.headers['user-agent'];
-        req.session.id = util.uid(50);
-        sys.sessions.create(req.session.id, req.user._id, req.ip, req.session, function (err) {
-            if(err) {
-                return res.status(500).json({error: {name: err.name, message: err.message} });
-            }
-            res.cookie('MailJS', req.session.id, {signed: true});
-            return res.json({token: req.session.id, needTFA: user.tfa, user: responseUser});
-        });
+        return res.json({token: req.session.id, needTFA: req.user.tfa, user: responseUser});
     });
 };
 
-exports.deleteLogin = function(req, res, next) {
-    sys.sessions.destroy(req.session.sessionID, null, function (err) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+exports.deleteLogin = function(req, res) {
+    req.session.destroy(function (err) {
+        if (err) return res.status(500).json({error: {name: err.name, message: err.message}});
         return res.json({message: 'Logout successfull.'});
     });
 }
@@ -47,7 +40,7 @@ exports.patchLogin = function (req, res) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value missing.'}});
     }
     var code = req.body.code;
-    if(req.body.code.length != 6) {
+    if(code.length != 6) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'TOTP value invalid.'}});
     }
     var serverCode = speakeasy.totp({key: req.user.tfaToken, encoding: 'base32'});

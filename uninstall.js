@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var config = require('./config.json');
 var colors = require('colors');
 var pack = require('./package.json');
+var redis = require('redis');
 
 console.log('\n')
 console.log(' __  __       _ _    '+'    _  _____  '.cyan);
@@ -31,7 +32,15 @@ mongoose.connection.on('open', function(){
     console.log('Deleting database..');
     mongoose.connection.db.dropDatabase(function () {
         console.log('Database deleted.');
-        console.log('Uninstall successfull, it\'s a shame to see you go away :(');
-        process.exit(0);
+        console.log('Connecting to redis..');
+        var client = redis.createClient(config.redis.port, config.redis.host);
+        client.on('ready', function () {
+            console.log('Flushing redis database..');
+            client.flushdb(function () {
+                console.log('Redis flushed.');
+                console.log('Uninstall successfull, it\'s a shame to see you go away :(');
+                process.exit(0);
+            });
+        });
     });
 });

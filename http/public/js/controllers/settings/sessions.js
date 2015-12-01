@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user, notification) {
+app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user, notification, $interval) {
     $rootScope.isLoading = true;
     $scope.sessions = [];
     var fetchSessions = function () {
@@ -23,6 +23,12 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user,
     $scope.reloadSessions = function () {
         fetchSessions();
     }
+    var intervalPromise = $interval(function () {
+        fetchSessions();
+    }, 10000);
+    $scope.$on('$locationChangeStart', function(event) {
+        $interval.cancel(intervalPromise);
+    });
     $scope.getOS = function (ua) {
         var os = new UAParser().setUA(ua).getResult().os;
         switch (os.name) {
@@ -90,21 +96,5 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user,
             default:
                 return 'unknown';
         }
-    }
-    $scope.killSession = function (id) {
-        $rootScope.isLoading = true;
-        var req = {
-            method: 'DELETE',
-            url: '/api/v1/user/session/'+id,
-            headers: {
-                'x-token': user.sessionID
-            }
-        };
-        $http(req).then(function(res) {
-            fetchSessions();
-        }, function(res) {
-            notification.send('An error occured..', res.data.error.message||'The server errored, please report this to your sysadmin.', 'error');
-            $rootScope.isLoading = false;
-        });
     }
 });

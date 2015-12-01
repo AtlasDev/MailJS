@@ -39,9 +39,6 @@ router.route('/user/current')
 router.route('/user/session')
   .get(authController.isAuthenticated, authController.checkTFA, sessionController.getSessions);
 
-router.route('/user/session/:sid')
-  .delete(authController.isAuthenticated, authController.checkTFA, sessionController.deleteSession);
-
 router.route('/user/:user')
   .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
 

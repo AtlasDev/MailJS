@@ -112,7 +112,7 @@
         },
         "sessions": {
             "title": "session settings",
-            "explanation": "Here you can view the current active sessions.",
+            "explanation": "Here you can view the current active sessions, refreshes every ten seconds.",
             "boxTitle": "sessions",
             "tableTitles": {
                 "os": "OS",
@@ -120,8 +120,8 @@
                 "ip": "IP",
                 "idle": "IDLE time",
                 "reads": "Reads",
-                "TFA": "2FA done",
-                "actions": "Actions"
+                "writes": "Writes",
+                "TFA": "2FA done"
             }
         },
         "user": {
