@@ -14,7 +14,7 @@
         "port": 80
     },
     "smtp": {
-        "submission": 465,
+        "submission": 25,
         "msa": 587,
         "DNSBL": [
             "zen.spamhaus.org"
