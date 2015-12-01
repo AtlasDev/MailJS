@@ -3,7 +3,6 @@ var RedisSessions = require("redis-sessions");
 var redis = require('../redis.js');
 var sys = require('../sys/main.js');
 var mongoose = require('mongoose');
-var cookie = require('cookie');
 
 function sessions() {
     this.sessions = new RedisSessions({client: redis, namespace: 'sess'});
