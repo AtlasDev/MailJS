@@ -241,7 +241,7 @@ var showSetup = function () {
 }
 
 var setName = function (name) {
-    $('.name').text(name);
+    $('#name').text(name);
 }
 
 var showLoginError = function showError(msg) {
