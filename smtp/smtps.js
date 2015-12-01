@@ -110,7 +110,7 @@ module.exports = function () {
                                         if(!isValid) {
                                             //Should NEVER happen!
                                             saveError = true;
-                                            return cb(new Error('invalid mailbox `'+session.envelope.rcptTo[j].address+'`.'));
+                                            return cb(new Error('Invalid mailbox `'+session.envelope.rcptTo[j].address+'`.'));
                                         }
                                         sys.email.create(
                                             mailbox._id,
@@ -127,7 +127,9 @@ module.exports = function () {
                                         );
                                     });
                                     if(j == session.envelope.rcptTo.length - 1) {
-                                        return cb(null, "Message stored as 1.");
+                                        if(!error && !saveError) {
+                                            return cb(null, "Message stored.");
+                                        }
                                     }
                                 }
                             }
