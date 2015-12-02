@@ -47,6 +47,7 @@ module.exports = function () {
             var parser = new mailparser();
             parser.on("end", function(mail){
                 console.log(mail);
+                var error = false;
                 for (var i = 0; i < session.envelope.rcptTo.length; i++) {
                     if(error == false) {
                         sys.mailbox.verify(session.envelope.rcptTo[j].address, function (err, isValid, mailbox) {
