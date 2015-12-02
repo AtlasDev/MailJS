@@ -33,7 +33,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string") {
+    if (typeof mail.subject != "string" || mail.subject = "") {
         var error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -47,11 +47,11 @@ exports.create = function (mailboxID, mail, cb) {
     }
     var email = new Email();
     email.mailbox = mailboxID;
-    email.creationDate = Date.now();
-    email.reportedDate = mail.receivedDate;
+    email.creationDate = Math.round((new Date()).getTime() / 1000);
+    email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000);
     email.sender = mail.from[0].address;
     email.senderDisplay = mail.from[0].name;
-    email.subject = subject;
+    email.subject = mail.subject;
     email.content = content;
     email.save(function (err) {
         if(err) {
