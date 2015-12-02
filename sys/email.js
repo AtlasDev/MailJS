@@ -19,26 +19,27 @@ var validator = require('validator');
  * @param {Error} err Error object, should be undefined or passed trough.
  * @param {Object} email The newly created email.
  */
-exports.create = function (mailboxID, sender, subject, content, cb) {
+exports.create = function (mailboxID, mail, cb) {
+    var content = mail.html || mail.text;
     if (!validator.isMongoId(mailboxID)) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (!validator.isEmail(sender)) {
+    if (!validator.isEmail(mail.from[0].address)) {
         var error = new Error('Invalid sender!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (!validator.isAscii(subject)) {
+    if (typeof mail.subject != "string") {
         var error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (!validator.isAscii(content)) {
+    if (typeof content != "string")) {
         var error = new Error('Invalid content!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -46,8 +47,10 @@ exports.create = function (mailboxID, sender, subject, content, cb) {
     }
     var email = new Email();
     email.mailbox = mailboxID;
-    email.creationTime = Date.now();
-    email.sender = sender;
+    email.creationDate = Date.now();
+    email.reportedDate = mail.receivedDate;
+    email.sender = mail.from[0].address;
+    email.senderDisplay = mail.from[0].name;
     email.subject = subject;
     email.content = content;
     email.save(function (err) {

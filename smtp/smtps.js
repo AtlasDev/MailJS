@@ -62,10 +62,9 @@ module.exports = function () {
                             }
                             sys.email.create(
                                 mailbox._id,
-                                mail.from,
-                                mail.subject,
-                                mail.html,
+                                mail,
                                 function(err, email) {
+                                    console.log(err);
                                     if(err) {
                                         saveError = true;
                                         return cb(err);
