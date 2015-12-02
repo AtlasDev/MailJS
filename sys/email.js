@@ -33,7 +33,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string" || mail.subject = "") {
+    if (typeof mail.subject != "string" || mail.subject == "") {
         var error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
