@@ -39,7 +39,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof content != "string")) {
+    if (typeof content != "string") {
         var error = new Error('Invalid content!');
         error.name = 'EVALIDATION';
         error.type = 400;
