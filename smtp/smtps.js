@@ -50,7 +50,7 @@ module.exports = function () {
                 var error = false;
                 for (var i = 0; i < session.envelope.rcptTo.length; i++) {
                     if(error == false) {
-                        sys.mailbox.verify(session.envelope.rcptTo[j].address, function (err, isValid, mailbox) {
+                        sys.mailbox.verify(session.envelope.rcptTo[i].address, function (err, isValid, mailbox) {
                             if(err) {
                                 saveError = true;
                                 return cb(err);
@@ -58,7 +58,7 @@ module.exports = function () {
                             if(!isValid) {
                                 //Should NEVER happen!
                                 saveError = true;
-                                return cb(new Error('Invalid mailbox `'+session.envelope.rcptTo[j].address+'`.'));
+                                return cb(new Error('Invalid mailbox `'+session.envelope.rcptTo[i].address+'`.'));
                             }
                             sys.email.create(
                                 mailbox._id,
@@ -75,7 +75,7 @@ module.exports = function () {
                             );
                         });
                         if(i == session.envelope.rcptTo.length - 1) {
-                            if(!error && !saveError) {
+                            if(!error) {
                                 return cb(null, "Message stored.");
                             }
                         }
