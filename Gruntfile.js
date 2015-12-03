@@ -34,15 +34,31 @@ module.exports = function (grunt) {
         },
         watch: {
             dev: {
-                files: ['http/public/js/*.js', 'http/public/js/**/*.js'],
-                tasks: ['jshint', 'concat:dist'],
+                files: [
+                    'http/public/js/app.js',
+                    'http/public/js/angular/*.js',
+                    'http/public/js/controllers/*.js',
+                    'http/public/js/controllers/settings/*.js',
+                    'http/public/js/factorys/*.js',
+                    'http/public/js/other/*.js',
+                    '!http/public/js/other/js.cookie.js'
+                ],
+                tasks: ['concat:dist'],
                 options: {
                     atBegin: true
                 }
             },
             min: {
-                files: ['http/public/js/*.js', 'http/public/js/**/*.js'],
-                tasks: ['jshint', 'concat:dist', 'uglify:dist'],
+                files: [
+                    'http/public/js/app.js',
+                    'http/public/js/angular/*.js',
+                    'http/public/js/controllers/*.js',
+                    'http/public/js/controllers/settings/*.js',
+                    'http/public/js/factorys/*.js',
+                    'http/public/js/other/*.js',
+                    '!http/public/js/other/js.cookie.js'
+                ],
+                tasks: ['concat:dist', 'uglify:dist'],
                 options: {
                     atBegin: true
                 }
