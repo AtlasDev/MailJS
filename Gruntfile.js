@@ -23,7 +23,7 @@ module.exports = function (grunt) {
             app: {
                 src: [
                     'http/public/js/other/js.cookie.js',
-                    'http/public/js/login.js',
+                    'http/public/js/login.js'
                 ],
                 dest: 'http/public/dist/login.min.js'
             },
@@ -38,6 +38,33 @@ module.exports = function (grunt) {
                     '!http/public/js/other/js.cookie.js'
                 ],
                 dest: 'http/public/dist/app.min.js'
+            }
+        },
+        compress: {
+            dist: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.zip'
+                },
+                files: [
+                    {
+                        src: [
+                            '*.md',
+                            '*.js',
+                            '*.json',
+                            'models/**',
+                            'smtp/**',
+                            'sys/**',
+                            'http/*.js',
+                            'http/v**/**',
+                            'http/views/**',
+                            'http/public/dist/**',
+                            'http/public/lang/**',
+                            'http/public/pages/**',
+                            'http/public/*.html'
+                        ],
+                        dest: 'mailjs'
+                    }
+                ]
             }
         },
         cssmin: {
@@ -74,21 +101,6 @@ module.exports = function (grunt) {
                     atBegin: true
                 }
             },
-            minjs: {
-                files: [
-                    'http/public/js/app.js',
-                    'http/public/js/angular/*.js',
-                    'http/public/js/controllers/*.js',
-                    'http/public/js/controllers/settings/*.js',
-                    'http/public/js/factorys/*.js',
-                    'http/public/js/other/*.js',
-                    '!http/public/js/other/js.cookie.js'
-                ],
-                tasks: ['concat:app', 'concat:login', 'uglify:dist'],
-                options: {
-                    atBegin: true
-                }
-            },
             css: {
                 files: [
                     'http/public/css/angular-toastr.min.css',
@@ -110,9 +122,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     grunt.registerTask('dev', ['watch:devjs', 'watch:css']);
-    grunt.registerTask('minified', ['watch:minjs', 'watch:css']);
-    grunt.registerTask('package', ['cssmin', 'concat:app', 'concat:login', 'uglify:dist']);
-    grunt.registerTask('package-dev', ['cssmin', 'concat:app', 'concat:login']);
+    grunt.registerTask('build', ['cssmin', 'concat:app', 'concat:login', 'uglify:dist', 'compress:dist']);
+    grunt.registerTask('build-dev', ['cssmin', 'concat:app', 'concat:login', 'compress:dist']);
 };
