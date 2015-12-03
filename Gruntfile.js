@@ -20,7 +20,15 @@ module.exports = function (grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['http/public/js/*.js', 'http/public/js/**/*.js'],
+                src: [
+                    'http/public/js/app.js',
+                    'http/public/js/angular/*.js',
+                    'http/public/js/controllers/*.js',
+                    'http/public/js/controllers/settings/*.js',
+                    'http/public/js/factorys/*.js',
+                    'http/public/js/other/*.js',
+                    '!http/public/js/other/js.cookie.js'
+                ],
                 dest: 'http/public/dist/app.js'
             }
         },
@@ -49,4 +57,5 @@ module.exports = function (grunt) {
     grunt.registerTask('dev', ['watch:dev']);
     grunt.registerTask('minified', ['watch:min']);
     grunt.registerTask('package', ['concat:dist', 'uglify:dist']);
+    grunt.registerTask('package-dev', ['concat:dist']);
 };

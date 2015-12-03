@@ -541,34 +541,6 @@
     }
   },
   {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "D__Projects_MailJS_http_doc_main_js",
-    "groupTitle": "D__Projects_MailJS_http_doc_main_js",
-    "name": ""
-  },
-  {
     "type": "get",
     "url": "/domain",
     "title": "Get domains",
@@ -2801,6 +2773,34 @@
         }
       ]
     }
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
+    "name": ""
   },
   {
     "type": "get",
