@@ -7,7 +7,8 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    'http/public/dist/app.min.js': ['http/public/dist/app.min.js']
+                    'http/public/dist/app.min.js': ['http/public/dist/app.min.js'],
+                    'http/public/dist/login.min.js': ['http/public/dist/login.min.js']
                 },
                 options: {
                     banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
@@ -19,7 +20,14 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             },
-            dist: {
+            app: {
+                src: [
+                    'http/public/js/other/js.cookie.js',
+                    'http/public/js/login.js',
+                ],
+                dest: 'http/public/dist/login.min.js'
+            },
+            login: {
                 src: [
                     'http/public/js/app.js',
                     'http/public/js/angular/*.js',
@@ -61,7 +69,7 @@ module.exports = function (grunt) {
                     'http/public/js/other/*.js',
                     '!http/public/js/other/js.cookie.js',
                 ],
-                tasks: ['concat:dist'],
+                tasks: ['concat:app', 'concat:login'],
                 options: {
                     atBegin: true
                 }
@@ -76,7 +84,7 @@ module.exports = function (grunt) {
                     'http/public/js/other/*.js',
                     '!http/public/js/other/js.cookie.js'
                 ],
-                tasks: ['concat:dist', 'uglify:dist'],
+                tasks: ['concat:app', 'concat:login', 'uglify:dist'],
                 options: {
                     atBegin: true
                 }
@@ -105,6 +113,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('dev', ['watch:devjs', 'watch:css']);
     grunt.registerTask('minified', ['watch:minjs', 'watch:css']);
-    grunt.registerTask('package', ['cssmin', 'concat:dist', 'uglify:dist']);
-    grunt.registerTask('package-dev', ['cssmin', 'concat:dist']);
+    grunt.registerTask('package', ['cssmin', 'concat:app', 'concat:login', 'uglify:dist']);
+    grunt.registerTask('package-dev', ['cssmin', 'concat:app', 'concat:login']);
 };
