@@ -7,7 +7,7 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    'http/public/dist/app.js': ['http/public/dist/app.js']
+                    'http/public/dist/app.min.js': ['http/public/dist/app.min.js']
                 },
                 options: {
                     banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
                     'http/public/js/other/*.js',
                     '!http/public/js/other/js.cookie.js'
                 ],
-                dest: 'http/public/dist/app.js'
+                dest: 'http/public/dist/app.min.js'
             }
         },
         watch: {
