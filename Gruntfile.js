@@ -5,14 +5,27 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
-            dist: {
+            public: {
                 files: {
                     'http/public/dist/app.min.js': ['http/public/dist/app.min.js'],
                     'http/public/dist/login.min.js': ['http/public/dist/login.min.js']
                 },
                 options: {
                     banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
-                    mangle: false
+                    mangle: false,
+                    screwIE8: true
+                }
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    src: ['**/*.js', '!http/doc/**', '!http/docfiles/**', '!http/public/**', '!node_modules/**', '!builds/**', '!Gruntfile.js'],
+                    dest: 'tmp'
+                }],
+                options: {
+                    banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
+                    mangle: false,
+                    screwIE8: true
                 }
             }
         },
@@ -41,28 +54,32 @@ module.exports = function (grunt) {
             }
         },
         compress: {
-            dist: {
+            fullGzip: {
                 options: {
-                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.zip'
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.zip',
+                    level: 9
                 },
                 files: [
                     {
-                        src: [
-                            '*.md',
-                            '*.js',
-                            '*.json',
-                            'models/**',
-                            'smtp/**',
-                            'sys/**',
-                            'http/*.js',
-                            'http/v**/**',
-                            'http/views/**',
-                            'http/public/dist/**',
-                            'http/public/lang/**',
-                            'http/public/pages/**',
-                            'http/public/*.html'
-                        ],
-                        dest: 'mailjs'
+                        expand: true,
+                        cwd: 'tmp/',
+                        src: '**/*',
+                        dest: 'mailjs',
+                        mode: 'gzip'
+                    }
+                ]
+            },
+            fullTgz: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.tar.gz'
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tmp/',
+                        src: '**/*',
+                        dest: 'mailjs',
+                        mode: 'tgz'
                     }
                 ]
             }
@@ -86,7 +103,7 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            devjs: {
+            js: {
                 files: [
                     'http/public/js/app.js',
                     'http/public/js/angular/*.js',
@@ -94,7 +111,7 @@ module.exports = function (grunt) {
                     'http/public/js/controllers/settings/*.js',
                     'http/public/js/factorys/*.js',
                     'http/public/js/other/*.js',
-                    '!http/public/js/other/js.cookie.js',
+                    '!http/public/js/other/js.cookie.js'
                 ],
                 tasks: ['concat:app', 'concat:login'],
                 options: {
@@ -115,6 +132,44 @@ module.exports = function (grunt) {
                     atBegin: true
                 }
             }
+        },
+        copy: {
+            json: {
+                files: [
+                    {
+                        src: 'config.json',
+                        dest: 'tmp/'
+                    },
+                    {
+                        src: 'package.json',
+                        dest: 'tmp/'
+                    },
+                ],
+            },
+            public: {
+                files: [
+                    {
+                        expand: true,
+                        src: [
+                            'http/*.js',
+                            'http/v**/**',
+                            'http/views/**',
+                            'http/public/dist/**',
+                            'http/public/lang/**',
+                            'http/public/pages/**',
+                            'http/public/*.html',
+                            '!http/doc/**',
+                            '!http/docfiles/**'
+                        ],
+                        dest: 'tmp'
+                    }
+                ]
+            }
+        },
+        clean: {
+            temp: {
+                src: ["tmp"]
+            }
         }
     });
 
@@ -123,8 +178,24 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('dev', ['watch:devjs', 'watch:css']);
-    grunt.registerTask('build', ['cssmin', 'concat:app', 'concat:login', 'uglify:dist', 'compress:dist']);
-    grunt.registerTask('build-dev', ['cssmin', 'concat:app', 'concat:login', 'compress:dist']);
+    grunt.registerTask('dev', [
+        'watch:js',
+        'watch:css'
+    ]);
+    grunt.registerTask('build', [
+        'clean:temp',
+        'cssmin',
+        'concat:app',
+        'concat:login',
+        'uglify:public',
+        'uglify:dist',
+        'copy:json',
+        'copy:public',
+        'compress:fullGzip',
+        'compress:fullTgz',
+        'clean:temp'
+    ]);
 };
