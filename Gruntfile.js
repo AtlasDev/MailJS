@@ -57,7 +57,8 @@ module.exports = function (grunt) {
             fullGzip: {
                 options: {
                     archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.zip',
-                    level: 9
+                    level: 9,
+                    pretty: true
                 },
                 files: [
                     {
@@ -71,7 +72,8 @@ module.exports = function (grunt) {
             },
             fullTgz: {
                 options: {
-                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.tar.gz'
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-full.tar.gz',
+                    pretty: true
                 },
                 files: [
                     {
@@ -79,6 +81,84 @@ module.exports = function (grunt) {
                         cwd: 'tmp/',
                         src: '**/*',
                         dest: 'mailjs',
+                        mode: 'tgz'
+                    }
+                ]
+            },
+            docGzip: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-docs.zip',
+                    level: 9,
+                    pretty: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'http/doc',
+                        src: '**/*',
+                        dest: 'docs',
+                        mode: 'gzip'
+                    }
+                ]
+            },
+            clientGzip: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-client.zip',
+                    level: 9,
+                    pretty: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tmp/http/public',
+                        src: '**/*',
+                        dest: 'public',
+                        mode: 'gzip'
+                    }
+                ]
+            },
+            clientTgz: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-client.tar.gz',
+                    pretty: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tmp/http/public',
+                        src: '**/*',
+                        dest: 'public',
+                        mode: 'tgz'
+                    }
+                ]
+            },
+            serverGzip: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-server.zip',
+                    level: 9,
+                    pretty: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tmp/',
+                        src: '**/*',
+                        dest: 'server',
+                        mode: 'gzip'
+                    }
+                ]
+            },
+            serverTgz: {
+                options: {
+                    archive: 'builds/<%= pkg.name %>-<%= pkg.version %>-server.tar.gz',
+                    pretty: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'tmp/',
+                        src: '**/*',
+                        dest: 'server',
                         mode: 'tgz'
                     }
                 ]
@@ -143,8 +223,8 @@ module.exports = function (grunt) {
                     {
                         src: 'package.json',
                         dest: 'tmp/'
-                    },
-                ],
+                    }
+                ]
             },
             public: {
                 files: [
@@ -169,6 +249,9 @@ module.exports = function (grunt) {
         clean: {
             temp: {
                 src: ["tmp"]
+            },
+            client: {
+                src: ["tmp/http/public"]
             }
         }
     });
@@ -196,6 +279,12 @@ module.exports = function (grunt) {
         'copy:public',
         'compress:fullGzip',
         'compress:fullTgz',
+        'compress:docGzip',
+        'compress:clientGzip',
+        'compress:clientTgz',
+        'clean:client',
+        'compress:serverGzip',
+        'compress:serverTgz',
         'clean:temp'
     ]);
 };
