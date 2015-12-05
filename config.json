@@ -4,6 +4,7 @@
     "noinstall": false,
     "uninstall": true,
     "maxExits": 10,
+    "servePublic": true,
     "sessions": {
         "cleanerInterval": 5,
         "timeout": 180
@@ -27,6 +28,6 @@
     },
     "redis": {
         "host": "db1.argon.atlasdev.nl",
-        "port": "6379"
+        "port": 6379
     }
 }

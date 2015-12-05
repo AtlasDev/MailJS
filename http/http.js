@@ -23,7 +23,9 @@ var redisSessions = require("connect-redis-sessions");
 var app = express();
 var http = require('http').Server(app);
 
-app.use(express.static(__dirname + '/public'));
+if(config.servePublic != false) {
+    app.use(express.static(__dirname + '/public'));
+}
 
 app.use(express.query());
 app.use(cookieParser());
