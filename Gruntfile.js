@@ -7,8 +7,8 @@ module.exports = function (grunt) {
         uglify: {
             public: {
                 files: {
-                    'http/public/dist/app.min.js': ['http/public/dist/app.min.js'],
-                    'http/public/dist/login.min.js': ['http/public/dist/login.min.js']
+                    'http/public/dist/js/app.min.js': ['http/public/dist/js/app.min.js'],
+                    'http/public/dist/js/login.min.js': ['http/public/dist/js/login.min.js']
                 },
                 options: {
                     banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
@@ -33,24 +33,42 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             },
-            app: {
+            login: {
                 src: [
+                    'http/public/js/other/jquery.min.js',
+                    'http/public/js/other/bootstrap.min.js',
                     'http/public/js/other/js.cookie.js',
                     'http/public/js/login.js'
                 ],
-                dest: 'http/public/dist/login.min.js'
+                dest: 'http/public/dist/js/login.min.js'
             },
-            login: {
+            app: {
                 src: [
+                    'http/public/js/other/jquery.min.js',
+                    'http/public/js/other/bootstrap.min.js',
+                    'http/public/js/other/bootstrap3-wysihtml5.all.min.js',
+                    'http/public/js/other/socketio.min.js',
+                    'http/public/js/other/qrcode.js',
+                    'http/public/js/other/UAparser.min.js',
+                    'http/public/js/angular/angular.min.js',
+                    'http/public/js/angular/angular-gravitar.min.js',
+                    'http/public/js/angular/angular-animate.js',
+                    'http/public/js/angular/angular-mask.js',
+                    'http/public/js/angular/angular-qrcode.js',
+                    'http/public/js/angular/angular-animate.min.js',
+                    'http/public/js/angular/angular-route.min.js',
+                    'http/public/js/angular/angular-toastr.tpls.min.js',
+                    'http/public/js/angular/angular-cookies.min.js',
+                    'http/public/js/angular/angular-translate.min.js',
+                    'http/public/js/angular/angular-translate-storagecookie.min.js',
+                    'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
+                    'http/public/js/other/adminlte.min.js',
+
                     'http/public/js/app.js',
-                    'http/public/js/angular/*.js',
-                    'http/public/js/controllers/*.js',
-                    'http/public/js/controllers/settings/*.js',
-                    'http/public/js/factorys/*.js',
-                    'http/public/js/other/*.js',
-                    '!http/public/js/other/js.cookie.js'
+                    'http/public/js/controllers/**/*.js',
+                    'http/public/js/factorys/*.js'
                 ],
-                dest: 'http/public/dist/app.min.js'
+                dest: 'http/public/dist/js/app.min.js'
             }
         },
         compress: {
@@ -171,13 +189,26 @@ module.exports = function (grunt) {
             },
             target: {
                 files: {
-                    'http/public/dist/style.css': [
-                        'http/public/css/angular-toastr.min.css',
+                    'http/public/dist/css/style.min.css': [
+                        'http/public/css/AdminLTE.min.css',
                         'http/public/css/preloader.css',
                         'http/public/css/style.css',
                         'http/public/css/loader.css',
+                        'http/public/css/bootstrap.min.css',
+                        'http/public/css/angular-toastr.min.css',
                         'http/public/css/skins/skin-red-light.min.css',
-                        'http/public/css/bootstrap3-wysihtml5.min.css'
+                        'http/public/css/bootstrap3-wysihtml5.min.css',
+                        'http/public/css/font-awesome.min.css',
+                        'http/public/css/ionicons.min.css'
+                    ],
+                    'http/public/dist/css/login.libs.min.css': [
+                        'http/public/css/bootstrap.min.css',
+                        'http/public/css/angular-toastr.min.css',
+                        'http/public/css/skins/skin-red-light.min.css',
+                        'http/public/css/bootstrap3-wysihtml5.min.css',
+                        'http/public/css/AdminLTE.min.css',
+                        'http/public/css/font-awesome.min.css',
+                        'http/public/css/ionicons.min.css'
                     ]
                 }
             }
@@ -286,5 +317,10 @@ module.exports = function (grunt) {
         'compress:serverGzip',
         'compress:serverTgz',
         'clean:temp'
+    ]);
+    grunt.registerTask('build-dev', [
+        'cssmin',
+        'concat:app',
+        'concat:login'
     ]);
 };
