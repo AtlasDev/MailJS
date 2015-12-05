@@ -1,4 +1,4 @@
-var util = require('../util.js');
+var util = require('./util.js');
 var User = require('../models/user.js');
 var clientFunc = require('./client.js');
 var groupFunc = require('./group.js');

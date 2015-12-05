@@ -1,4 +1,4 @@
-var util = require('../util.js');
+var util = require('./util.js');
 var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
 var User = require('../models/user.js');

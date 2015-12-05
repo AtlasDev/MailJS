@@ -1,5 +1,4 @@
 var sys = require('../../../sys/main.js');
-var util = require('../../../util.js');
 
 exports.postClient = function(req, res) {
     sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {

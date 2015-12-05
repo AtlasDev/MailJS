@@ -1,6 +1,5 @@
 var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
-var util = require('../../../util.js');
 
 exports.postLogin = function(req, res) {
     req.session.upgrade(req.user._id, 86400, function (err) {

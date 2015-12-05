@@ -1,5 +1,5 @@
 var Domain = require('../models/domain.js');
-var util = require('../util.js');
+var util = require('./util.js');
 var validator = require('validator');
 
 /**

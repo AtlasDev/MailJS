@@ -1,8 +1,8 @@
-var util = require('../util.js');
 var Client = require('../models/client.js');
 var Code = require('../models/code.js');
 var Token = require('../models/token.js');
 var validator = require('validator');
+var util = require('./util.js');
 
 /**
  * Create a new client.

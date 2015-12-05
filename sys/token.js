@@ -1,4 +1,3 @@
-var util = require('../util.js');
 var Token = require('../models/token.js');
 var Client = require('../models/client.js')
 var userFunc = require('./user.js');

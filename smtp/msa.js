@@ -1,4 +1,3 @@
-var util = require('../util.js');
 var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
@@ -37,12 +36,12 @@ module.exports = function () {
             var blocked = false;
             var uribl = new lookup.uribl(address.address.split('@')[1], config.smtp.DNSBL);
             uribl.on('error',function(error,blocklist){
-                util.error('Could not check URI blacklist on '+blocklist.zone+' for '+address.address+'.', error);
+                sys.util.error('Could not check URI blacklist on '+blocklist.zone+' for '+address.address+'.', error);
                 cb(new Error('Internal Server Error.'));
             });
             uribl.on('data',function(result,blocklist){
                 if(result.status == "listed") {
-                    util.log('Blocked '+address.address+' on MSA because of a blacklist.');
+                    sys.util.log('Blocked '+address.address+' on MSA because of a blacklist.');
                     blocked = true;
                     return cb(new Error('URI blacklisted by '+blocklist.zone+'.'));
                 }
@@ -55,6 +54,6 @@ module.exports = function () {
         }
     });
     smtp.listen(config.smtp.msa, false, function () {
-        util.log('SMTP MSA server started on port '+config.smtp.msa, true);
+        sys.util.log('SMTP MSA server started on port '+config.smtp.msa, true);
     });
 }

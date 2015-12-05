@@ -9,3 +9,7 @@ exports.token = require('./token.js');
 exports.group = require('./group.js');
 exports.sessions = require('./sessions.js');
 exports.email = require('./email.js');
+
+exports.redis = require('./redis.js');
+exports.util = require('./util.js');
+exports.worker = require('./worker.js');

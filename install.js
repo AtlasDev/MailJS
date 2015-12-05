@@ -3,7 +3,6 @@ var config = require('./config.json');
 var colors = require('colors');
 var pack = require('./package.json');
 var sys = require('./sys/main.js');
-var util = require('./util.js');
 var validator = require('validator');
 
 if(config.noinstall == true) {
@@ -49,7 +48,7 @@ mongoose.connection.on('open', function(){
 var dbstuff = function (group) {
     console.log('Creating first user.');
     console.log(' - Generating password..');
-    var password = util.uid(12);
+    var password = sys.util.uid(12);
     console.log('   - password generated');
     sys.user.create('admin', password, 'Admin', 'Adminius', function (err, user) {
         if (err) {

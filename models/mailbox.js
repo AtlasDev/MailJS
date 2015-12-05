@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var util = require('../util.js');
+var sys = require('../sys/main.js');
 
 var MailboxSchema = new mongoose.Schema({
     address: { type: String, required: true, unique: true },
@@ -13,7 +13,7 @@ var MailboxSchema = new mongoose.Schema({
 
 MailboxSchema.methods.generateTransferCode = function(cb) {
     var _this = this;
-    var code = util.uid(15);
+    var code = sys.util.uid(15);
     this.transferCode = code;
     cb();
 };

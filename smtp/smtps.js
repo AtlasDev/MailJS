@@ -1,4 +1,3 @@
-var util = require('../util.js');
 var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
@@ -19,12 +18,12 @@ module.exports = function () {
             //A blocked IP for testing: 2.0.0.127
             var dnsbl = new lookup.dnsbl(session.remoteAddress, config.smtp.DNSBL);
             dnsbl.on('error',function(error,blocklist){
-                util.error('Could not check DNS blacklist on '+blocklist+' for '+session.remoteAddress+'.', error);
+                sys.util.error('Could not check DNS blacklist on '+blocklist+' for '+session.remoteAddress+'.', error);
                 cb(new Error('Internal Server Error.'));
             });
             dnsbl.on('data',function(result,blocklist){
                 if(result.status == "listed") {
-                    util.log('Blocked '+session.remoteAddress+'\'s connection on SMTP submission because of a blacklist.');
+                    sys.util.log('Blocked '+session.remoteAddress+'\'s connection on SMTP submission because of a blacklist.');
                     return cb(new Error('IP blacklisted by '+blocklist+'.'));
                 }
             });
@@ -85,6 +84,6 @@ module.exports = function () {
         }
     });
     smtp.listen(config.smtp.submission, false, function () {
-        util.log('SMTP submission server started on port '+config.smtp.submission, true);
+        sys.util.log('SMTP submission server started on port '+config.smtp.submission, true);
     });
 }

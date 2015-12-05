@@ -1,7 +1,7 @@
 var config = require('../config.json');
 var RedisSessions = require("redis-sessions");
-var redis = require('../redis.js');
-var sys = require('../sys/main.js');
+var redis = require('./redis.js');
+var user = require('./user.js')
 var mongoose = require('mongoose');
 
 function sessions() {
@@ -21,7 +21,7 @@ sessions.prototype.create = function(username, ip, other, callback) {
         cb = callback;
         options = other;
     }
-    sys.user.findByUsername(username, function (err, user) {
+    user.findByUsername(username, function (err, user) {
         if(err){ cb(err, null) };
         options.group = user.group;
         options.username = user.username;
@@ -79,7 +79,8 @@ sessions.prototype.killAll = function (user, cb) {
 
 sessions.prototype.getSession = function (token, cb) {
     var _this = this;
-    _this.sessions.get({
+    _this.sessions.get(
+        {
             app: _this.appName,
             token: token
         },
@@ -102,7 +103,7 @@ sessions.prototype.socket = function(socket, cb) {
             if(token[1] && token[1] != '') {
                 _this.getSession(token[1], function (err, session) {
                     if(err) { return cb(new Error('Authentication error')); };
-                    sys.user.find(session.id, function (err, user) {
+                    user.find(session.id, function (err, user) {
                         if(err) {
                             return cb(new Error('Authentication error'));
                         }

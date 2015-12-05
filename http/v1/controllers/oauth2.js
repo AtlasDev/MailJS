@@ -3,7 +3,7 @@ var User = require('../../../models/user');
 var Client = require('../../../models/client');
 var Token = require('../../../models/token');
 var Code = require('../../../models/code');
-var util = require('../../../util.js');
+var sys = require('../../../sys/main.js');
 
 var server = oauth2orize.createServer();
 
@@ -20,7 +20,7 @@ server.deserializeClient(function(id, callback) {
 
 server.grant(oauth2orize.grant.code(function(client, redirectUri, user, ares, callback) {
     var code = new Code({
-        value: util.uid(16),
+        value: sys.util.uid(16),
         clientId: client._id,
         redirectUri: redirectUri,
         userId: user._id
@@ -41,7 +41,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectUri, ca
         authCode.remove(function (err) {
             if(err) { return callback(err); }
             var token = new Token({
-                value: util.uid(256),
+                value: sys.util.uid(256),
                 clientId: authCode.clientId,
                 userId: authCode.userId
             });

@@ -6,7 +6,7 @@
 
 var redis = require('redis');
 var util  = require('./util.js');
-var config = require('./config.json');
+var config = require('../config.json');
 
 var client = redis.createClient(config.redis.port, config.redis.host);
 

@@ -1,5 +1,4 @@
 var sys = require('../../../sys/main.js');
-var util = require('../../../util.js');
 var speakeasy = require('speakeasy');
 
 exports.getTFA = function (req, res) {

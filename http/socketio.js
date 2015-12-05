@@ -4,7 +4,6 @@ var socketio = function(http, app) {
 
 var express = require('express');
 var io = require('socket.io')(http);
-var util = require('../util.js');
 var config = require('../config.json');
 var sys = require('../sys/main.js');
 var cluster = require('cluster');

@@ -1,5 +1,4 @@
 var sys = require('../../../sys/main.js');
-var util = require('../../../util.js');
 
 exports.postInbox = function (req, res) {
     if(req.user.mailboxes.indexOf(req.body.mailbox) == -1) {

@@ -1,5 +1,4 @@
 var Inbox = require('../models/inbox.js');
-var util = require('../util.js');
 var validator = require('validator');
 
 /**

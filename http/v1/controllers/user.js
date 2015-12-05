@@ -1,6 +1,5 @@
 var User = require('../../../models/user.js');
 var sys = require('../../../sys/main.js');
-var util = require('../../../util.js');
 
 exports.postUser = function(req, res) {
     sys.perms.hasPerm('user.create', req.user.group, req.authInfo, function (err, hasPerm) {
@@ -42,7 +41,7 @@ exports.getUser = function(req, res) {
             sys.user.findByUsername(req.query.user, function (err, user) {
                 if(err) {
                     res.status(500).json({error: {name: err.name, message: err.message}});
-                    util.error(err, true);
+                    sys.util.error(err, true);
                     return;
                 }
                 if(user == false) {
@@ -69,7 +68,7 @@ exports.getUsers = function(req, res) {
     sys.perms.hasPerm('user.list', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) {
             res.status(500).json({error: {name: err.name, message: err.message}});
-            util.error(err, true);
+            sys.util.error(err, true);
             return;
         }
         if(hasPerm != true) {
@@ -89,7 +88,7 @@ exports.getUsers = function(req, res) {
         sys.user.findAll(req.query.LimitBy, req.query.skip, function (err, users) {
             if (err) {
                 res.status(500).json({error: {name: err.name, message: err.message}});
-                util.error(err, true);
+                sys.util.error(err, true);
                 return;
             }
             users.forEach(function (user) {
@@ -120,7 +119,7 @@ exports.deleteUser = function(req, res) {
             res.status(400).json({error: {name: "EPERMITTED", message: "You cannot delete the first user."}});
         } else {
             user.remove();
-            util.log('User `'+user.username+'` deleted.');
+            sys.util.log('User `'+user.username+'` deleted.');
             res.json({message: "User deleted."});
         }
     });
@@ -154,7 +153,7 @@ exports.updateUserGroup = function(req, res) {
                     res.status(500).json({error: {name: err.name, message: err.message}});
                     return;
                 }
-                util.log('Group of user `'+user.username+'` updated.');
+                sys.util.log('Group of user `'+user.username+'` updated.');
                 res.json({message: "User group updated."});
             });
         }

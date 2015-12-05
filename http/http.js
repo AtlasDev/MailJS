@@ -14,7 +14,6 @@ var cookieParser = require('cookie-parser');
 var config = require('../config.json');
 var v1apiRouter = require('./v1/apiRouter.js');
 var socketio = require('./socketio.js');
-var util = require('../util.js');
 var mongoose = require('mongoose');
 var config = require('../config.json');
 var sys = require('../sys/main.js');
@@ -56,7 +55,7 @@ app.use(function(err, req, res, next) {
             message: 'JSON invalid.'
         }});
     }
-    util.error('Express errored:', err);
+    sys.util.error('Express errored:', err);
     res.status(500).send('Internal Server Error');
 });
 
@@ -65,7 +64,7 @@ socketio(http, app);
 app.use('/api/v1', v1apiRouter);
 
 http.listen(config.http.port);
-util.log('Http server started at port '+config.http.port, true);
+sys.util.log('HTTP server started at port '+config.http.port, true);
 
 };
 

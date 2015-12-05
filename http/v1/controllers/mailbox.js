@@ -1,5 +1,4 @@
 var sys = require('../../../sys/main.js');
-var util = require('../../../util.js');
 
 exports.getMailboxes = function (req, res) {
     var mailboxes = req.user.mailboxes;
@@ -10,7 +9,7 @@ exports.getMailboxes = function (req, res) {
             if(mailbox == false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
-            mailbox = util.copyObject(mailbox);
+            mailbox = sys.util.copyObject(mailbox);
             sys.inbox.getInboxes(mailbox._id, function (err, inboxes) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
                 mailbox.inboxes = inboxes;
@@ -73,7 +72,7 @@ function runGetMailbox(req, res) {
         if(mailbox == false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
         }
-        mailbox = util.copyObject(mailbox);
+        mailbox = sys.util.copyObject(mailbox);
         sys.user.findByMailbox(mailbox._id, function (err, users) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             if(users == false) {

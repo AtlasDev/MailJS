@@ -4,7 +4,7 @@
  * @copyright Dany Sluijk 2015
  */
 
-var config   = require('./config.json');
+var config   = require('../config.json');
 var mongoose = require('mongoose');
 var util     = require('./util.js');
 var cluster  = require('cluster');
@@ -35,8 +35,8 @@ mongoose.connection.on('disconnected', function () {
     util.error('Disconnected from the database!');
 });
 
-require('./http/http.js')();
-require('./smtp/smtp.js');
+require('../http/http.js')();
+require('../smtp/smtp.js');
 
 process.on('uncaughtException', function(err) {
     util.error("An uncaught exception has taken place!", err, true);
