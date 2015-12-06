@@ -7,7 +7,7 @@ var redis = require('./redis.js');
 var user = require('./user.js');
 var mongoose = require('mongoose');
 
-function sessions() {
+function Sessions() {
    /*jshint validthis: true */
    this.sessions = new RedisSessions({client: redis, namespace: 'sess'});
    this.appName = 'MailJS';

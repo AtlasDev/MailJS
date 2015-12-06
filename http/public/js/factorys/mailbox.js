@@ -1,6 +1,3 @@
-(function () {
-'use strict';
-
 app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
     var current;
     var mailboxes = [];
@@ -69,4 +66,3 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         findMailbox: findMailbox
     };
 });
-}());

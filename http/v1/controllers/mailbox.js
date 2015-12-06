@@ -5,7 +5,7 @@ var sys = require('../../../sys/main.js');
 exports.getMailboxes = function (req, res) {
     var mailboxes = req.user.mailboxes;
     var foundMailboxes = [];
-    for(i = 0; i<mailboxes.length; i++) {
+    for(var i = 0; i<mailboxes.length; i++) {
         sys.mailbox.find(mailboxes[i], function (err, mailbox) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             if(mailbox === false) {

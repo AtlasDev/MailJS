@@ -1,6 +1,3 @@
-(function () {
-'use strict';
-
 app.factory('user', function ($window, $cookies, $http, $rootScope) {
     var sessionID = $cookies.get('MailJS');
     var user = {};
@@ -85,4 +82,3 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         getUser: getUser
     };
 });
-}());

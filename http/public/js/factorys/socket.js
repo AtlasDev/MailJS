@@ -1,6 +1,3 @@
-(function () {
-'use strict';
-
 app.factory('socket', function ($rootScope) {
     var socket = io.connect(document.location.protocol+'//'+document.location.host);
     var status = 0;
@@ -51,4 +48,3 @@ app.factory('socket', function ($rootScope) {
         getStatus: getStatus
     };
 });
-}());

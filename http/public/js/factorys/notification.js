@@ -1,6 +1,3 @@
-(function () {
-'use strict';
-
 app.factory('notification', function (toastr) {
     var notifyTimeout = localStorage.getItem('notifyTimeout') | 10000;
     var screenFocus = true;
@@ -123,4 +120,3 @@ app.factory('notification', function (toastr) {
         notifyTimeout: notifyTimeout
     };
 });
-}());

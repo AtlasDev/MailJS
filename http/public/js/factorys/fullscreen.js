@@ -1,6 +1,3 @@
-(function () {
-'use strict';
-
 app.factory('fullscreen', function () {
     function toggleFullScreen() {
         if (!isFullscreen()) {
@@ -39,4 +36,3 @@ app.factory('fullscreen', function () {
         isFullscreen: isFullscreen
     };
 });
-}());
