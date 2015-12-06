@@ -216,13 +216,7 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: [
-                    'http/public/js/app.js',
-                    'http/public/js/angular/*.js',
-                    'http/public/js/controllers/*.js',
-                    'http/public/js/controllers/settings/*.js',
-                    'http/public/js/factorys/*.js',
-                    'http/public/js/other/*.js',
-                    '!http/public/js/other/js.cookie.js'
+                    'http/public/js/**/*.js'
                 ],
                 tasks: ['concat:app', 'concat:login'],
                 options: {
@@ -231,14 +225,18 @@ module.exports = function (grunt) {
             },
             css: {
                 files: [
-                    'http/public/css/angular-toastr.min.css',
-                    'http/public/css/preloader.css',
-                    'http/public/css/style.css',
-                    'http/public/css/loader.css',
-                    'http/public/css/skins/skin-red-light.min.css',
-                    'http/public/css/bootstrap3-wysihtml5.min.css'
+                    'http/public/css/**/*.js'
                 ],
                 tasks: ['cssmin'],
+                options: {
+                    atBegin: true
+                }
+            },
+            img: {
+                files: [
+                    'http/public/img/**/*.{png,jpg,gif}'
+                ],
+                tasks: ['imagemin:public'],
                 options: {
                     atBegin: true
                 }
@@ -284,6 +282,21 @@ module.exports = function (grunt) {
             client: {
                 src: ["tmp/http/public"]
             }
+        },
+        imagemin: {
+            public: {
+                options: {
+                    optimizationLevel: 7
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'http/public/img/',
+                    src: [
+                        '**/*.{png,jpg,gif}'
+                    ],
+                    dest: 'http/public/dist/img/'
+                }]
+            }
         }
     });
 
@@ -293,11 +306,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('dev', [
         'watch:js',
-        'watch:css'
+        'watch:css',
+        'watch:img'
     ]);
     grunt.registerTask('build', [
         'clean:temp',
@@ -306,6 +321,7 @@ module.exports = function (grunt) {
         'concat:login',
         'uglify:public',
         'uglify:dist',
+        'imagemin:public',
         'copy:json',
         'copy:public',
         'compress:fullGzip',
