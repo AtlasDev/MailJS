@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification, mailbox) {
@@ -28,7 +29,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         if(user.getUser().group.permissions.indexOf('domain.create') > -1) {
             $scope.showDomainCreateForm = true;
         }
-    }
+    };
 
     $scope.claimMailbox = function () {
         if(!$scope.transferCode || typeof $scope.transferCode == "undefined") {
@@ -53,7 +54,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Cannot claim mailbox!', res.data.error.message, 'error');
         });
-    }
+    };
 
     $scope.createMailbox = function () {
         if(typeof $scope.localAddress == "undefined" || !$scope.localAddress) {
@@ -87,7 +88,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Maibox creation failed!', res.data.error.message, 'error');
         });
-    }
+    };
 
     $scope.createDomain = function () {
         if(!new RegExp(/^([a-z0-9]+\.)?[a-z0-9][a-z0-9-]*\.[a-z]{2,6}$/i).test($scope.domain)) {
@@ -106,7 +107,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             }
         };
         $http(req).then(function(res) {
-            if(res.data.domain.disabled != true) {
+            if(res.data.domain.disabled !== true) {
                 $scope.domains.push(res.data.domain);
             }
             $rootScope.isLoading = false;
@@ -115,7 +116,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Domain adding failed!', res.data.error.message, 'error');
         });
-    }
+    };
 
     $scope.viewMailbox = function (id) {
         $rootScope.isLoading = true;
@@ -136,7 +137,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 $scope.viewingMailbox.function = 1;
             }
             for (var i = 0; i < $scope.viewingMailbox.users.length; i++) {
-                $scope.viewingMailbox.users[i];
                 var userID = $scope.viewingMailbox.users[i]._id;
                 if(userID == $scope.viewingMailbox.creator) {
                     $scope.viewingMailbox.users[i].function = 3;
@@ -154,17 +154,17 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Cannot view mailbox!', res.data.error.message, 'error');
         });
-    }
+    };
 
     $scope.deleteMailbox = function (mailbox) {
         var confirmDelete = prompt("Are you sure? Please enter the mail address to confirm deletion.");
         if(confirmDelete == mailbox.address) {
             //TODO
             notification.send('Mailbox deletion canceled!', 'Not implemented.', 'info');
-        } else if(confirmDelete != null) {
+        } else if(confirmDelete !== null) {
             notification.send('Mailbox deletion canceled!', 'Mail addresses do not match.', 'error');
         }
-    }
+    };
 
     $scope.transferableMailbox = function (mailbox) {
         $rootScope.isLoading = true;
@@ -193,10 +193,10 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Cannot toggle the transferable option!', res.data.error.message, 'error');
         });
-    }
+    };
 
     $scope.createInbox = function () {
-        if(typeof $scope.inboxTitle == "undefined" || $scope.inboxTitle == "") {
+        if(typeof $scope.inboxTitle == "undefined" || $scope.inboxTitle === "") {
             notification.send('Cannot add inbox!', 'No title given.', 'error');
             return;
         }
@@ -220,7 +220,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Cannot add inbox!', res.data.error.message, 'error');
         });
-    }
+    };
 
     if(typeof user.getUser().group == 'undefined' || typeof user.getUser().group == "string") {
         $rootScope.$on('userLoaded', function () {
@@ -230,3 +230,4 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         init();
     }
 });
+}());

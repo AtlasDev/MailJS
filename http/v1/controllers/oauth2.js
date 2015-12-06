@@ -1,10 +1,12 @@
-var oauth2orize = require('oauth2orize')
+(function () {
+'use strict';
+
+var oauth2orize = require('oauth2orize');
 var User = require('../../../models/user');
 var Client = require('../../../models/client');
 var Token = require('../../../models/token');
 var Code = require('../../../models/code');
 var sys = require('../../../sys/main.js');
-
 var server = oauth2orize.createServer();
 
 server.serializeClient(function(client, callback) {
@@ -64,13 +66,14 @@ exports.authorization = [
     function(req, res){
         res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
     }
-]
+];
 
 exports.decision = [
     server.decision()
-]
+];
 
 exports.token = [
     server.token(),
     server.errorHandler()
-]
+];
+}());

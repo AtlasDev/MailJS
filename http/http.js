@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 /**
  * @file The main HTTP handler
  * @author AtlasDev
@@ -15,14 +18,13 @@ var config = require('../config.json');
 var v1apiRouter = require('./v1/apiRouter.js');
 var socketio = require('./socketio.js');
 var mongoose = require('mongoose');
-var config = require('../config.json');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
 
 var app = express();
 var http = require('http').Server(app);
 
-if(config.servePublic != false) {
+if(config.servePublic !== false) {
     app.use(express.static(__dirname + '/public'));
 }
 
@@ -69,3 +71,4 @@ sys.util.log('HTTP server started at port '+config.http.port, true);
 };
 
 module.exports = http;
+}());

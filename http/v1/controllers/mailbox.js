@@ -1,12 +1,14 @@
-var sys = require('../../../sys/main.js');
+(function () {
+'use strict';
 
+var sys = require('../../../sys/main.js');
 exports.getMailboxes = function (req, res) {
     var mailboxes = req.user.mailboxes;
     var foundMailboxes = [];
     for(i = 0; i<mailboxes.length; i++) {
         sys.mailbox.find(mailboxes[i], function (err, mailbox) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            if(mailbox == false) {
+            if(mailbox === false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
             mailbox = sys.util.copyObject(mailbox);
@@ -20,7 +22,7 @@ exports.getMailboxes = function (req, res) {
             });
         });
     }
-}
+};
 
 exports.postMailbox = function (req, res) {
     if(!req.body.local || !req.body.domain || !req.body.title) {
@@ -31,7 +33,7 @@ exports.postMailbox = function (req, res) {
     }
     sys.perms.hasPerm('mailbox.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm == false) {
+        if(hasPerm === false) {
             return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
         }
         var transferable = req.body.transferable || false;
@@ -40,7 +42,7 @@ exports.postMailbox = function (req, res) {
             return res.json({mailbox: mailbox});
         });
     });
-}
+};
 
 exports.patchMailbox = function (req, res) {
     if(!req.body.transfercode) {
@@ -50,13 +52,13 @@ exports.patchMailbox = function (req, res) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({mailbox: mailbox});
     });
-}
+};
 
 exports.getMailbox = function (req, res) {
     if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
         sys.perms.hasPerm('mailbox.view', req.user.group, req.authInfo, function (err, hasPerm) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            if(hasPerm == false) {
+            if(hasPerm === false) {
                 return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
             }
             runGetMailbox(req, res);
@@ -64,18 +66,18 @@ exports.getMailbox = function (req, res) {
     } else {
         runGetMailbox(req, res);
     }
-}
+};
 
 function runGetMailbox(req, res) {
     sys.mailbox.find(req.params.mailbox, function (err, mailbox) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(mailbox == false) {
+        if(mailbox === false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
         }
         mailbox = sys.util.copyObject(mailbox);
         sys.user.findByMailbox(mailbox._id, function (err, users) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            if(users == false) {
+            if(users === false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'No users found in the database!'}});
             }
             mailbox.users = [];
@@ -96,7 +98,7 @@ function runGetMailbox(req, res) {
                     });
                 }
             }
-        })
+        });
     });
 }
 
@@ -105,4 +107,5 @@ exports.setTransferable = function (req, res) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({transferable: mailbox.transferable});
     });
-}
+};
+}());

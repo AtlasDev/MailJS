@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Group = require('../models/group.js');
 var userFunc = require('./user.js');
 var validator = require('validator');
@@ -50,5 +53,6 @@ exports.hasPerm = function (node, group, authInfo, callback) {
         } else {
             return callback(null, false);
         }
-    })
-}
+    });
+};
+}());

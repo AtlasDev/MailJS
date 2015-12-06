@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 /**
  * @file The main worker file
  * @author AtlasDev
@@ -15,7 +18,7 @@ var worker = function () {
 util.log('Booting worker #'+cluster.worker.id, true);
 process.title = config.process_name+' worker #'+cluster.worker.id;
 
-if(config.reportErrors == true) {
+if(config.reportErrors === true) {
     var ravenClient = new raven.Client(config.ravenURL);
     ravenClient.patchGlobal();
     util.log('Raven error logger enabled.', true);
@@ -42,6 +45,7 @@ process.on('uncaughtException', function(err) {
     util.error("An uncaught exception has taken place!", err, true);
 });
 
-}
+};
 
 module.exports = worker;
+}());

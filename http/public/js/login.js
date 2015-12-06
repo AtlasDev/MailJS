@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 var token;
@@ -66,12 +67,12 @@ $("#login").submit(function(event) {
 		}
     });
     request.done(function(data) {
-        if(data.needTFA == true) {
+        if(data.needTFA === true) {
             token = data.token;
             setName(data.user.firstName + ' ' + data.user.lastName);
             showTFA();
         } else {
-            if(data.user.mailboxes.length == 0) {
+            if(data.user.mailboxes.length === 0) {
                 user = data.user;
                 showSetup();
             } else {
@@ -127,13 +128,13 @@ $("#setupCreate").submit(function(event) {
     var local = $("#localCreate").val();
     var domain = $("#domainCreate").val();
     var title = $("#titleCreate").val();
-    if(local == "") {
+    if(local === "") {
         return showSetupError('Please fill in a local part.');
     }
-    if(title == "") {
+    if(title === "") {
         return showSetupError('Please fill in a mailbox title.');
     }
-    if(domain == "") {
+    if(domain === "") {
         return showSetupError('Please select a domain.');
     }
     var request = $.ajax({
@@ -185,13 +186,13 @@ var showTFA = function () {
     $('#2fa-box').show();
     $('#login-box').hide();
     $('#setup-box').hide();
-}
+};
 
 var showLogin = function () {
     $('#2fa-box').hide();
     $('#login-box').show();
     $('#setup-box').hide();
-}
+};
 
 var showSetup = function () {
     setName(user.firstName+' '+user.lastName);
@@ -238,11 +239,11 @@ var showSetup = function () {
     $('#2fa-box').hide();
     $('#login-box').hide();
     $('#setup-box').show();
-}
+};
 
 var setName = function (name) {
     $('#name').text(name);
-}
+};
 
 var showLoginError = function showError(msg) {
     $("#loginErrorMsg").text(msg);
@@ -266,7 +267,7 @@ var showInfo = function showInfo(msg) {
 };
 
 var get = (function(a) {
-    if (a == "") return {};
+    if (a === "") return {};
     var b = {};
     for (var i = 0; i < a.length; ++i)
     {
@@ -278,3 +279,4 @@ var get = (function(a) {
     }
     return b;
 })(window.location.search.substr(1).split('&'));
+}());

@@ -1,5 +1,7 @@
-var sys = require('../../../sys/main.js');
+(function () {
+'use strict';
 
+var sys = require('../../../sys/main.js');
 exports.getSessions = function (req, res) {
     sys.sessions.getSessions(req.user._id, function (err, sess) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
@@ -19,4 +21,5 @@ exports.getSessions = function (req, res) {
             }
         }
     });
-}
+};
+}());

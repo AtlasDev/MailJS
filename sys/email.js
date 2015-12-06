@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Email = require('../models/email.js');
 var validator = require('validator');
 
@@ -21,26 +24,27 @@ var validator = require('validator');
  */
 exports.create = function (mailboxID, mail, cb) {
     var content = mail.html || mail.text;
+    var error;
     if (!validator.isMongoId(mailboxID)) {
-        var error = new Error('Invalid mailbox ID!');
+        error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
     if (!validator.isEmail(mail.from[0].address)) {
-        var error = new Error('Invalid sender!');
+        error = new Error('Invalid sender!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string" || mail.subject == "") {
-        var error = new Error('Invalid subject!');
+    if (typeof mail.subject != "string" || mail.subject === "") {
+        error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
     if (typeof content != "string") {
-        var error = new Error('Invalid content!');
+        error = new Error('Invalid content!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
@@ -59,4 +63,5 @@ exports.create = function (mailboxID, mail, cb) {
         }
         return cb(null, email);
     });
-}
+};
+}());

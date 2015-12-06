@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var util = require('./util.js');
 var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
@@ -26,40 +29,42 @@ var validator = require('validator');
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
 exports.create = function (local, domainID, userID, title, transferable, overwrite, callback) {
+    var error;
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isMongoId(domainID)) {
-        var error = new Error('Invalid domain ID!');
+        error = new Error('Invalid domain ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     var localRegex = new RegExp(/^[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*/i);
     if(!localRegex.test(local) || local.length >= 65) {
-        var error = new Error('Invalid local part!');
+        error = new Error('Invalid local part!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    var overwrite = overwrite || false;
+    overwrite = overwrite || false;
     //TODO: local part validation
     Domain.findById(domainID, function (err, domain) {
+        var error;
         if(err) {
             return callback(err);
         }
         if(!domain) {
-            var error = new Error('Domain not found.');
+            error = new Error('Domain not found.');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return callback(error);
         }
-        if(domain.disabled == true) {
-            if(overwrite != true) {
-                var error = new Error('Specified domain has been disabled for registrations.');
+        if(domain.disabled === true) {
+            if(overwrite !== true) {
+                error = new Error('Specified domain has been disabled for registrations.');
                 error.name = 'EDISABLED';
                 error.type = 400;
                 return callback(error);
@@ -100,16 +105,16 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
                                 if(err) {
                                     return callback(err);
                                 }
-                                util.log('Mailbox `'+mailbox.address+'` created.')
+                                util.log('Mailbox `'+mailbox.address+'` created.');
                                 return callback(null, mailbox);
                             }
                         );
-                    })
+                    });
                 });
             });
-        })
-    })
-}
+        });
+    });
+};
 
 /**
  * Find a mailbox by ID
@@ -142,7 +147,7 @@ exports.find = function (mailboxID, callback) {
         }
         return callback(null, mailbox);
     });
-}
+};
 
 /**
  * Verify a mail address
@@ -176,7 +181,7 @@ exports.verify = function (mailAddress, callback) {
         }
         return callback(null, true, mailbox);
     });
-}
+};
 
 /**
  * Claim a mailbox with a transfer code.
@@ -195,34 +200,37 @@ exports.verify = function (mailAddress, callback) {
  * @param {Object} mailbox Mailbox object of the claimed mailbox.
  */
 exports.claimMailbox = function (transferCode, userID, callback) {
+    var error;
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     Mailbox.findOne({transferCode: transferCode}, function (err, mailbox) {
+        var error;
         if(err) {
             return callback(err);
         }
         if(!mailbox) {
-            var error = new Error('Mailbox not found.');
+            error = new Error('Mailbox not found.');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return callback(error);
         }
-        if(mailbox.transferable == false) {
-            var error = new Error('Mailbox not transferable.');
+        if(mailbox.transferable === false) {
+            error = new Error('Mailbox not transferable.');
             error.name = 'EDENIED';
             error.type = 400;
             return callback(error);
         }
         User.findById(userID, function (err, user) {
+            var error;
             if(err) {
                 return callback(err);
             }
             if(user.mailboxes.indexOf(mailbox._id) > -1) {
-                var error = new Error('User already member of the mailbox.');
+                error = new Error('User already member of the mailbox.');
                 error.name = 'EOCCUPIED';
                 error.type = 400;
                 return callback(error);
@@ -232,12 +240,12 @@ exports.claimMailbox = function (transferCode, userID, callback) {
                 if(err) {
                     return callback(err);
                 }
-                util.log('`'+user.username+'` claimed `'+mailbox.address+'`.')
+                util.log('`'+user.username+'` claimed `'+mailbox.address+'`.');
                 return callback(null, mailbox);
             });
         });
     });
-}
+};
 
 /**
  * Set the transfer boolean of a mailbox.
@@ -257,30 +265,32 @@ exports.claimMailbox = function (transferCode, userID, callback) {
  * @param {Object} mailbox Mailbox object of the changed mailbox
  */
 exports.setTransferable = function (transferable, mailboxID, userID, callback) {
+    var error;
     if (!validator.isBoolean(transferable)) {
-        var error = new Error('transferable is not a boolean!');
+        error = new Error('transferable is not a boolean!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isMongoId(mailboxID)) {
-        var error = new Error('Invalid mailbox ID!');
+        error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     Mailbox.findById(mailboxID, function (err, mailbox) {
+        var error;
         if(err) {
             return callback(err);
         }
         if(!mailbox) {
-            var error = new Error('Mailbox not found.');
+            error = new Error('Mailbox not found.');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return callback(error);
@@ -294,13 +304,13 @@ exports.setTransferable = function (transferable, mailboxID, userID, callback) {
                 return callback(null, mailbox);
             });
         } else {
-            var error = new Error('Permission denied.');
+            error = new Error('Permission denied.');
             error.name = 'EPERMS';
             error.type = 403;
             return callback(error);
         }
     });
-}
+};
 
 /**
  * Checks if a user is admin or creator of the given mailbox.
@@ -319,24 +329,26 @@ exports.setTransferable = function (transferable, mailboxID, userID, callback) {
  * @param {Boolean} isAdmin Boolean which gives back if the user is an admin or creator.
  */
 exports.isAdmin = function (mailboxID, userID, cb) {
+    var error;
     if (!validator.isMongoId(mailboxID)) {
-        var error = new Error('Invalid mailbox ID!');
+        error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     exports.find(mailboxID, function (err, mailbox) {
+        var error;
         if(err) {
             return cb(err);
         }
-        if(mailbox == false) {
-            var error = new Error('Mailbox not found!');
+        if(mailbox === false) {
+            error = new Error('Mailbox not found!');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return cb(error);
@@ -347,4 +359,5 @@ exports.isAdmin = function (mailboxID, userID, cb) {
             return cb(null, false);
         }
     });
-}
+};
+}());

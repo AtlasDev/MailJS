@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 
 var EmailSchema  = new mongoose.Schema({
@@ -11,3 +14,4 @@ var EmailSchema  = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Email', EmailSchema);
+}());

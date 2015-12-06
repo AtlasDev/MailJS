@@ -1,9 +1,12 @@
+(function () {
+'use strict';
+
 var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
 var lookup = require('dnsbl-lookup');
 var os = require('os');
-var mailparser = require('mailparser').MailParser;
+var MailParser = require('mailparser').MailParser;
 
 module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
@@ -43,12 +46,11 @@ module.exports = function () {
             });
         },
         onData: function(stream, session, cb){
-            var parser = new mailparser();
+            var parser = new MailParser();
             parser.on("end", function(mail){
-                console.log(mail);
                 var error = false;
                 for (var i = 0; i < session.envelope.rcptTo.length; i++) {
-                    if(error == false) {
+                    if(error === false) {
                         sys.mailbox.verify(session.envelope.rcptTo[i].address, function (err, isValid, mailbox) {
                             if(err) {
                                 saveError = true;
@@ -63,12 +65,10 @@ module.exports = function () {
                                 mailbox._id,
                                 mail,
                                 function(err, email) {
-                                    console.log(err);
                                     if(err) {
                                         saveError = true;
                                         return cb(err);
                                     }
-                                    console.log(email)
                                 }
                             );
                         });
@@ -86,4 +86,5 @@ module.exports = function () {
     smtp.listen(config.smtp.submission, false, function () {
         sys.util.log('SMTP submission server started on port '+config.smtp.submission, true);
     });
-}
+};
+}());

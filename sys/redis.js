@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 /**
  * @file Centerialized redis client.
  * @author AtlasDev
@@ -19,3 +22,4 @@ client.on("ready", function () {
 });
 
 module.exports = client;
+}());

@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Client = require('../models/client.js');
 var Code = require('../models/code.js');
 var Token = require('../models/token.js');
@@ -43,7 +46,7 @@ exports.create = function (user, name, description, url, scopes, callback) {
         util.log('Client `'+client.name+'` created');
         return callback(null, responseClient);
     });
-}
+};
 
 /**
  * Get all clients.
@@ -63,8 +66,9 @@ exports.create = function (user, name, description, url, scopes, callback) {
  * @param {array} clients Found clients in a array.
  */
 exports.get = function (userID, limitBy, skip, callback) {
+    var error;
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         error.type = 400;
         return callback(error);
@@ -72,13 +76,13 @@ exports.get = function (userID, limitBy, skip, callback) {
     limitBy = limitBy || 20;
     skip = skip || 0;
     if (!validator.isInt(limitBy)) {
-        var error = new Error('Invalid limitBy value!');
+        error = new Error('Invalid limitBy value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isInt(userID)) {
-        var error = new Error('Invalid skip value!');
+        error = new Error('Invalid skip value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
@@ -94,7 +98,7 @@ exports.get = function (userID, limitBy, skip, callback) {
         }
         return callback(null, clients);
     });
-}
+};
 
 /**
  * Verify the id and secret of a client.
@@ -126,9 +130,9 @@ exports.verify = function (username, password, callback) {
                 return callback(err);
             }
             return callback(null, match, client);
-        })
+        });
     });
-}
+};
 
 /**
  * Remove a specific client, also removes all access tokens and codes.
@@ -165,7 +169,7 @@ exports.delete = function (clientID, callback) {
                 if(err) {
                     return callback(err);
                 }
-                if(client == null) {
+                if(client === null) {
                     var error = new Error('The given id was not found.');
                     error.name = 'ENOTFOUND';
                     error.type = 404;
@@ -177,7 +181,7 @@ exports.delete = function (clientID, callback) {
             });
         });
     });
-}
+};
 
 /**
  * Remove all clients of a user, also removes all access tokens and codes.
@@ -209,9 +213,9 @@ exports.deleteUser = function (userID, callback) {
                 return callback(err);
             }
             return callback(null);
-        })
-    })
-}
+        });
+    });
+};
 
 var deleteUserHelper = function (i, clients, cb) {
     if( i < length ) {
@@ -220,8 +224,9 @@ var deleteUserHelper = function (i, clients, cb) {
                 cb(err);
             }
             deleteUserHelper(i+1);
-        })
+        });
     } else {
         cb();
     }
-}
+};
+}());

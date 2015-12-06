@@ -1,9 +1,11 @@
-var sys = require('../../../sys/main.js');
+(function () {
+'use strict';
 
+var sys = require('../../../sys/main.js');
 exports.postClient = function(req, res) {
     sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm != true) {
+        if(hasPerm !== true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
@@ -29,7 +31,7 @@ exports.getOwnClients = function(req, res) {
     });
 };
 
-//deprecated
+//deprecated TODO
 exports.deleteClients = function(req, res) {
     if(!req.body.id) {
         res.status(400).json({error: {name: "EINVALID", message: 'No id given.'}});
@@ -38,5 +40,6 @@ exports.deleteClients = function(req, res) {
     sys.client.remove(req.body.id, function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({message: 'Client deleted.'});
-    })
+    });
 };
+}());

@@ -1,5 +1,8 @@
+(function () {
+'use strict';
+
 var Token = require('../models/token.js');
-var Client = require('../models/client.js')
+var Client = require('../models/client.js');
 var userFunc = require('./user.js');
 
 /**
@@ -36,7 +39,7 @@ exports.verify = function (token, callback) {
             return callback(null, true, user);
         });
     });
-}
+};
 
 /**
  * Get the client corresponding with the token
@@ -66,6 +69,7 @@ exports.getClient = function (token, callback) {
                 return callback(err);
             }
             return callback(null, client);
-        })
-    })
-}
+        });
+    });
+};
+}());

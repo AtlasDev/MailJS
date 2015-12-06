@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller('createMailCtrl', function($rootScope, $scope, notification) {
@@ -14,7 +15,7 @@ app.controller('createMailCtrl', function($rootScope, $scope, notification) {
 		var to = $scope.to.replace(' ', '').split(';');
 		var subject = $scope.subject;
 		var html = $('#compose-textarea').val();
-	}
+	};
 
 	$(function () {
 	    $("#compose-textarea").wysihtml5({
@@ -24,3 +25,4 @@ app.controller('createMailCtrl', function($rootScope, $scope, notification) {
 		});
 	});
 });
+}());

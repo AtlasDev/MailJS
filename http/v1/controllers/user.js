@@ -1,10 +1,12 @@
+(function () {
+'use strict';
+
 var User = require('../../../models/user.js');
 var sys = require('../../../sys/main.js');
-
 exports.postUser = function(req, res) {
     sys.perms.hasPerm('user.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm != true) {
+        if(hasPerm !== true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName) {
@@ -26,15 +28,15 @@ exports.currentUser = function (req, res) {
     user.password = undefined;
     user.tfaToken = undefined;
     return res.json({user: user});
-}
+};
 
 exports.getUser = function(req, res) {
     sys.perms.hasPerm('user.list', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm != true) {
+        if(hasPerm !== true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
-        if(req.query.getBy && (!req.query.getBy == 'ID' || !req.query.getBy=='username')) {
+        if(req.query.getBy && (req.query.getBy != 'ID' || req.query.getBy != 'username')) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
         }
         if(req.query.getBy == 'username') {
@@ -44,7 +46,7 @@ exports.getUser = function(req, res) {
                     sys.util.error(err, true);
                     return;
                 }
-                if(user == false) {
+                if(user === false) {
                     return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
                 }
                 return res.json({user: user});
@@ -52,14 +54,14 @@ exports.getUser = function(req, res) {
         } else {
             sys.user.find(req.params.user, function (err, user) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-                if(user == false) {
+                if(user === false) {
                     return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
                 }
                 user.username = undefined;
                 user.password = undefined;
                 user.tfaToken = undefined;
                 return res.json({user: user});
-            })
+            });
         }
     });
 };
@@ -71,7 +73,7 @@ exports.getUsers = function(req, res) {
             sys.util.error(err, true);
             return;
         }
-        if(hasPerm != true) {
+        if(hasPerm !== true) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         if(req.query.limitBy) {
@@ -94,7 +96,7 @@ exports.getUsers = function(req, res) {
             users.forEach(function (user) {
                 user.password = undefined;
                 user.tfaToken = undefined;
-            })
+            });
             res.json({users: users});
         });
     });
@@ -111,7 +113,7 @@ exports.deleteUser = function(req, res) {
             res.status(500).json({error: {name: err.name, message: err.message}});
             return;
         }
-        if(user == null) {
+        if(user === null) {
             res.status(400).json({error: {name: "ENOTFOUND", message: "The given user was not found."}});
         } else if(user.username == req.user.username) {
             res.status(400).json({error: {name: "EPERMITTED", message: "You cannot delete yourself."}});
@@ -140,7 +142,7 @@ exports.updateUserGroup = function(req, res) {
             res.status(500).json({error: {name: err.name, message: err.message}});
             return;
         }
-        if(user == null) {
+        if(user === null) {
             res.status(400).json({error: {name: "ENOTFOUND", message: "The given id was not found."}});
         } else if(user.username == req.user.username) {
             res.status(400).json({error: {name: "EPERMITTED", message: "You cannot change your own group."}});
@@ -158,4 +160,5 @@ exports.updateUserGroup = function(req, res) {
             });
         }
     });
-}
+};
+}());

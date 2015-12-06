@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 var app = angular.module("mail", ['ngRoute', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask']);
@@ -68,3 +69,4 @@ app.filter('firstLetter', function () {
 		return input.charAt(0);
     };
 });
+}());

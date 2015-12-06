@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 var sys = require('../sys/main.js');
 
@@ -19,3 +22,4 @@ MailboxSchema.methods.generateTransferCode = function(cb) {
 };
 
 module.exports = mongoose.model('Mailbox', MailboxSchema);
+}());

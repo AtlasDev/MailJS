@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.factory('fullscreen', function () {
@@ -38,3 +39,4 @@ app.factory('fullscreen', function () {
         isFullscreen: isFullscreen
     };
 });
+}());

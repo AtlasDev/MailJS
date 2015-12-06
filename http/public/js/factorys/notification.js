@@ -1,4 +1,5 @@
-'use strict'
+(function () {
+'use strict';
 
 app.factory('notification', function (toastr) {
     var notifyTimeout = localStorage.getItem('notifyTimeout') | 10000;
@@ -45,14 +46,14 @@ app.factory('notification', function (toastr) {
             callback = icon;
             icon = '/favicon-96x96.png';
         }
-        if(icon == null) {
+        if(icon === null) {
             icon = '/favicon-96x96.png';
         }
-        if(this.check() == true && screenFocus == false) {
+        if(check() === true && screenFocus === false) {
             var options = {
                   body: message,
                   icon: icon
-            }
+            };
             var notification = new Notification(title, options);
             setTimeout(notification.close.bind(notification), notifyTimeout);
             notification.onclick = function(x) {
@@ -68,7 +69,7 @@ app.factory('notification', function (toastr) {
     }
 
     function setTimeout(timeout) {
-        var timeout = parseInt(timeout);
+        timeout = parseInt(timeout);
         if(timeout*1000 < 1) {
             localStorage.setItem('notifyTimeout', 1000);
             notifyTimeout = 1;
@@ -84,10 +85,10 @@ app.factory('notification', function (toastr) {
         if(!("Notification" in window)) {
             return false;
         }
-        if(originalState == true) {
+        if(originalState === true) {
             if((Notification.permission === "granted")) {
-                return true;
                 localStorage.setItem('notifications', true);
+                return true;
             } else {
                 Notification.requestPermission(function (perm) {
                     if (perm === "granted") {
@@ -95,7 +96,7 @@ app.factory('notification', function (toastr) {
                         var options = {
                               body: 'The notification system works! You will get a notification everytime you get a new E-mail. You can always disable it in the settings if it gets annoying.',
                               icon: '/favicon-96x96.png'
-                        }
+                        };
                         var notification = new Notification('Awesome!', options);
                         setTimeout(notification.close.bind(notification), 10000);
                         notification.onclick = function(x) {
@@ -122,3 +123,4 @@ app.factory('notification', function (toastr) {
         notifyTimeout: notifyTimeout
     };
 });
+}());

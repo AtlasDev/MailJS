@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 
 var InboxSchema = new mongoose.Schema({
@@ -7,3 +10,4 @@ var InboxSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Inbox', InboxSchema);
+}());

@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
@@ -34,7 +37,7 @@ passport.use('session', new SessionStrategy(function(token, done) {
         return done(null, false);
     }
     sys.sessions.getSession(token, function (err, session) {
-        if(err) { return done(err) };
+        if(err) { return done(err); }
         if(!session.id) {
             return done(null, false);
         }
@@ -42,7 +45,7 @@ passport.use('session', new SessionStrategy(function(token, done) {
             if (err) { return done(err); }
             if (!user) { return done(null, false); }
             return done(null, user, { session: false, type: 'session' });
-        })
+        });
     });
 }));
 
@@ -59,7 +62,7 @@ passport.use('client', new BasicStrategy(
                 return callback(null, false);
             }
             return callback(null, client, { session: false, type: 'client' });
-        })
+        });
     }
 ));
 
@@ -78,16 +81,17 @@ passport.use(new BearerStrategy(
 ));
 
 exports.checkTFA = function (req, res, next) {
-    if(req.user.tfa == true && req.authInfo.type == 'session') {
-        if(req.session.finishTFA != true) {
+    if(req.user.tfa === true && req.authInfo.type == 'session') {
+        if(req.session.finishTFA !== true) {
             return res.status(401).end('Unauthorized');
         }
         return next();
     }
     return next();
-}
+};
 
 exports.isAuthenticated = passport.authenticate(['session', 'bearer']);
 exports.isSessionAuthenticated = passport.authenticate('session');
 exports.isUserAuthenticated = passport.authenticate('user');
 exports.isClientAuthenticated = passport.authenticate('client');
+}());

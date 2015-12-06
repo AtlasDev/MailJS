@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Group = require('../models/group.js');
 var validator = require('validator');
 
@@ -21,8 +24,8 @@ exports.getGroups = function (callback) {
             return callback(err);
         }
         return callback(null, groups);
-    })
-}
+    });
+};
 
 /**
  * Get a specific group.
@@ -51,8 +54,8 @@ exports.getGroup = function (groupID, callback) {
             return callback(err);
         }
         return callback(null, group);
-    })
-}
+    });
+};
 
 /**
  * Get the default group.
@@ -74,8 +77,8 @@ exports.getDefaultGroup = function (callback) {
             return callback(err);
         }
         return callback(null, group);
-    })
-}
+    });
+};
 
 /**
  * Create a new group
@@ -98,31 +101,33 @@ exports.getDefaultGroup = function (callback) {
 
 //TODO rewrite?
 exports.createGroup = function (name, type, masterGroup, def, callback) {
+    var error;
     if(!name) {
-        var error = new Error('Name not set');
+        error = new Error('Name not set');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if(!masterGroup && !type) {
-        var error = new Error('Type AND masterGroup not set.');
+        error = new Error('Type AND masterGroup not set.');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if(typeof masterGroup == "string") {
         if (!validator.isMongoId(masterGroup)) {
-            var error = new Error('Invalid masterGroup ID!');
+            error = new Error('Invalid masterGroup ID!');
             error.name = 'EVALIDATION';
             error.type = 400;
             return callback(error);
         }
         Group.findById(masterGroup, function (err, responseMasterGroup) {
+            var error;
             if(err) {
                 return callback(err);
             }
             if(!responseMasterGroup) {
-                var error = new Error('Master group not found');
+                error = new Error('Master group not found');
                 error.name = 'ENOTFOUND';
                 error.type = 404;
                 return callback(error);
@@ -133,7 +138,7 @@ exports.createGroup = function (name, type, masterGroup, def, callback) {
                     return callback(err);
                 }
                 return callback(null, group);
-            })
+            });
         });
     } else {
         groupCreateHelper(name, type, masterGroup, def, function (err, group) {
@@ -143,7 +148,7 @@ exports.createGroup = function (name, type, masterGroup, def, callback) {
             return callback(null, group);
         });
     }
-}
+};
 
 var groupCreateHelper = function (name, type, perms, def, callback) {
     var group = new Group();
@@ -157,7 +162,7 @@ var groupCreateHelper = function (name, type, perms, def, callback) {
         }
         return callback(null, group);
     });
-}
+};
 
 /**
  * Delete a group, only if empty.
@@ -196,6 +201,7 @@ exports.deleteGroup = function (groupID, callback) {
                 return callback(err);
             }
             return callback(null, group);
-        })
+        });
     });
-}
+};
+}());

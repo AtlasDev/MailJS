@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
@@ -35,3 +38,4 @@ ClientSchema.methods.verifySecret = function(secret, cb) {
 };
 
 module.exports = mongoose.model('Client', ClientSchema);
+}());

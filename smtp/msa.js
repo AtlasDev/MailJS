@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
@@ -21,7 +24,7 @@ module.exports = function () {
                         return cb(new Error('Invalid username and/or password'));
                     }
                     return cb(null, {user: user});
-                })
+                });
             } else if(auth.method == 'XOAUTH2') {
                 //TODO
                 return cb(new Error('Auth method not implemented.'));
@@ -47,7 +50,7 @@ module.exports = function () {
                 }
             });
             uribl.on('done', function(){
-                if(blocked == false) {
+                if(blocked === false) {
                     return cb();
                 }
             });
@@ -56,4 +59,5 @@ module.exports = function () {
     smtp.listen(config.smtp.msa, false, function () {
         sys.util.log('SMTP MSA server started on port '+config.smtp.msa, true);
     });
-}
+};
+}());

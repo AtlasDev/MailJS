@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 
 var GroupSchema = new mongoose.Schema({
@@ -8,3 +11,4 @@ var GroupSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Group', GroupSchema);
+}());

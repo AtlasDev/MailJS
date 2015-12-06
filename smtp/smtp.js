@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 /**
  * @file The main SMTP handler
  * @author AtlasDev
@@ -6,3 +9,4 @@
 
 //var msa = require('./msa.js')();
 var smtps = require('./smtps.js')();
+}());

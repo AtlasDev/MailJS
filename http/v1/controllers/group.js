@@ -1,11 +1,13 @@
-var sys = require('../../../sys/main.js');
+(function () {
+'use strict';
 
+var sys = require('../../../sys/main.js');
 exports.getGroups = function (req, res) {
     sys.perms.hasPerm('group.list', req.user.group, req.authInfo, function (err, hasPerm) {
         if(err) {
             return res.json({error: {name: err.name, message: err.message} });
         }
-        if(hasPerm == false) {
+        if(hasPerm === false) {
             return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
         }
         sys.group.getGroups(function (err, groups) {
@@ -15,7 +17,7 @@ exports.getGroups = function (req, res) {
             return res.json({groups: groups});
         });
     });
-}
+};
 
 exports.getGroup = function(req, res) {
     if(!req.params.group) {
@@ -29,5 +31,6 @@ exports.getGroup = function(req, res) {
             return res.json({error: {name: 'ENOTFOUND', message: 'Group not found.'}});
         }
         return res.json({group: group});
-    })
-}
+    });
+};
+}());

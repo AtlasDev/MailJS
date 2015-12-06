@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 
 var CodeSchema   = new mongoose.Schema({
@@ -8,3 +11,4 @@ var CodeSchema   = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Code', CodeSchema);
+}());

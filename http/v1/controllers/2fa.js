@@ -1,8 +1,11 @@
+(function () {
+'use strict';
+
 var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
 
 exports.getTFA = function (req, res) {
-    if(req.user.tfa == true) {
+    if(req.user.tfa === true) {
         return res.status(400).json({"error": {
             "name": "EINVALID",
             "message": "2FA already enabled."
@@ -18,10 +21,10 @@ exports.getTFA = function (req, res) {
             uri: 'otpauth://totp/MailJS?secret='+key.base32
         });
     });
-}
+};
 
 exports.postTFA = function (req, res) {
-    if(req.user.tfa == true) {
+    if(req.user.tfa === true) {
         return res.status(400).json({error: {name: 'EINVALID', message: '2FA already enabled.'}});
     }
     if(!req.body.code) {
@@ -45,7 +48,7 @@ exports.postTFA = function (req, res) {
             return res.json({message: "2FA has been enabled."});
         });
     });
-}
+};
 
 exports.deleteTFA = function (req, res) {
     if(!req.body.code) {
@@ -69,4 +72,5 @@ exports.deleteTFA = function (req, res) {
             return res.json({message: "2FA disabled."});
         });
     });
-}
+};
+}());

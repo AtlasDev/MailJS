@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification, user, $cookies) {
@@ -12,18 +13,18 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
     };
     $scope.updateTimeout = function () {
         var newTimeout = notification.setTimeout($scope.notifyTimeout);
-        if(newTimeout != false) {
+        if(newTimeout !== false) {
             $scope.notifyTimeout = newTimeout;
         }
-    }
+    };
     $scope.askPerms = function () {
         $scope.notifyToggle = notification.askPermissions($scope.notifyToggle);
-    }
+    };
     $scope.checkVerify = function () {
         if($scope.verifyCode.length == 7) {
             $rootScope.isLoading = true;
             var code = $scope.verifyCode.replace('-', "");
-            if(user.getUser().tfa == true) {
+            if(user.getUser().tfa === true) {
                 var req = {
                     method: 'DELETE',
                     url: '/api/v1/2fa',
@@ -37,7 +38,8 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 };
                 $http(req).then(function(res) {
                     $cookies.remove('MailJS');
-                    return $window.location.href = '/index.html?msg=2FA%20successfull%20disabled!%20Please%20login%20again.&info=true';
+                    $window.location.href = '/index.html?msg=2FA%20successfull%20disabled!%20Please%20login%20again.&info=true';
+                    return;
                 }, function(res) {
                     $rootScope.isLoading = false;
                     if(res.status == 400) {
@@ -59,7 +61,8 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                     }
                 }).then(function(res) {
                     $cookies.remove('MailJS');
-                    return $window.location.href = '/index.html?msg=2FA%20successfull%20enabled!%20Please%20login%20again.&info=true';
+                    $window.location.href = '/index.html?msg=2FA%20successfull%20enabled!%20Please%20login%20again.&info=true';
+                    return;
                 }, function(res) {
                     $rootScope.isLoading = false;
                     if(res.status == 400) {
@@ -73,7 +76,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
     };
 
     var loadTFA = function () {
-        if(user.getUser().tfa == false) {
+        if(user.getUser().tfa === false) {
             $rootScope.isLoading = true;
             $http({
                 method: 'GET',
@@ -88,14 +91,15 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             }, function(res) {
                 if(res.status == 401) {
                     $cookies.remove('MailJS');
-                    return $window.location.href = '/index.html?msg=Token%20invalid.';
+                    $window.location.href = '/index.html?msg=Token%20invalid.';
+                    return;
                 } else {
                     rootScope.isLoading = false;
                     notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
                 }
             });
         }
-    }
+    };
     if(typeof user.getUser()._id == "undefined") {
         $rootScope.$on('userLoaded', function () {
             loadTFA();
@@ -104,3 +108,4 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         loadTFA();
     }
 });
+}());

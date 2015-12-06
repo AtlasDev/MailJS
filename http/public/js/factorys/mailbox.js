@@ -1,4 +1,5 @@
-'use strict'
+(function () {
+'use strict';
 
 app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
     var current;
@@ -42,7 +43,6 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         for(var i = 0; i<mailboxes.length; i++) {
             if(mailboxes[i]._id == id) {
                 return mailboxes[i];
-                break;
             }
         }
     }
@@ -58,7 +58,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
 
     $rootScope.$on('userLoaded', function () {
         init();
-    })
+    });
 
     return {
         init: init,
@@ -67,5 +67,6 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         getMailboxes: getMailboxes,
         addMailbox: addMailbox,
         findMailbox: findMailbox
-    }
+    };
 });
+}());

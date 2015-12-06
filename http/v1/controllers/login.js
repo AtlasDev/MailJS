@@ -1,6 +1,8 @@
+(function () {
+'use strict';
+
 var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
-
 exports.postLogin = function(req, res) {
     req.session.upgrade(req.user._id, 86400, function (err) {
         if(err) {
@@ -9,7 +11,7 @@ exports.postLogin = function(req, res) {
         var responseUser = req.user;
         responseUser.password = undefined;
         responseUser.tfaToken = undefined;
-        if(req.user.tfa == true) {
+        if(req.user.tfa === true) {
             req.session.finishTFA = false;
         } else {
             req.session.finishTFA = true;
@@ -24,11 +26,11 @@ exports.deleteLogin = function(req, res) {
         if (err) return res.status(500).json({error: {name: err.name, message: err.message}});
         return res.json({message: 'Logout successfull.'});
     });
-}
+};
 
 exports.patchLogin = function (req, res) {
-    if(req.user.tfa == true && req.authInfo.type == 'session') {
-        if(req.session.finishTFA == true) {
+    if(req.user.tfa === true && req.authInfo.type == 'session') {
+        if(req.session.finishTFA === true) {
             return req.status(400).json({error: {
                 "name": "EINVALID",
                 "message": "User already authenticated."
@@ -48,4 +50,5 @@ exports.patchLogin = function (req, res) {
     }
     req.session.finishTFA = true;
     return res.json({success: true});
-}
+};
+}());

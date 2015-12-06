@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 var socketio = function(http, app) {
@@ -29,7 +30,7 @@ io.on('connection', function(socket) {
         socket.disconnect();
         return false;
     }
-    if(socket.data.user.mailboxes.length == 0) {
+    if(socket.data.user.mailboxes.length === 0) {
         socket.emit('error:nomailbox');
         socket.disconnect();
         return false;
@@ -44,3 +45,4 @@ return io;
 };
 
 module.exports = socketio;
+}());

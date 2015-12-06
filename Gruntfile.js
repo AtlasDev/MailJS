@@ -219,7 +219,7 @@ module.exports = function (grunt) {
                 files: [
                     'http/public/**/*.js'
                 ],
-                tasks: ['concat:app', 'concat:login', 'cssmin', 'imagemin:public'],
+                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public'],
                 options: {
                     atBegin: true
                 }
@@ -307,6 +307,60 @@ module.exports = function (grunt) {
                     dest: 'http/public/dist/img/'
                 }]
             }
+        },
+        jshint: {
+            options: {
+                globals: {
+                    require: true,
+                    process: true,
+                    exports: true,
+                    console: true,
+                    module: true,
+                    element: true,
+                    document: true,
+                    window: true,
+                    $: true,
+                    Cookies: true,
+                    io: true,
+                    app: true,
+                    localStorage: true,
+                    Notification: true,
+                    $window: true,
+                    Element: true,
+                    confirm: true,
+                    angular: true,
+                    prompt: true
+                },
+                'loopfunc': true
+            },
+            all: [
+                'sys/*.js',
+                'models/*.js',
+                'http/**/*.js',
+                '!http/public/dist/**',
+                '!http/public/js/other/**',
+                '!http/public/js/angular/**',
+                '!http/doc/**',
+                '!http/docfiles/**',
+                'smtp/**/*.js'
+            ],
+            sys: [
+                'sys/**/*.js'
+            ],
+            http: [
+                'http/**/*.js',
+                '!http/public/dist/**',
+                '!http/public/js/other/**',
+                '!http/public/js/angular/**',
+                '!http/doc/**',
+                '!http/docfiles/**'
+            ],
+            smtp: [
+                'smtp/**/*.js'
+            ],
+            models: [
+                'models/*.js'
+            ]
         }
     });
 
@@ -318,12 +372,29 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     grunt.registerTask('dev', [
         'watch:all'
     ]);
+    grunt.registerTask('hint', [
+        'jshint:all'
+    ]);
+    grunt.registerTask('syshint', [
+        'jshint:sys'
+    ]);
+    grunt.registerTask('httphint', [
+        'jshint:http'
+    ]);
+    grunt.registerTask('smtphint', [
+        'jshint:http'
+    ]);
+    grunt.registerTask('modelshint', [
+        'jshint:models'
+    ]);
     grunt.registerTask('build', [
         'clean:temp',
+        'jshint:all',
         'cssmin',
         'concat:app',
         'concat:login',

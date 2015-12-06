@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.factory('socket', function ($rootScope) {
@@ -50,3 +51,4 @@ app.factory('socket', function ($rootScope) {
         getStatus: getStatus
     };
 });
+}());

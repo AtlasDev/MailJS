@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var util = require('./util.js');
 var User = require('../models/user.js');
 var clientFunc = require('./client.js');
@@ -23,14 +26,15 @@ var validator = require('validator');
  * @param {Object} user User object of the new created user.
  */
 exports.create = function (username, password, firstName, lastName, callback) {
+    var error;
     if(username.length < 5) {
-        var error = new Error('Username does not meet the requirements!');
+        error = new Error('Username does not meet the requirements!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if(password.length < 7 || validator.isAlpha(password) || !/[a-z]/g.test(password) || !/[A-Z]/g.test(password)) {
-        var error = new Error('Password does not meet the requirements!');
+        error = new Error('Password does not meet the requirements!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
@@ -41,7 +45,7 @@ exports.create = function (username, password, firstName, lastName, callback) {
             return callback(err);
         }
         if(!group) {
-            var error = new Error('No default group found!');
+            error = new Error('No default group found!');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return callback(error);
@@ -63,7 +67,7 @@ exports.create = function (username, password, firstName, lastName, callback) {
             return callback(null, user);
         });
     });
-}
+};
 
 /**
  * Replace the current group of a user with a new one.
@@ -82,14 +86,15 @@ exports.create = function (username, password, firstName, lastName, callback) {
  * @param {Object} user User object of user of which the group was replaced.
  */
 exports.setGroup = function (userID, groupID, callback) {
+    var error;
     if (!validator.isMongoId(userID)) {
-        var error = new Error('Invalid user ID!');
+        error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isMongoId(groupID)) {
-        var error = new Error('Invalid group ID!');
+        error = new Error('Invalid group ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
@@ -99,7 +104,7 @@ exports.setGroup = function (userID, groupID, callback) {
             return callback(err);
         }
         if(!group) {
-            var error = new Error('Group not found!');
+            error = new Error('Group not found!');
             error.name = 'ENOTFOUND';
             error.type = 404;
             return callback(error);
@@ -109,7 +114,7 @@ exports.setGroup = function (userID, groupID, callback) {
                 return callback(err);
             }
             if(!user) {
-                var error = new Error('User not found!');
+                error = new Error('User not found!');
                 error.name = 'ENOTFOUND';
                 error.type = 404;
                 return callback(error);
@@ -122,9 +127,9 @@ exports.setGroup = function (userID, groupID, callback) {
                 util.log('Group of `'+user.username+'` has been changed to `'+group.name+'`.');
                 return callback(null, user);
             });
-        })
+        });
     });
-}
+};
 
 /**
  * Find a user by id.
@@ -156,8 +161,8 @@ exports.find = function (userID, callback) {
             return callback(null, false);
         }
         return callback(null, user);
-    })
-}
+    });
+};
 
 /**
  * Find a user by username.
@@ -183,8 +188,8 @@ exports.findByUsername = function (username, callback) {
             return callback(null, false);
         }
         return callback(null, user);
-    })
-}
+    });
+};
 
 /**
  * Find a user by mailbox.
@@ -216,8 +221,8 @@ exports.findByMailbox = function (mailboxID, callback) {
             return callback(null, false);
         }
         return callback(null, users);
-    })
-}
+    });
+};
 
 /**
  * Find all users.
@@ -238,14 +243,15 @@ exports.findByMailbox = function (mailboxID, callback) {
 exports.findAll = function (limitBy, skip, callback) {
     limitBy = limitBy || 20;
     skip = skip || 0;
+    var error;
     if (!validator.isInt(limitBy)) {
-        var error = new Error('Invalid limitBy value!');
+        error = new Error('Invalid limitBy value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     if (!validator.isInt(skip)) {
-        var error = new Error('Invalid skip value!');
+        error = new Error('Invalid skip value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
@@ -260,7 +266,7 @@ exports.findAll = function (limitBy, skip, callback) {
         }
         return callback(null, users);
     });
-}
+};
 
 /**
  * Find all users with a certain group.
@@ -292,8 +298,8 @@ exports.findByGroup = function (groupID, callback) {
             return callback(null, false);
         }
         return callback(null, users);
-    })
-}
+    });
+};
 
 /**
  * Verify user creditals.
@@ -327,7 +333,7 @@ exports.verify = function (username, password, callback) {
             return callback(null, isMatch, user);
         });
     });
-}
+};
 
 /**
  * Delete a user
@@ -354,7 +360,7 @@ exports.delete = function (userID, callback) {
         if(err) {
             return callback(err);
         }
-        if(user == null) {
+        if(user === null) {
             var error = new Error('The given id was not found.');
             error.name = 'ENOTFOUND';
             error.type = 404;
@@ -366,7 +372,8 @@ exports.delete = function (userID, callback) {
                 }
                 util.log('User `'+user._id+'` deleted.');
                 return callback(null);
-            })
+            });
         }
     });
-}
+};
+}());

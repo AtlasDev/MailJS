@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
@@ -60,3 +63,4 @@ UserSchema.methods.verifyPassword = function(password, cb) {
 };
 
 module.exports = mongoose.model('User', UserSchema);
+}());

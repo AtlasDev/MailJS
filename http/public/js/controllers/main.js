@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox) {
@@ -29,19 +30,19 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 
 	$scope.changeMailbox = function (id) {
 		mailbox.changeMailbox(id);
-	}
+	};
 
 	$scope.logout = function logout(){
         return user.logout();
-	}
+	};
 
     $scope.toggleFullScreen = function () {
         return fullscreen.toggleFullScreen();
-    }
+    };
 
     $scope.isFullscreen = function () {
         return fullscreen.isFullscreen();
-    }
+    };
 
     //error handling
     socket.on('error', function (err) {
@@ -85,3 +86,4 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
         }
     });
 });
+}());

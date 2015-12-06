@@ -1,11 +1,13 @@
-var sys = require('../../../sys/main.js');
+(function () {
+'use strict';
 
+var sys = require('../../../sys/main.js');
 exports.getDomains = function (req, res) {
     sys.domain.getDomains(function (err, domains) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         return res.json({domains: domains});
     });
-}
+};
 
 exports.postDomain = function (req, res) {
     if(!req.body.domain || !new RegExp(/^([a-z0-9]+\.)?[a-z0-9][a-z0-9-]*\.[a-z]{2,6}$/i).test(req.body.domain)) {
@@ -16,7 +18,7 @@ exports.postDomain = function (req, res) {
     }
     sys.perms.hasPerm('domain.create', req.user.group, req.authInfo, function (err, hasPerm) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm == false) {
+        if(hasPerm === false) {
             return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
         }
         var disabled = req.body.disabled || false;
@@ -25,4 +27,5 @@ exports.postDomain = function (req, res) {
             return res.json({domain: domain});
         });
     });
-}
+};
+}());

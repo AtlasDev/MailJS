@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var mongoose = require('mongoose');
 
 var DomainSchema = new mongoose.Schema({
@@ -6,3 +9,4 @@ var DomainSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Domain', DomainSchema);
+}());

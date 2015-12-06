@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Domain = require('../models/domain.js');
 var util = require('./util.js');
 var validator = require('validator');
@@ -16,35 +19,36 @@ var validator = require('validator');
  * Callback for creating a new domain.
  * @callback createDomainCallback
  * @param {Error} err Error object, should be undefined.
- * @param {Object} domain Domain object of the created domain.
+ * @param {Object} newDomain Domain object of the created domain.
  */
 exports.create = function (domain, disabled, callback) {
     //TODO: generate and save certificates for the domain (when Let's Encrypt for nodejs gets released).
+    var error;
     if(!validator.isBoolean(disabled)) {
-        var error = new Error('Disabled is not a boolean!');
+        error = new Error('Disabled is not a boolean!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
     var domainRegex = new RegExp(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
     if(!domainRegex.test(domain) || domain.length >= 265) {
-        var error = new Error('Invalid domain!');
+        error = new Error('Invalid domain!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    var domain = new Domain({
+    var newDomain = new Domain({
         domain: domain,
         disabled: disabled
     });
-    domain.save(function(err) {
+    newDomain.save(function(err) {
         if (err) {
             return callback(err, null);
         }
-        util.log('Domain `'+domain.domain+'` created.');
-        return callback(null, domain);
+        util.log('Domain `'+newDomain.domain+'` created.');
+        return callback(null, newDomain);
     });
-}
+};
 
 /**
  * Get all open domains
@@ -66,5 +70,6 @@ exports.getDomains = function (callback) {
             return callback(err);
         }
         return callback(null, domains);
-    })
-}
+    });
+};
+}());

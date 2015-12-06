@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location, notification, $http) {
@@ -45,19 +46,19 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             notification.send('Cannot Groups!', res.body.error.messsage, 'error');
             $rootScope.isLoading = false;
         });
-    }
+    };
 
     $scope.changeGroup = function (user, oldGroupID) {
         var newGroup = $scope.newSelectGroup[user._id];
         if(oldGroupID == newGroup._id) {
             return notification.send('Group not changed.', 'User is already member of `'+newGroup.name+'`');
         }
-        if(confirm('Are you sure you want to change the group of `'+user.username+'` to `'+newGroup.name+'`?') == true) {
+        if(confirm('Are you sure you want to change the group of `'+user.username+'` to `'+newGroup.name+'`?') === true) {
             notification.send('Cannot change group!', 'Not implemented', 'info');
         } else {
             return notification.send('Group not changed.', 'Canceled on prompt.');
         }
-    }
+    };
 
     $scope.createUser = function () {
         if(typeof $scope.username == "undefined" || !$scope.username) {
@@ -100,7 +101,7 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             notification.send('An error occured!', res.data.error.message || 'The server errored, please report this to your sysadmin.', 'error');
             $rootScope.isLoading = false;
         });
-    }
+    };
 
     function loadGroups() {
         var req = {
@@ -121,7 +122,7 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
 
     function checkPerms() {
         if(user.getUser().group.permissions.indexOf('user.list') == -1) {
-            notification.send('Cannot visit page!', 'Permissions denied.', 'error')
+            notification.send('Cannot visit page!', 'Permissions denied.', 'error');
             $location.path('/mainSettings');
             return false;
         }
@@ -142,3 +143,4 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         }
     }
 });
+}());

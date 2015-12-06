@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket) {
@@ -18,7 +19,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket)
 				return true;
 			}
         }
-	}
+	};
 	$scope.countMails = function countMails() {
 		$scope.mailCount = 0;
 		for(var i in $rootScope.mails) {
@@ -26,7 +27,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket)
 				$scope.mailCount++;
 			}
 		}
-	}
+	};
 	$scope.selectAll = function selectAll() {
 		for(var i in $rootScope.mails) {
 			if($scope.selected.indexOf($rootScope.mails[i].uuid) == -1) {
@@ -35,10 +36,11 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, socket)
 				}
 			}
 		}
-	}
+	};
 	socket.on('mail:delete', function(data) {
-		if(data.err != null){
+		if(data.err !== null){
 			$scope.countMails();
 		}
 	});
 });
+}());

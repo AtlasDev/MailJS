@@ -1,4 +1,5 @@
-'use strict'
+(function () {
+'use strict';
 
 app.factory('user', function ($window, $cookies, $http, $rootScope) {
     var sessionID = $cookies.get('MailJS');
@@ -20,8 +21,9 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
             }
         };
         $http(req).then(function(res) {
-            if(res.data.user.mailboxes.length == 0) {
-                return $window.location.href = '/index.html?setup=true';
+            if(res.data.user.mailboxes.length === 0) {
+                $window.location.href = '/index.html?setup=true';
+                return;
             }
             user = res.data.user;
             var req = {
@@ -37,19 +39,24 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
             }, function(res) {
                 $cookies.remove('MailJS');
                 if(res.status == 401) {
-                    return $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
+                    $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
+                    return;
                 }
                 $window.location.href = '/index.html?msg='+JSON.parse(res.data).error.message;
+                return;
             });
         }, function(res) {
             $cookies.remove('MailJS');
             if(res.status == 401) {
-                return $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
+                $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
+                return;
             }
             if(res.data.error) {
                 $window.location.href = '/index.html?msg='+res.data.error.message;
+                return;
             } else {
                 $window.location.href = '/index.html?msg=Authentication%20error.';
+                return;
             }
         });
     })();
@@ -64,9 +71,11 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         }).then(function(res) {
             $cookies.remove('MailJS');
             $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
+            return;
         }, function(res) {
             $cookies.remove('MailJS');
             $window.location.href = '/index.html?info=true&msg=Logout%20Succesfull,%20goodbye!';
+            return;
         });
     }
 
@@ -74,5 +83,6 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
         logout: logout,
         sessionID: sessionID,
         getUser: getUser
-    }
+    };
 });
+}());

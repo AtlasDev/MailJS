@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 var Inbox = require('../models/inbox.js');
 var validator = require('validator');
 
@@ -59,7 +62,7 @@ exports.createDefaults = function (mailboxID, callback) {
             });
         });
     });
-}
+};
 
 /**
  * Get all inboxes of a mailbox
@@ -88,7 +91,7 @@ exports.getInboxes = function (mailboxID, cb) {
         }
         return cb(null, inboxes);
     });
-}
+};
 
 
 /**
@@ -107,14 +110,15 @@ exports.getInboxes = function (mailboxID, cb) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.createInbox = function (mailboxID, title, cb) {
+    var error;
     if (!validator.isMongoId(mailboxID)) {
-        var error = new Error('Invalid mailbox ID!');
+        error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
     if (!validator.isAscii(title) || title.length < 4 || title.length > 64) {
-        var error = new Error('Invalid inbox title!');
+        error = new Error('Invalid inbox title!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
@@ -129,4 +133,5 @@ exports.createInbox = function (mailboxID, title, cb) {
         }
         return cb(null, inbox);
     });
-}
+};
+}());
