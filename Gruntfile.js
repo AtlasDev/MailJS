@@ -185,23 +185,24 @@ module.exports = function (grunt) {
         cssmin: {
             options: {
                 shorthandCompacting: false,
-                roundingPrecision: -1
+                roundingPrecision: -1,
+                keepSpecialComments: 0
             },
             target: {
                 files: {
                     'http/public/dist/css/style.min.css': [
-                        'http/public/css/AdminLTE.min.css',
+                        'http/public/css/bootstrap.min.css',
+                        'http/public/css/angular-toastr.min.css',
                         'http/public/css/preloader.css',
                         'http/public/css/style.css',
                         'http/public/css/loader.css',
-                        'http/public/css/bootstrap.min.css',
-                        'http/public/css/angular-toastr.min.css',
                         'http/public/css/skins/skin-red-light.min.css',
                         'http/public/css/bootstrap3-wysihtml5.min.css',
                         'http/public/css/font-awesome.min.css',
-                        'http/public/css/ionicons.min.css'
+                        'http/public/css/ionicons.min.css',
+                        'http/public/css/AdminLTE.min.css'
                     ],
-                    'http/public/dist/css/login.libs.min.css': [
+                    'http/public/dist/css/login.min.css': [
                         'http/public/css/bootstrap.min.css',
                         'http/public/css/angular-toastr.min.css',
                         'http/public/css/skins/skin-red-light.min.css',
@@ -214,6 +215,15 @@ module.exports = function (grunt) {
             }
         },
         watch: {
+            all: {
+                files: [
+                    'http/public/**/*.js'
+                ],
+                tasks: ['concat:app', 'concat:login', 'cssmin', 'imagemin:public'],
+                options: {
+                    atBegin: true
+                }
+            },
             js: {
                 files: [
                     'http/public/js/**/*.js'
@@ -310,9 +320,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.registerTask('dev', [
-        'watch:js',
-        'watch:css',
-        'watch:img'
+        'watch:all'
     ]);
     grunt.registerTask('build', [
         'clean:temp',
