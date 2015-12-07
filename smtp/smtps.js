@@ -57,7 +57,6 @@ module.exports = function () {
                                 return cb(err);
                             }
                             if(!isValid) {
-                                //Should NEVER happen!
                                 error = true;
                                 return cb(new Error('Invalid mailbox `'+session.envelope.rcptTo[i].address+'`.'));
                             }
@@ -69,7 +68,6 @@ module.exports = function () {
                                         error = true;
                                         return cb(err);
                                     }
-                                    //never running
                                 }
                             );
                         });

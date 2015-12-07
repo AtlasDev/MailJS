@@ -8,6 +8,7 @@ var User = require('../models/user.js');
 var Inbox = require('../models/inbox.js');
 var inboxFunc = require('./inbox.js');
 var validator = require('validator');
+var mongoose = require('mongoose');
 
 /**
  * Create a new mailbox
@@ -385,6 +386,7 @@ exports.getInbox = function (mailboxID, cb) {
         error.type = 400;
         return callback(error);
     }
+    mailboxID = mongoose.Types.ObjectId(mailboxID);
     Inbox.findOne({type: 'Inbox', mailbox: mailboxID}, function (err, inbox) {
         if(err) {
             return cb(err);

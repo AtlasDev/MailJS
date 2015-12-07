@@ -39,7 +39,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string" || mail.subject === "") {
+    if (typeof mail.subject != "string") {
         error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -52,18 +52,25 @@ exports.create = function (mailboxID, mail, cb) {
         return cb(error);
     }
     mailbox.getInbox(mailboxID, function (err, inbox) {
+        var error;
         if(err) {
             return cb(err);
         }
+        if(!inbox) {
+            error = new Error('mailbox not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
         var email = new Email();
-        email.mailbox = inbox._id;
+        email.inbox = inbox._id;
         email.creationDate = Math.round((new Date()).getTime() / 1000);
         email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
         email.sender = mail.from[0].address;
         email.senderDisplay = mail.from[0].name;
         email.subject = mail.subject;
         email.content = content;
-        email.preview = mail.text.substr(0, 100);
+        email.preview = mail.text.trim().substr(0, 100);
         email.save(function (err) {
             if(err) {
                 return cb(err);
