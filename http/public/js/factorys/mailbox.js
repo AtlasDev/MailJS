@@ -1,4 +1,4 @@
-app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
+app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
     var current;
     var mailboxes = [];
 
@@ -19,6 +19,13 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
             $rootScope.$emit('mailboxesChange', res.data.mailboxes);
             current = mailboxes[0];
             $rootScope.$emit('currentMailboxChange', current);
+            if($location.path() == "/") {
+                for (var i = 0; i < current.inboxes.length; i++) {
+                    if(current.inboxes[i].type == "Inbox") {
+                        $location.path("/mailbox/"+current.inboxes[i]._id);
+                    }
+                }
+            }
             $('body').addClass('preloaded');
         }, function (res) {
             $cookies.remove('MailJS');
@@ -48,6 +55,10 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
         return mailboxes;
     }
 
+    function getCurrent() {
+        return current;
+    }
+
     function addMailbox(mailbox) {
         mailboxes.push(mailbox);
         $rootScope.$emit('mailboxesChange', mailboxes);
@@ -59,7 +70,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies) {
 
     return {
         init: init,
-        current: current,
+        getCurrent: getCurrent,
         changeMailbox: changeMailbox,
         getMailboxes: getMailboxes,
         addMailbox: addMailbox,

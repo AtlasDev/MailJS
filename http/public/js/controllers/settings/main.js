@@ -47,7 +47,6 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                     } else {
                         notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
                     }
-                    $rootScope.isLoading = false;
                 });
             } else {
                 $http({

@@ -1,14 +1,10 @@
 {
     "currentLanguage": "English",
     "mailbox": {
-        "search_mail": "Search",
-        "non_found": "No results found...",
-        "starred": "Starred",
-        "sender": "Sender",
         "subject": "Subject",
-        "title": "Title",
-        "attachment": "Attachment",
-        "date": "Date"
+        "preview": "Preview",
+        "sender": "From",
+        "date": "Received"
     },
     "connection": {
         "connected": "Connected",

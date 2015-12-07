@@ -21,8 +21,8 @@ exports.postInbox = function (req, res) {
 };
 
 exports.getInbox = function (req, res) {
-    var skip = req.params.skip || 0;
-    var limit = req.params.limit || 20;
+    var skip = parseInt(req.params.skip) || 0;
+    var limit = parseInt(req.params.limit) || 20;
     var inboxID = req.params.inbox;
     sys.inbox.get(inboxID, function (err, inbox) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
