@@ -66,7 +66,7 @@ exports.createDefaults = function (mailboxID, callback) {
 
 /**
  * Get all inboxes of a mailbox
- * @name GetInboxes
+ * @name getInboxes
  * @since 0.1.0
  * @version 1
  * @param {string} mailboxID Id of the mailbox to get the mailboxes of.
@@ -77,6 +77,7 @@ exports.createDefaults = function (mailboxID, callback) {
  * Callback for getting all mailboxes
  * @callback GetInboxesCallback
  * @param {Error} err Error object, should be undefined.
+ * @param {Array} inboxes Array of inbox objects.
  */
 exports.getInboxes = function (mailboxID, cb) {
     if (!validator.isMongoId(mailboxID)) {
@@ -93,7 +94,6 @@ exports.getInboxes = function (mailboxID, cb) {
     });
 };
 
-
 /**
  * Create a inbox
  * @name createInbox
@@ -108,6 +108,7 @@ exports.getInboxes = function (mailboxID, cb) {
  * Callback for creating a inbox.
  * @callback createInboxCallback
  * @param {Error} err Error object, should be undefined.
+ * @param {Object} inbox New created inbox.
  */
 exports.createInbox = function (mailboxID, title, cb) {
     var error;
@@ -128,6 +129,37 @@ exports.createInbox = function (mailboxID, title, cb) {
     inbox.mailbox = mailboxID;
     inbox.editable = true;
     inbox.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, inbox);
+    });
+};
+
+/**
+ * get an inbox by id
+ * @name getInbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} inboxID Id of the inbox to get.
+ * @param {getInboxCallback} callback Callback function after getting the inbox.
+ */
+
+/**
+ * Callback for getting a inbox.
+ * @callback getInboxCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} inbox Inbox object.
+ */
+exports.get = function (inboxID, cb) {
+    var error;
+    if (!validator.isMongoId(inboxID)) {
+        error = new Error('Invalid inbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Inbox.findById(inboxID, function (err, inbox) {
         if(err) {
             return cb(err);
         }

@@ -86,7 +86,7 @@ exports.create = function (mailboxID, mail, cb) {
  */
 exports.getEmails = function (inboxID, limit, skip, cb) {
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(inboxID)) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
