@@ -1,4 +1,4 @@
-# MailJS
+# MailJS[![Build Status](https://travis-ci.com/AtlasDev/MailJS.svg?token=vWypZLp5ehGoh8yBJSvd&branch=master)](https://travis-ci.com/AtlasDev/MailJS)
 Full blown mail system written in NodeJS.
 
 ---
