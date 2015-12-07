@@ -33,6 +33,7 @@ exports.getInbox = function (req, res) {
             return res.status(403).json({error: {name: 'EPERMS', message: 'Not a member of the given inbox.'}});
         }
         sys.email.getEmails(inboxID, limit, skip, function (err, emails) {
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({emails: emails});
         });
     });

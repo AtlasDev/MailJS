@@ -27,6 +27,7 @@ exports.createDefaults = function (mailboxID, callback) {
     }
     var inbox = new Inbox();
     inbox.name = 'Inbox';
+    inbox.type = 'Inbox';
     inbox.mailbox = mailboxID;
     inbox.editable = false;
     inbox.save(function (err) {
@@ -35,6 +36,7 @@ exports.createDefaults = function (mailboxID, callback) {
         }
         var junk = new Inbox();
         junk.name = 'Junk';
+        junk.type = 'Spam';
         junk.mailbox = mailboxID;
         junk.editable = false;
         junk.save(function (err) {
@@ -42,6 +44,7 @@ exports.createDefaults = function (mailboxID, callback) {
                 return callback(err);
             }
             var trash = new Inbox();
+            trash.name = 'Trash';
             trash.name = 'Trash';
             trash.mailbox = mailboxID;
             trash.editable = false;
@@ -51,6 +54,7 @@ exports.createDefaults = function (mailboxID, callback) {
                 }
                 var send = new Inbox();
                 send.name = 'Send';
+                send.type = 'Send';
                 send.mailbox = mailboxID;
                 send.editable = false;
                 send.save(function (err) {

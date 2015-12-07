@@ -4,6 +4,7 @@
 var Email = require('../models/email.js');
 var validator = require('validator');
 var inbox = require('./inbox.js');
+var mailbox = require('./mailbox.js');
 
 /**
  * Create a new email
@@ -50,20 +51,25 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    var email = new Email();
-    email.mailbox = mailboxID;
-    email.creationDate = Math.round((new Date()).getTime() / 1000);
-    email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
-    email.sender = mail.from[0].address;
-    email.senderDisplay = mail.from[0].name;
-    email.subject = mail.subject;
-    email.content = content;
-    email.preview = mail.text.substr(0, 100);
-    email.save(function (err) {
+    mailbox.getInbox(mailboxID, function (err, inbox) {
         if(err) {
             return cb(err);
         }
-        return cb(null, email);
+        var email = new Email();
+        email.mailbox = inbox._id;
+        email.creationDate = Math.round((new Date()).getTime() / 1000);
+        email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
+        email.sender = mail.from[0].address;
+        email.senderDisplay = mail.from[0].name;
+        email.subject = mail.subject;
+        email.content = content;
+        email.preview = mail.text.substr(0, 100);
+        email.save(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, email);
+        });
     });
 };
 
@@ -92,19 +98,19 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof limit == "number" || limit > 100) {
+    if (typeof limit != "number" || limit > 100 || limit <= 0) {
         error = new Error('Invalid limit!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (typeof skip == "number") {
+    if (typeof skip != "number" || skip < 0) {
         error = new Error('Invalid skip!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    Email.find({inbox: inboxID}).sort('reportedDate', 1).skip(skip).limit(limit).exclude('content').exec(function (err, emails) {
+    Email.find({inbox: inboxID}).sort('reportedDate').skip(skip).limit(limit).select('-content').exec(function (err, emails) {
         if(err) {
             return cb(err);
         }
