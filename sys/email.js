@@ -5,6 +5,7 @@ var Email = require('../models/email.js');
 var validator = require('validator');
 var inbox = require('./inbox.js');
 var mailbox = require('./mailbox.js');
+var os = require('os');
 
 /**
  * Create a new email
@@ -71,6 +72,7 @@ exports.create = function (mailboxID, mail, cb) {
         email.subject = mail.subject;
         email.content = content;
         email.preview = mail.text.trim().substr(0, 100);
+        email.receivedBy = os.hostname();
         email.save(function (err) {
             if(err) {
                 return cb(err);

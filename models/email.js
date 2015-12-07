@@ -12,6 +12,7 @@ var EmailSchema  = new mongoose.Schema({
     content: { type: String, required: true },
     preview: { type: String, required: true },
     subject: { type: String, required: true },
+    receivedBy: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Email', EmailSchema);
