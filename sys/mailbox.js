@@ -5,8 +5,10 @@ var util = require('./util.js');
 var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
 var User = require('../models/user.js');
+var Inbox = require('../models/inbox.js');
 var inboxFunc = require('./inbox.js');
 var validator = require('validator');
+var mongoose = require('mongoose');
 
 /**
  * Create a new mailbox
@@ -358,6 +360,38 @@ exports.isAdmin = function (mailboxID, userID, cb) {
         } else {
             return cb(null, false);
         }
+    });
+};
+
+/**
+ * Get the main inbox of a mailbox.
+ * @name getInbox
+ * @since 0.1.0
+ * @version 1
+ * @param {string} mailboxID Mailbox id of the mailbox to get the inbox from
+ * @param {getInboxCallback} callback Callback function after getting the mailbox.
+ */
+
+/**
+ * Callback for getting the inbox.
+ * @callback getInboxCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} inbox THe main inbox object.
+ */
+exports.getInbox = function (mailboxID, cb) {
+    var error;
+    if (!validator.isMongoId(mailboxID)) {
+        error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    mailboxID = mongoose.Types.ObjectId(mailboxID);
+    Inbox.findOne({type: 'Inbox', mailbox: mailboxID}, function (err, inbox) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, inbox);
     });
 };
 }());

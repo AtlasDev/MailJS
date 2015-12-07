@@ -53,6 +53,15 @@ router.route('/mailbox/:mailbox')
 router.route('/inbox')
   .post(authController.isAuthenticated, authController.checkTFA, inboxController.postInbox);
 
+router.route('/inbox/:inbox')
+  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+
+router.route('/inbox/:inbox/:skip')
+  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+
+router.route('/inbox/:inbox/:skip/:limit')
+  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+
 router.route('/mailbox/:mailbox/transferable')
   .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
 

@@ -3,6 +3,9 @@
 
 var Email = require('../models/email.js');
 var validator = require('validator');
+var inbox = require('./inbox.js');
+var mailbox = require('./mailbox.js');
+var os = require('os');
 
 /**
  * Create a new email
@@ -10,7 +13,7 @@ var validator = require('validator');
  * @since 0.1.0
  * @version 1
  * @param {String} mailboxID ID of the mailbox to add the email to.
- * @param {string} sender Envelope of the sender of the email.
+ * @param {String} sender Envelope of the sender of the email.
  * @param {String} subject The subject of the email.
  * @param {String} content The content of the email.
  * @param {createEmailCallback} callback Callback function after creating a new email.
@@ -37,7 +40,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string" || mail.subject === "") {
+    if (typeof mail.subject != "string") {
         error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -49,19 +52,78 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    var email = new Email();
-    email.mailbox = mailboxID;
-    email.creationDate = Math.round((new Date()).getTime() / 1000);
-    email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000);
-    email.sender = mail.from[0].address;
-    email.senderDisplay = mail.from[0].name;
-    email.subject = mail.subject;
-    email.content = content;
-    email.save(function (err) {
+    mailbox.getInbox(mailboxID, function (err, inbox) {
+        var error;
         if(err) {
             return cb(err);
         }
-        return cb(null, email);
+        if(!inbox) {
+            error = new Error('mailbox not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        var email = new Email();
+        email.inbox = inbox._id;
+        email.creationDate = Math.round((new Date()).getTime() / 1000);
+        email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
+        email.sender = mail.from[0].address;
+        email.senderDisplay = mail.from[0].name;
+        email.subject = mail.subject;
+        email.content = content;
+        email.preview = mail.text.trim().substr(0, 100);
+        email.receivedBy = os.hostname();
+        email.save(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, email);
+        });
+    });
+};
+
+/**
+ * Get emails from a inbox
+ * @name getEmails
+ * @since 0.1.0
+ * @version 1
+ * @param {String} mailboxID The id of the mailbox to get the emails from.
+ * @param {Number} limit Amount to limit the to gain emails.
+ * @param {String} skip Skip an amount of emails before returning.
+ * @param {getEmailsCallback} callback Callback function after getting the emails.
+ */
+
+/**
+ * Callback for creating a new email.
+ * @callback getEmailsCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {Object} emails Preview of the found emails.
+ */
+exports.getEmails = function (inboxID, limit, skip, cb) {
+    var error;
+    if (!validator.isMongoId(inboxID)) {
+        error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if (typeof limit != "number" || limit > 100 || limit <= 0) {
+        error = new Error('Invalid limit!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if (typeof skip != "number" || skip < 0) {
+        error = new Error('Invalid skip!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Email.find({inbox: inboxID}).sort('reportedDate').skip(skip).limit(limit).select('-content').exec(function (err, emails) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, emails);
     });
 };
 }());

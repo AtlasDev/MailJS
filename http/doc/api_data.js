@@ -541,6 +541,34 @@ define({ "api": [
     }
   },
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p> "
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "./doc/main.js",
+    "group": "D__Projects_MailJS_http_doc_main_js",
+    "groupTitle": "D__Projects_MailJS_http_doc_main_js",
+    "name": ""
+  },
+  {
     "type": "get",
     "url": "/domain",
     "title": "Get domains",
@@ -941,6 +969,133 @@ define({ "api": [
         {
           "title": "EPERMS:",
           "content": "HTTP/1.1 403 Forbidden\n{\n  \"error\": {\n    \"name\": \"EPERM\",\n    \"message\": \"Permission denied.\"\n  }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Unauthorized:",
+          "content": "HTTP/1.1 401 Unauthorized\nUnauthorized",
+          "type": "HTTP"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-token",
+            "description": "<p>User session token</p> "
+          },
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>OAuth access token.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Session Header:",
+          "content": "\"x-token\": \"{token}\"",
+          "type": "String"
+        },
+        {
+          "title": "OAuth Header:",
+          "content": "\"Authorization\": \"Bearer {token}\"",
+          "type": "String"
+        }
+      ]
+    }
+  },
+  {
+    "type": "get",
+    "url": "/inbox/{inbox}/{start}/{limitBy}",
+    "title": "Get emails",
+    "version": "0.1.0",
+    "name": "GetInbox",
+    "group": "Inbox",
+    "description": "<p>Get emails in an inbox.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "inbox",
+            "description": "<p>ID of the inbox to get the mails from.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Int</p> ",
+            "optional": false,
+            "field": "start",
+            "description": "<p>Amount of mails to skip before returning. Default: 0</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Int</p> ",
+            "optional": false,
+            "field": "limitBy",
+            "description": "<p>Maximal amount of mails to return. Default: 20</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Get the first 10 mails:",
+          "content": "{\n  \"inbox\": \"55e415b46e0c093119a0748c\",\n  \"start\": 0,\n  \"limitBy\": 10\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "emails",
+            "description": "<p>The found emails</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Created response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"emails\": [\n    {\n      \"__v\": 0,\n      \"_id\": \"55e415b46e0c093119a0748c\",\n      \"inbox\": \"55e40dc8cf8dbadb0c352304\",\n      \"creationDate\": \"1449441116\",\n      \"reportedDate\": \"1449441035\",\n      \"sender\": \"dany@atlasdev.nl\",\n      \"senderDisplay\": \"Dany Sluijk\",\n      \"preview\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consequat est vel tortor turpis duis.\",\n      \"subject\": \"Hey, check this out!\",\n    },\n    { ... }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "./docfiles/inbox.js",
+    "groupTitle": "Inbox",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "EVALIDATION",
+            "description": "<p>Data validation failed.</p> "
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "Unauthorized",
+            "description": "<p>The user is not authorized.</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "EVALIDATION:",
+          "content": "HTTP/1.1 {{status}}\n{\n  \"error\": {\n    \"name\": \"EVALIDATION\",\n    \"message\": \"{{message}}\"\n  }\n}",
           "type": "json"
         },
         {
@@ -2773,34 +2928,6 @@ define({ "api": [
         }
       ]
     }
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p> "
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "./doc/main.js",
-    "group": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "groupTitle": "_home_dany_Projects_MailJS_http_doc_main_js",
-    "name": ""
   },
   {
     "type": "get",
