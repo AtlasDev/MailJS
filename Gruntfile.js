@@ -219,7 +219,7 @@ module.exports = function (grunt) {
                 files: [
                     'http/public/**/*.js'
                 ],
-                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public'],
+                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:fonts'],
                 options: {
                     atBegin: true
                 }
@@ -264,6 +264,12 @@ module.exports = function (grunt) {
                         dest: 'tmp/'
                     }
                 ]
+            },
+            fonts: {
+                expand: true,
+                cwd: 'http/public/fonts/',
+                src: '**',
+                dest: 'http/public/dist/fonts'
             },
             public: {
                 files: [
@@ -402,6 +408,7 @@ module.exports = function (grunt) {
         'uglify:dist',
         'imagemin:public',
         'copy:json',
+        'copy:fonts',
         'copy:public',
         'compress:fullGzip',
         'compress:fullTgz',
