@@ -33,7 +33,9 @@
         "inboxes": "Inboxes",
         "isAdmin": "Is administrator",
         "admin": "Administrator",
-        "user": "User"
+        "user": "User",
+        "domain": "Domain",
+        "domains": "Domains"
     },
     "settings": {
         "settings": "settings",

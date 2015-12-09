@@ -46,6 +46,26 @@
                             </table>
                         </div>
                     </div>
+                    <div class="box box-danger">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'common.domains' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body table-responsive no-padding">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th>{{'common.domain' | translate}}</th>
+                                        <th>{{'common.disabled' | translate}}</th>
+                                    </tr>
+                                    <tr ng-repeat="domain in domains">
+                                        <td>{{domain.domain}}</td>
+                                        <td ng-if="domain.disabled == true">{{'common.yes' | translate}}</td>
+                                        <td ng-if="domain.disabled == false">{{'common.no' | translate}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="box box-danger">
@@ -65,7 +85,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="box box-danger" ng-show="showMailboxCreateForm">
+                    <div class="box box-danger">
                         <div class="box-header">
                             <h3 class="box-title">{{'settings.mailbox.createMailbox.title' | translate | capitalize}}</h3>
                         </div>
@@ -145,7 +165,7 @@
                                                     <td ng-if="mailboxUser.function == 1">{{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}</td>
                                                     <td ng-if="mailboxUser.function == 2" class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</td>
                                                     <td ng-if="mailboxUser.function == 3" class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</td>
-                                                    <td ng-if="viewingMailbox.function > 1">{{'common.actions' | translate}}</td>
+                                                    <td ng-if="viewingMailbox.function > 1"></td>
                                                 </tr>
                                             </tbody>
                                         </table>

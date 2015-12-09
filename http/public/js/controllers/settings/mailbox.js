@@ -3,7 +3,6 @@
 
 app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification, mailbox) {
     $rootScope.isLoading = true;
-    $scope.showMailboxCreateForm = false;
     $scope.showDomainCreateForm = false;
     $scope.domains = [];
     $scope.viewingMailbox = {};
@@ -23,9 +22,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Could not get domains.', res.data.message, 'error');
         });
-        if(user.getUser().isAdmin) {
-            $scope.showMailboxCreateForm = true;
-        }
         if(user.getUser().isAdmin) {
             $scope.showDomainCreateForm = true;
         }
