@@ -55,7 +55,8 @@
 											<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 											<p>
 												{{user.firstName}} {{user.lastName}}
-												<small>{{user.group.name}}</small>
+												<small ng-if="user.isAdmin == true">{{'common.admin' | translate}}</small>
+												<small ng-if="user.isAdmin == false">{{'common.user' | translate}}</small>
 											</p>
 										</li>
 										<li class="user-body">

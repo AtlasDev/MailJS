@@ -3,7 +3,6 @@
 
 app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification, mailbox) {
     $rootScope.isLoading = true;
-    $scope.showMailboxCreateForm = false;
     $scope.showDomainCreateForm = false;
     $scope.domains = [];
     $scope.viewingMailbox = {};
@@ -23,10 +22,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             $rootScope.isLoading = false;
             notification.send('Could not get domains.', res.data.message, 'error');
         });
-        if(user.getUser().group.permissions.indexOf('mailbox.create') > -1) {
-            $scope.showMailboxCreateForm = true;
-        }
-        if(user.getUser().group.permissions.indexOf('domain.create') > -1) {
+        if(user.getUser().isAdmin) {
             $scope.showDomainCreateForm = true;
         }
     };
@@ -222,7 +218,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         });
     };
 
-    if(typeof user.getUser().group == 'undefined' || typeof user.getUser().group == "string") {
+    if(typeof user.getUser()._id == 'undefined') {
         $rootScope.$on('userLoaded', function () {
             init();
         });

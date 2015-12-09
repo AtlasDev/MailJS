@@ -28,26 +28,6 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         });
     }
 
-    $scope.getGroupName = function (groupID) {
-        if($scope.groupNames.indexOf(groupID) >= 0) {
-            return;
-        }
-        var req = {
-            method: 'GET',
-            url: '/api/v1/group/'+groupID,
-            headers: {
-                'x-token': user.sessionID
-            }
-        };
-        $http(req).then(function(res) {
-            $rootScope.isLoading = false;
-            $scope.groupNames[groupID] = res.data.group.name;
-        }, function(res) {
-            notification.send('Cannot Groups!', res.body.error.messsage, 'error');
-            $rootScope.isLoading = false;
-        });
-    };
-
     $scope.changeGroup = function (user, oldGroupID) {
         var newGroup = $scope.newSelectGroup[user._id];
         if(oldGroupID == newGroup._id) {
@@ -103,25 +83,8 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         });
     };
 
-    function loadGroups() {
-        var req = {
-            method: 'GET',
-            url: '/api/v1/group',
-            headers: {
-                'x-token': user.sessionID
-            }
-        };
-        $http(req).then(function(res) {
-            $rootScope.isLoading = false;
-            $scope.groups = res.data.groups;
-        }, function(res) {
-            $rootScope.isLoading = false;
-            notification.send('Cannot get groups!', res.body.error.messsage, 'error');
-        });
-    }
-
     function checkPerms() {
-        if(user.getUser().group.permissions.indexOf('user.list') == -1) {
+        if(user.getUser().isAdmin === false) {
             notification.send('Cannot visit page!', 'Permissions denied.', 'error');
             $location.path('/mainSettings');
             return false;
@@ -129,16 +92,14 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         return true;
     }
 
-    if(typeof user.getUser()._id == "undefined" || typeof user.getUser().group.permissions == "undefined") {
+    if(typeof user.getUser()._id == "undefined") {
         $rootScope.$on('userLoaded', function () {
             if(checkPerms()) {
-                loadGroups();
                 loadUsers(1);
             }
         });
     } else {
         if(checkPerms()) {
-            loadGroups();
             loadUsers(1);
         }
     }

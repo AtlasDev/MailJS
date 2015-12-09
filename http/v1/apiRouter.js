@@ -6,7 +6,6 @@ var userController = require('./controllers/user.js');
 var loginController = require('./controllers/login.js');
 var clientController = require('./controllers/client.js');
 var oauth2Controller = require('./controllers/oauth2.js');
-var groupController = require('./controllers/group.js');
 var tfaController = require('./controllers/2fa.js');
 var mailboxController = require('./controllers/mailbox.js');
 var sessionController = require('./controllers/session.js');
@@ -17,12 +16,6 @@ router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
   .delete(authController.isSessionAuthenticated, loginController.deleteLogin)
   .patch(authController.isSessionAuthenticated, loginController.patchLogin);
-
-router.route('/group')
-  .get(authController.isAuthenticated, authController.checkTFA, groupController.getGroups);
-
-router.route('/group/:group')
-  .get(authController.isAuthenticated, authController.checkTFA, groupController.getGroup);
 
 router.route('/user')
   .post(authController.isAuthenticated, authController.checkTFA, userController.postUser)

@@ -14,10 +14,6 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    group: {
-        type: String,
-        required: true
-    },
     firstName: {
         type: String,
         required: true
@@ -36,6 +32,10 @@ var UserSchema = new mongoose.Schema({
     },
     tfaToken: {
         type: String
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 

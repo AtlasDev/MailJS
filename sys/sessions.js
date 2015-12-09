@@ -28,7 +28,7 @@ Sessions.prototype.create = function(username, ip, other, callback) {
        if(err){
            cb(err, null);
        }
-       options.group = user.group;
+       options.isAdmin = user.isAdmin;
        options.username = user.username;
        options._id = user._id;
        options.mailboxes = user.mailboxes;

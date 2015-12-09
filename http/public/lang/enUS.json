@@ -19,8 +19,8 @@
         "enabled": "enabled",
         "disabled": "disabled",
         "seconds": "seconds",
-        "yes": "yes",
-        "no": "no",
+        "yes": "Yes",
+        "no": "No",
         "admins": "admins",
         "users": "users",
         "id": "ID",
@@ -30,7 +30,12 @@
         "actions": "Actions",
         "title": "Title",
         "editable": "Editable",
-        "inboxes": "Inboxes"
+        "inboxes": "Inboxes",
+        "isAdmin": "Is administrator",
+        "admin": "Administrator",
+        "user": "User",
+        "domain": "Domain",
+        "domains": "Domains"
     },
     "settings": {
         "settings": "settings",

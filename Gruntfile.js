@@ -49,7 +49,7 @@ module.exports = function (grunt) {
                     'http/public/js/other/bootstrap3-wysihtml5.all.min.js',
                     'http/public/js/other/socketio.min.js',
                     'http/public/js/other/qrcode.js',
-                    'http/public/js/other/UAparser.min.js',
+                    'http/public/js/other/UAParser.min.js',
                     'http/public/js/angular/angular.min.js',
                     'http/public/js/angular/angular-gravitar.min.js',
                     'http/public/js/angular/angular-animate.js',
