@@ -3,11 +3,8 @@
 
 var sys = require('../../../sys/main.js');
 exports.postClient = function(req, res) {
-    sys.perms.hasPerm('client.create', req.user.group, req.authInfo, function (err, hasPerm) {
+    sys.perms.checkOauth(req, res, function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm !== true) {
-            return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
-        }
         if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
             return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
         }

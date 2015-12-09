@@ -4,7 +4,6 @@
 var util = require('./util.js');
 var User = require('../models/user.js');
 var clientFunc = require('./client.js');
-var groupFunc = require('./group.js');
 var validator = require('validator');
 
 /**
@@ -25,7 +24,7 @@ var validator = require('validator');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the new created user.
  */
-exports.create = function (username, password, firstName, lastName, callback) {
+exports.create = function (username, password, firstName, lastName, isAdmin, callback) {
     var error;
     if(username.length < 5) {
         error = new Error('Username does not meet the requirements!');
@@ -39,95 +38,21 @@ exports.create = function (username, password, firstName, lastName, callback) {
         error.type = 400;
         return callback(error);
     }
-    groupFunc.getDefaultGroup(function (err, group) {
-        if(err) {
-            err.type = 500;
-            return callback(err);
-        }
-        if(!group) {
-            error = new Error('No default group found!');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        var user = new User({
-            username: username,
-            password: password,
-            group: group._id,
-            firstName: firstName,
-            lastName: lastName,
-            mailboxes: []
-        });
-        user.save(function(err) {
-            if (err) {
-                err.type = 500;
-                return callback(err, null);
-            }
-            util.log('User `'+user.username+'` created.');
-            return callback(null, user);
-        });
+    var user = new User({
+        username: username,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        mailboxes: [],
+        isAdmin: isAdmin
     });
-};
-
-/**
- * Replace the current group of a user with a new one.
- * @name setGroup
- * @since 0.1.0
- * @version 2
- * @param {string} userID UserID of the user to replace the group from.
- * @param {string} groupID ID of the new group.
- * @param {SetGroupCallback} callback Callback function after replacing the group.
- */
-
-/**
- * Callback for replacing a group.
- * @callback setGroupCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Object} user User object of user of which the group was replaced.
- */
-exports.setGroup = function (userID, groupID, callback) {
-    var error;
-    if (!validator.isMongoId(userID)) {
-        error = new Error('Invalid user ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    if (!validator.isMongoId(groupID)) {
-        error = new Error('Invalid group ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    groupFunc.getGroup(groupID, function (err, group) {
-        if(err) {
-            return callback(err);
+    user.save(function(err) {
+        if (err) {
+            err.type = 500;
+            return callback(err, null);
         }
-        if(!group) {
-            error = new Error('Group not found!');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        exports.find(userID, function (err, user) {
-            if(err) {
-                return callback(err);
-            }
-            if(!user) {
-                error = new Error('User not found!');
-                error.name = 'ENOTFOUND';
-                error.type = 404;
-                return callback(error);
-            }
-            user.group = groupID;
-            user.save(function (err) {
-                if(err) {
-                    return callback(err);
-                }
-                util.log('Group of `'+user.username+'` has been changed to `'+group.name+'`.');
-                return callback(null, user);
-            });
-        });
+        util.log('User `'+user.username+'` created.');
+        return callback(null, user);
     });
 };
 
@@ -263,39 +188,6 @@ exports.findAll = function (limitBy, skip, callback) {
     .exec(function(err, users) {
         if (err) {
             return callback(err, null);
-        }
-        return callback(null, users);
-    });
-};
-
-/**
- * Find all users with a certain group.
- * @name findByGroupUser
- * @since 0.1.0
- * @version 1
- * @param {string} groupID Group ID of the users to find.
- * @param {findByGroupUserCallback} callback Callback function after finding the user.
- */
-
-/**
- * Callback for finding a user.
- * @callback findByGroupUserCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Array} users Array of user objects, returns false if none.
- */
-exports.findByGroup = function (groupID, callback) {
-    if (!validator.isMongoId(groupID)) {
-        var error = new Error('Invalid group ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    User.find({group: groupID}, function (err, users) {
-        if(err) {
-            return callback(err);
-        }
-        if(!users) {
-            return callback(null, false);
         }
         return callback(null, users);
     });

@@ -31,11 +31,8 @@ exports.postMailbox = function (req, res) {
     if(typeof req.body.transferable != "boolean" && req.body.transferable) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Transferable data is invalid.'}});
     }
-    sys.perms.hasPerm('mailbox.create', req.user.group, req.authInfo, function (err, hasPerm) {
+    sys.perms.checkOauth(req, res, function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(hasPerm === false) {
-            return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
-        }
         var transferable = req.body.transferable || false;
         sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, transferable, false, function (err, mailbox) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
@@ -55,17 +52,18 @@ exports.patchMailbox = function (req, res) {
 };
 
 exports.getMailbox = function (req, res) {
-    if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
-        sys.perms.hasPerm('mailbox.view', req.user.group, req.authInfo, function (err, hasPerm) {
-            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            if(hasPerm === false) {
-                return res.status(403).json({error: {name: 'EPERMS', message: 'Permission denied.'}});
+    sys.perms.checkOauth(req, res, function (err) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
+            if(user.isAdmin) {
+                runGetMailbox(req, res);
+            } else {
+                return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
             }
+        } else {
             runGetMailbox(req, res);
-        });
-    } else {
-        runGetMailbox(req, res);
-    }
+        }
+    });
 };
 
 function runGetMailbox(req, res) {
@@ -88,7 +86,7 @@ function runGetMailbox(req, res) {
                 cleanUser.tfaToken = undefined;
                 cleanUser.mailboxes = undefined;
                 cleanUser.tfa = undefined;
-                cleanUser.group = undefined;
+                cleanUser.isAdmin = undefined;
                 mailbox.users[i] = cleanUser;
                 if(users.length == mailbox.users.length) {
                     sys.inbox.getInboxes(req.params.mailbox, function (err, inboxes) {

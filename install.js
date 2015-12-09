@@ -40,114 +40,45 @@ var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.databas
 mongoose.connect(dburl);
 
 mongoose.connection.on('open', function(){
-    SavePerms(function (group) {
-        dbstuff(group);
-    });
+    dbstuff();
 });
 
-var dbstuff = function (group) {
+var dbstuff = function () {
     console.log('Creating first user.');
     console.log(' - Generating password..');
     var password = sys.util.uid(12);
     console.log('   - password generated');
-    sys.user.create('admin', password, 'Admin', 'Adminius', function (err, user) {
+    sys.user.create('admin', password, 'Admin', 'Adminius', true, function (err, user) {
         if (err) {
             console.log(colors.red('Failed to create initial user: '.red+err));
             process.exit(1);
         }
-        sys.user.setGroup(user._id, group._id, function (err, user) {
+        console.log(' - User created.');
+        console.log('Creating first domain..');
+        sys.domain.create(setupDomain, false, function (err, domain) {
             if (err) {
-                console.log(colors.red('Failed to set the group of the initial user: '.red+err));
+                console.log(colors.red('Failed to create initial domain: '.red+err));
                 process.exit(1);
             }
-            console.log(' - User created.');
-            console.log('Creating first domain..');
-            sys.domain.create(setupDomain, false, function (err, domain) {
+            console.log('Domain created.');
+            console.log('Creating initial mailbox..');
+            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, false, true, function (err, mailbox) {
                 if (err) {
-                    console.log(colors.red('Failed to create initial domain: '.red+err));
+                    console.log(colors.red('Failed to create initial mailbox: '.red+err));
                     process.exit(1);
                 }
-                console.log('Domain created.');
-                console.log('Creating initial mailbox..');
-                sys.mailbox.create('info', domain._id, user._id, 'Example Info', false, true, function (err, mailbox) {
-                    if (err) {
-                        console.log(colors.red('Failed to create initial mailbox: '.red+err));
-                        process.exit(1);
-                    }
-                    console.log('Initial mailbox created.');
-                    console.log('');
-                    console.log('###############');
-                    console.log('##  Installation Finished!');
-                    console.log('##  Initial account details:');
-                    console.log('##  Username: '+'admin'.cyan);
-                    console.log('##  Password: '+colors.cyan(password));
-                    console.log('##  Mailaddress: '+'info@'.cyan+setupDomain.cyan);
-                    console.log('##  SAVE THIS INFORMATION CAREFULLY!');
-                    console.log('##  It is NOT recoverable!');
-                    console.log('###############');
-                    process.exit(0);
-                });
-            });
-        })
-    });
-}
-
-var SavePerms = function SavePerms(cb) {
-    console.log('Creating default groups..');
-    sys.group.createGroup('Administrator', 'Administrators', [
-        'user.list',
-        'user.create',
-        'user.delete',
-        'user.protected',
-        'user.overwrite',
-        'user.group.change',
-        'group.list',
-        'client.create',
-        'client.list',
-        'client.delete',
-        'mailbox.create',
-        'mailbox.view',
-        'domain.create'
-    ], false, function (err, adminGroup) {
-        if(err) {
-            if (err) {
-                console.log(colors.red('Failed to create initial Administrators group: '.red+err));
-                process.exit(1);
-            }
-        }
-        console.log(' - Admin group created');
-        sys.group.createGroup('Moderator', 'Moderators', [
-            'user.list',
-            'user.create',
-            'user.delete',
-            'user.protected',
-            'group.list',
-            'client.create',
-            'client.list',
-            'client.delete',
-            'mailbox.create',
-            'mailbox.view'
-        ], false, function (err, modGroup) {
-            if(err) {
-                if (err) {
-                    console.log(colors.red('Failed to create initial Moderators group: '.red+err));
-                    process.exit(1);
-                }
-            }
-            console.log(' - Moderators group created.');
-            sys.group.createGroup('User', 'Users', [
-                'client.create',
-                'mailbox.create'
-            ], true, function (err, userGroup) {
-                if(err) {
-                    if (err) {
-                        console.log(colors.red('Failed to create initial Users group: '.red+err));
-                        process.exit(1);
-                    }
-                }
-                console.log(' - Users group created.');
-                console.log('Default groups created.');
-                cb(adminGroup);
+                console.log('Initial mailbox created.');
+                console.log('');
+                console.log('###############');
+                console.log('##  Installation Finished!');
+                console.log('##  Initial account details:');
+                console.log('##  Username: '+'admin'.cyan);
+                console.log('##  Password: '+colors.cyan(password));
+                console.log('##  Mail address: '+'info@'.cyan+setupDomain.cyan);
+                console.log('##  SAVE THIS INFORMATION CAREFULLY!');
+                console.log('##  It is NOT recoverable!');
+                console.log('###############');
+                process.exit(0);
             });
         });
     });

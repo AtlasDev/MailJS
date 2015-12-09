@@ -5,7 +5,6 @@ var token;
 var user = {};
 var domains = [];
 var canCreate;
-var group = {};
 
 $(document).ready(function() {
     if(get.msg && get.info != 'true') {
@@ -198,7 +197,7 @@ var showSetup = function () {
     setName(user.firstName+' '+user.lastName);
     var request = $.ajax({
         type: 'GET',
-        url: '/api/v1/group/'+user.group,
+        url: '/api/v1/domain',
         dataType: 'json',
         cache: false,
         headers: {
@@ -206,31 +205,13 @@ var showSetup = function () {
         }
     });
     request.done(function(data) {
-        group = data.group;
-        if(group.permissions.indexOf('mailbox.create') != -1) {
-            var request = $.ajax({
-                type: 'GET',
-                url: '/api/v1/domain',
-                dataType: 'json',
-                cache: false,
-                headers: {
-                    'x-token': Cookies.get('MailJS')
-                }
-            });
-            request.done(function(data) {
-                $.each(data.domains, function(key, value) {
-                     $('#domainCreate')
-                         .append($("<option></option>")
-                         .attr("value",value._id)
-                         .text(value.domain));
-                });
-                $('#setupCreate').show();
-            });
-            request.fail(function(data) {
-                user = {};
-                showLogin();
-            });
-        }
+        $.each(data.domains, function(key, value) {
+             $('#domainCreate')
+                 .append($("<option></option>")
+                 .attr("value",value._id)
+                 .text(value.domain));
+        });
+        $('#setupCreate').show();
     });
     request.fail(function(data) {
         user = {};

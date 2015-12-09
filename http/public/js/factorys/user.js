@@ -23,25 +23,7 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
                 return;
             }
             user = res.data.user;
-            var req = {
-                method: 'GET',
-                url: '/api/v1/group/'+user.group,
-                headers: {
-                    'x-token': sessionID
-                }
-            };
-            $http(req).then(function(res) {
-                user.group = res.data.group;
-                $rootScope.$emit('userLoaded');
-            }, function(res) {
-                $cookies.remove('MailJS');
-                if(res.status == 401) {
-                    $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
-                    return;
-                }
-                $window.location.href = '/index.html?msg='+JSON.parse(res.data).error.message;
-                return;
-            });
+            $rootScope.$emit('userLoaded');
         }, function(res) {
             $cookies.remove('MailJS');
             if(res.status == 401) {

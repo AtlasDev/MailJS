@@ -31,8 +31,7 @@
                                         <th>{{'settings.user.list.lastName' | translate}}</th>
                                         <th>{{'settings.user.list.mailboxAmount' | translate}}</th>
                                         <th>{{'settings.user.list.tfa' | translate}}</th>
-                                        <th>{{'settings.user.list.group' | translate}}</th>
-                                        <th>{{'settings.user.list.changeGroup' | translate}}</th>
+                                        <th>{{'common.isAdmin' | translate}}</th>
                                     </tr>
                                     <tr ng-repeat="userList in users | orderBy : username : true">
                                         <td>{{userList.username}}</td>
@@ -41,10 +40,8 @@
                                         <td>{{userList.mailboxes.length}}</td>
                                         <td ng-if="userList.tfa == true">{{'common.enabled' | translate}}</td>
                                         <td ng-if="userList.tfa == false">{{'common.disabled' | translate}}</td>
-                                        <td ng-init="getGroupName(userList.group)">{{groupNames[userList.group]}}</td>
-                                        <td ng-if="user.group.permissions.indexOf('group.list') != -1 && user.group.permissions.indexOf('user.group.change') != -1">
-                                            <select ng-model="newSelectGroup[userList._id]" ng-options="group.name for group in groups" ng-change="changeGroup(userList, userList.group)"></select>
-                                        </td>
+                                        <td ng-if="userList.isAdmin == true">{{'common.yes' | translate}}</td>
+                                        <td ng-if="userList.isAdmin == false">{{'common.no' | translate}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -52,7 +49,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="box box-danger" ng-show="user.group.permissions.indexOf('user.create') >= 0">
+                    <div class="box box-danger" ng-show="user.isAdmin">
                         <div class="box-header">
                             <h3 class="box-title">{{'settings.user.create.title' | translate | capitalize}}</h3>
                         </div>
