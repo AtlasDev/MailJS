@@ -21,8 +21,9 @@ var validator = require('validator');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} newDomain Domain object of the created domain.
  */
-exports.create = function (domain, disabled, callback) {
+exports.create = function (domain, admin, disabled, callback) {
     //TODO: generate and save certificates for the domain (when Let's Encrypt for nodejs gets released).
+    //TODO: handle dubble domains nicer
     var error;
     if(!validator.isBoolean(disabled)) {
         error = new Error('Disabled is not a boolean!');
@@ -39,7 +40,9 @@ exports.create = function (domain, disabled, callback) {
     }
     var newDomain = new Domain({
         domain: domain,
-        disabled: disabled
+        disabled: disabled,
+        admin: admin,
+        users: [admin]
     });
     newDomain.save(function(err) {
         if (err) {
@@ -64,8 +67,14 @@ exports.create = function (domain, disabled, callback) {
  * @param {Error} err Error object, should be undefined.
  * @param {Array} domains An array of domain objects
  */
-exports.getDomains = function (callback) {
-    Domain.find({ disabled: false }, function (err, domains) {
+exports.getDomains = function (userID, callback) {
+    if(!validator.isMongoId(userID)) {
+        error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    Domain.find({ users: userID }, function (err, domains) {
         if(err) {
             return callback(err);
         }
