@@ -37,7 +37,6 @@ router.route('/user/:user')
 
 router.route('/mailbox')
   .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
-  .patch(authController.isAuthenticated, authController.checkTFA, mailboxController.patchMailbox)
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailboxes);
 
 router.route('/mailbox/:mailbox')
@@ -54,9 +53,6 @@ router.route('/inbox/:inbox/:skip')
 
 router.route('/inbox/:inbox/:skip/:limit')
   .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
-
-router.route('/mailbox/:mailbox/transferable')
-  .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
 
 router.route('/domain')
   .post(authController.isAuthenticated, authController.checkTFA, domainController.postDomain)

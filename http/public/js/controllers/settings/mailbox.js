@@ -27,31 +27,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         }
     };
 
-    $scope.claimMailbox = function () {
-        if(!$scope.transferCode || typeof $scope.transferCode == "undefined") {
-            return notification.send('Cannot claim mailbox!', 'Transfer code not filled in.', 'error');
-        }
-        $rootScope.isLoading = true;
-        var req = {
-            method: 'PATCH',
-            url: '/api/v1/mailbox',
-            headers: {
-                'x-token': user.sessionID
-            },
-            data: {
-                'transfercode': $scope.transferCode
-            }
-        };
-        $http(req).then(function(res) {
-            mailbox.addMailbox(res.data.mailbox);
-            $rootScope.isLoading = false;
-            notification.send('Mailbox claimed!', 'Mailbox has been added to your account.', 'success');
-        }, function(res) {
-            $rootScope.isLoading = false;
-            notification.send('Cannot claim mailbox!', res.data.error.message, 'error');
-        });
-    };
-
     $scope.createMailbox = function () {
         if(typeof $scope.localAddress == "undefined" || !$scope.localAddress) {
             return notification.send('Mailbox creation failed!', 'Local part empty.', 'error');
@@ -72,8 +47,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             data: {
                 'local': $scope.localAddress,
                 'domain': $scope.mailboxDomain,
-                'title': $scope.mailboxTitle,
-                'transferable': $scope.mailboxTransferable
+                'title': $scope.mailboxTitle
             }
         };
         $http(req).then(function(res) {
@@ -160,35 +134,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         } else if(confirmDelete !== null) {
             notification.send('Mailbox deletion canceled!', 'Mail addresses do not match.', 'error');
         }
-    };
-
-    $scope.transferableMailbox = function (mailbox) {
-        $rootScope.isLoading = true;
-        mailbox.transferable = !mailbox.transferable;
-        var req = {
-            method: 'POST',
-            url: '/api/v1/mailbox/'+mailbox._id+'/transferable',
-            headers: {
-                'x-token': user.sessionID
-            },
-            data: {
-                'transferable': mailbox.transferable
-            }
-        };
-        $http(req).then(function(res) {
-            $rootScope.isLoading = false;
-            $scope.viewingMailbox = mailbox;
-            for (var i = 0; i < $scope.mailboxes.length; i++) {
-                if($scope.mailboxes[i]._id == mailbox._id) {
-                    $scope.mailboxes[i] = mailbox;
-                    break;
-                }
-            }
-            notification.send('Transferable option toggled!', 'Transferable is now `'+mailbox.transferable+'`.', 'success');
-        }, function(res) {
-            $rootScope.isLoading = false;
-            notification.send('Cannot toggle the transferable option!', res.data.error.message, 'error');
-        });
     };
 
     $scope.createInbox = function () {

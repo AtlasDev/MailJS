@@ -87,8 +87,8 @@ UserSchema.methods.use = function(cb) {
                 return cb(err);
             }
             return cb();
-        })
-    })
+        });
+    });
 };
 
 module.exports = mongoose.model('Transfer', TransferSchema);

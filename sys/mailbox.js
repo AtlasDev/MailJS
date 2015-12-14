@@ -19,7 +19,6 @@ var mongoose = require('mongoose');
  * @param {string} domainID ID of the domain to register the mailbox to.
  * @param {string} userID ID of the user to register the mailbox to.
  * @param {string} title Title of the mailbox, used as name when sending emails.
- * @param {string} transferable Set if the mailbox is transferable to other users.
  * @param {string} overwrite Overwrite the disabled check for the domain.
  * @param {createMailboxCallback} callback Callback function after creating the mailbox.
  */
@@ -30,7 +29,7 @@ var mongoose = require('mongoose');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
-exports.create = function (local, domainID, userID, title, transferable, overwrite, callback) {
+exports.create = function (local, domainID, userID, title, overwrite, callback) {
     var error;
     if (!validator.isMongoId(userID)) {
         error = new Error('Invalid user ID!');
@@ -89,29 +88,26 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
             mailbox.admins = [ userID ];
             mailbox.title = title;
             mailbox.creator = userID;
-            mailbox.transferable = transferable;
-            mailbox.generateTransferCode(function () {
-                mailbox.save(function (err, mailbox) {
+            mailbox.save(function (err, mailbox) {
+                if(err) {
+                    return callback(err);
+                }
+                inboxFunc.createDefaults(mailbox._id, function (err) {
                     if(err) {
                         return callback(err);
                     }
-                    inboxFunc.createDefaults(mailbox._id, function (err) {
-                        if(err) {
-                            return callback(err);
-                        }
-                        User.findByIdAndUpdate(
-                            userID,
-                            {$push: {"mailboxes": mailbox._id}},
-                            {safe: true, upsert: true},
-                            function(err) {
-                                if(err) {
-                                    return callback(err);
-                                }
-                                util.log('Mailbox `'+mailbox.address+'` created.');
-                                return callback(null, mailbox);
+                    User.findByIdAndUpdate(
+                        userID,
+                        {$push: {"mailboxes": mailbox._id}},
+                        {safe: true, upsert: true},
+                        function(err) {
+                            if(err) {
+                                return callback(err);
                             }
-                        );
-                    });
+                            util.log('Mailbox `'+mailbox.address+'` created.');
+                            return callback(null, mailbox);
+                        }
+                    );
                 });
             });
         });
@@ -182,135 +178,6 @@ exports.verify = function (mailAddress, callback) {
             return callback(null, false);
         }
         return callback(null, true, mailbox);
-    });
-};
-
-/**
- * Claim a mailbox with a transfer code.
- * @name claimMailbox
- * @since 0.1.0
- * @version 2
- * @param {string} transferCode TransferCode to check.
- * @param {string} userID User ID of the user to add the mailbox to.
- * @param {claimMailboxCallback} callback Callback function after claiming the mailbox.
- */
-
-/**
- * Callback for claiming a mailbox.
- * @callback claimMailboxCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Object} mailbox Mailbox object of the claimed mailbox.
- */
-exports.claimMailbox = function (transferCode, userID, callback) {
-    var error;
-    if (!validator.isMongoId(userID)) {
-        error = new Error('Invalid user ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    Mailbox.findOne({transferCode: transferCode}, function (err, mailbox) {
-        var error;
-        if(err) {
-            return callback(err);
-        }
-        if(!mailbox) {
-            error = new Error('Mailbox not found.');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        if(mailbox.transferable === false) {
-            error = new Error('Mailbox not transferable.');
-            error.name = 'EDENIED';
-            error.type = 400;
-            return callback(error);
-        }
-        User.findById(userID, function (err, user) {
-            var error;
-            if(err) {
-                return callback(err);
-            }
-            if(user.mailboxes.indexOf(mailbox._id) > -1) {
-                error = new Error('User already member of the mailbox.');
-                error.name = 'EOCCUPIED';
-                error.type = 400;
-                return callback(error);
-            }
-            user.mailboxes.push(mailbox._id);
-            user.save(function (err) {
-                if(err) {
-                    return callback(err);
-                }
-                util.log('`'+user.username+'` claimed `'+mailbox.address+'`.');
-                return callback(null, mailbox);
-            });
-        });
-    });
-};
-
-/**
- * Set the transfer boolean of a mailbox.
- * @name setTransferable
- * @since 0.1.0
- * @version 1
- * @param {boolean} transferable The value of the transfer boolean.
- * @param {string} mailboxID Mailbox to be changed.
- * @param {string} userID User to check permissions for.
- * @param {setTransferableCallback} callback Callback function after changing the boolean
- */
-
-/**
- * Callback for setting the transferable boolean.
- * @callback setTransferableCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Object} mailbox Mailbox object of the changed mailbox
- */
-exports.setTransferable = function (transferable, mailboxID, userID, callback) {
-    var error;
-    if (!validator.isBoolean(transferable)) {
-        error = new Error('transferable is not a boolean!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    if (!validator.isMongoId(mailboxID)) {
-        error = new Error('Invalid mailbox ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    if (!validator.isMongoId(userID)) {
-        error = new Error('Invalid user ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    Mailbox.findById(mailboxID, function (err, mailbox) {
-        var error;
-        if(err) {
-            return callback(err);
-        }
-        if(!mailbox) {
-            error = new Error('Mailbox not found.');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        if(mailbox.creator == userID || mailbox.admins.indexOf(userID) != -1) {
-            mailbox.transferable = transferable;
-            mailbox.save(function (err) {
-                if(err) {
-                    return callback(err);
-                }
-                return callback(null, mailbox);
-            });
-        } else {
-            error = new Error('Permission denied.');
-            error.name = 'EPERMS';
-            error.type = 403;
-            return callback(error);
-        }
     });
 };
 

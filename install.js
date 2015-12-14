@@ -62,7 +62,7 @@ var dbstuff = function () {
             }
             console.log('Domain created.');
             console.log('Creating initial mailbox..');
-            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, false, true, function (err, mailbox) {
+            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, true, function (err, mailbox) {
                 if (err) {
                     console.log(colors.red('Failed to create initial mailbox: '.red+err));
                     process.exit(1);

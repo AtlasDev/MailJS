@@ -28,17 +28,12 @@
                                     <tr>
                                         <th>{{'common.address' | translate}}</th>
                                         <th>{{'common.title' | translate}}</th>
-                                        <th>{{'common.transferable' | translate}}</th>
-                                        <th>{{'common.transferToken' | translate}}</th>
                                         <th>{{'common.admins' | translate}}
                                         <th>{{'common.actions' | translate}}</th>
                                     </tr>
                                     <tr ng-repeat="mailbox in mailboxes">
                                         <td>{{mailbox.address}}</td>
                                         <td>{{mailbox.title}}</td>
-                                        <td ng-if="mailbox.transferable">{{'common.yes' | translate | capitalize}}</td>
-                                        <td ng-if="!mailbox.transferable">{{'common.no' | translate | capitalize}}</td>
-                                        <td class="secret">{{mailbox.transferCode}}</td>
                                         <td>{{mailbox.admins.length}}</td>
                                         <td><li class="fa fa-eye pointer" ng-click="viewMailbox(mailbox._id)"></li></td>
                                     </tr>
@@ -103,13 +98,6 @@
                                             <option value="">{{'settings.mailbox.createMailbox.select' | translate}}</option>
                                             <option ng-repeat="domain in domains" value="{{domain._id}}">{{domain.domain}}</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label>
-                                            <input ng-model="mailboxTransferable" type="checkbox"> {{'common.transferable' | translate | capitalize}}
-                                        </label>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.createMailbox.submit' | translate}}</button>
@@ -233,15 +221,6 @@
                                             </li>
                                             <li><b>{{'settings.mailbox.viewMailbox.userCount' | translate}}:</b> {{viewingMailbox.users.length}}</li>
                                             <li><b>{{'settings.mailbox.viewMailbox.adminCount' | translate}}:</b> {{viewingMailbox.admins.length}}</li>
-                                            <li ng-if="viewingMailbox.transferable == true">
-                                                <b>{{'common.transferable' | translate}}:</b> {{'common.yes' | translate}}
-                                            </li>
-                                            <li ng-if="viewingMailbox.transferable == false">
-                                                <b>{{'common.transferable' | translate}}:</b> {{'common.no' | translate}}
-                                            </li>
-                                            <li ng-if="viewingMailbox.transferCode">
-                                                <b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -250,11 +229,6 @@
                                         <h3 class="box-title">{{'common.actions' | translate | capitalize}}</h3>
                                     </div>
                                     <div class="box-body">
-                                        <p>
-                                            <form role="form" ng-submit="transferableMailbox(viewingMailbox)">
-                                                <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.transferable' | translate}}</button>
-                                            </form>
-                                        </p>
                                         <p>
                                             <form role="form" ng-submit="deleteMailbox(viewingMailbox)">
                                                 <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.delete' | translate}}</button>

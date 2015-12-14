@@ -11,9 +11,6 @@ exports.getMailboxes = function (req, res) {
             if(mailbox === false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
-            if(mailbox.admins.indexOf(req.user._id) == -1) {
-                mailbox.transferCode = undefined;
-            }
             mailbox = sys.util.copyObject(mailbox);
             sys.inbox.getInboxes(mailbox._id, function (err, inboxes) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
@@ -31,26 +28,12 @@ exports.postMailbox = function (req, res) {
     if(!req.body.local || !req.body.domain || !req.body.title) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Request data is missing.'}});
     }
-    if(typeof req.body.transferable != "boolean" && req.body.transferable) {
-        return res.status(400).json({error: {name: 'EINVALID', message: 'Transferable data is invalid.'}});
-    }
     sys.perms.checkOauth(req, res, function (err) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        var transferable = req.body.transferable || false;
-        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, transferable, false, function (err, mailbox) {
+        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, false, function (err, mailbox) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({mailbox: mailbox});
         });
-    });
-};
-
-exports.patchMailbox = function (req, res) {
-    if(!req.body.transfercode) {
-        return res.status(400).json({error: {name: 'EMISSING', message: 'Request data is missing.'}});
-    }
-    sys.mailbox.claimMailbox(req.body.transfercode, req.user._id, function (err, mailbox) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        return res.json({mailbox: mailbox});
     });
 };
 
@@ -74,9 +57,6 @@ function runGetMailbox(req, res) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         if(mailbox === false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
-        }
-        if(mailbox.admins.indexOf(req.user._id) == -1) {
-            mailbox.transferCode = undefined;
         }
         mailbox = sys.util.copyObject(mailbox);
         sys.user.findByMailbox(mailbox._id, function (err, users) {
@@ -105,11 +85,4 @@ function runGetMailbox(req, res) {
         });
     });
 }
-
-exports.setTransferable = function (req, res) {
-    sys.mailbox.setTransferable(req.body.transferable, req.params.mailbox, req.user._id, function (err, mailbox) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        return res.json({transferable: mailbox.transferable});
-    });
-};
 }());

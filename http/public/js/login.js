@@ -161,9 +161,13 @@ $("#setupCreate").submit(function(event) {
 $("#setupTransfer").submit(function(event) {
     event.preventDefault();
     var code = $("#transferCode").val();
+    if(code.length != 18) {
+        showSetupError('Code must be a mailbox transfer code.');
+        return;
+    }
     var request = $.ajax({
         type: 'PATCH',
-        url: '/api/v1/mailbox',
+        url: '/api/v1/transfer',
         dataType: 'json',
         cache: false,
         headers: {
