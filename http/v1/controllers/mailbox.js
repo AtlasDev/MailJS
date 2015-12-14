@@ -11,6 +11,9 @@ exports.getMailboxes = function (req, res) {
             if(mailbox === false) {
                 return res.status(500).json({error: {name: 'ENOTFOUND', message: 'Mailbox `'+mailboxes[i]+'` not found, while it should be.'}});
             }
+            if(mailbox.admins.indexOf(req.user._id) == -1) {
+                mailbox.transferCode = undefined;
+            }
             mailbox = sys.util.copyObject(mailbox);
             sys.inbox.getInboxes(mailbox._id, function (err, inboxes) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
@@ -58,7 +61,7 @@ exports.getMailbox = function (req, res) {
             if(user.isAdmin) {
                 runGetMailbox(req, res);
             } else {
-                return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
+                return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
             }
         } else {
             runGetMailbox(req, res);
@@ -71,6 +74,9 @@ function runGetMailbox(req, res) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         if(mailbox === false) {
             return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
+        }
+        if(mailbox.admins.indexOf(req.user._id) == -1) {
+            mailbox.transferCode = undefined;
         }
         mailbox = sys.util.copyObject(mailbox);
         sys.user.findByMailbox(mailbox._id, function (err, users) {

@@ -239,7 +239,9 @@
                                             <li ng-if="viewingMailbox.transferable == false">
                                                 <b>{{'common.transferable' | translate}}:</b> {{'common.no' | translate}}
                                             </li>
-                                            <li><b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span></li>
+                                            <li ng-if="viewingMailbox.transferCode">
+                                                <b>{{'common.transferToken' | translate}}:</b> <span class="secret">{{viewingMailbox.transferCode}}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

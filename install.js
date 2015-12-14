@@ -55,7 +55,7 @@ var dbstuff = function () {
         }
         console.log(' - User created.');
         console.log('Creating first domain..');
-        sys.domain.create(setupDomain, false, function (err, domain) {
+        sys.domain.create(setupDomain, user._id, false, function (err, domain) {
             if (err) {
                 console.log(colors.red('Failed to create initial domain: '.red+err));
                 process.exit(1);
