@@ -11,7 +11,7 @@ var TransferSchema = new mongoose.Schema({
         required: true
     },
     type: {
-        type: String,
+        type: Number,
         required: true
     },
     object: {
@@ -37,17 +37,20 @@ UserSchema.methods.generate = function(type, cb) {
     var uid;
     switch (type) {
         case 1:
+            //Contactlist
             uid = sys.util.uid(15);
             break;
         case 2:
+            //Mailbox
             uid = sys.util.uid(18);
             break;
         case 3:
+            //Domain
             uid = sys.util.uid(20);
             break;
     }
     this.code = uid;
-    this.save(cb);
+    cb();
 };
 
 UserSchema.methods.isValid = function(cb) {

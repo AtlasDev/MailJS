@@ -20,7 +20,6 @@ var util = require('./util.js');
  */
 
 /**
- * Callback for creating a new client.
  * @callback createClientCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} client Client object of the new created client, id and secret are not hashed here, these values should be send back to the origin of the request.
@@ -60,7 +59,6 @@ exports.create = function (user, name, description, url, scopes, callback) {
  */
 
 /**
- * Callback for gettting all clients of a user.
  * @callback getClientCallback
  * @param {Error} err Error object, should be undefined.
  * @param {array} clients Found clients in a array.
@@ -111,7 +109,6 @@ exports.get = function (userID, limitBy, skip, callback) {
  */
 
 /**
- * Callback for verifying a user.
  * @callback verifyClientCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} match If the id and the secret match the ones in the database.
@@ -144,7 +141,6 @@ exports.verify = function (username, password, callback) {
  */
 
 /**
- * Callback for deleting a clients.
  * @callback deleteClientCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Int} removedTokens Amount of deleted tokens in the process.
@@ -193,7 +189,6 @@ exports.delete = function (clientID, callback) {
  */
 
 /**
- * Callback for Deleting all clients of an user.
  * @callback deleteClientCallback
  * @param {Error} err Error object, should be undefined.
  */

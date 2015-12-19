@@ -16,7 +16,6 @@ var validator = require('validator');
  */
 
 /**
- * Callback for creating a new domain.
  * @callback createDomainCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} newDomain Domain object of the created domain.
@@ -62,7 +61,6 @@ exports.create = function (domain, admin, disabled, callback) {
  */
 
 /**
- * Callback for getting all available domains.
  * @callback getDomainsCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Array} domains An array of domain objects

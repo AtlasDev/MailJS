@@ -24,7 +24,6 @@ var mongoose = require('mongoose');
  */
 
 /**
- * Callback for creating a new mailbox.
  * @callback createMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the new created mailbox.
@@ -124,7 +123,6 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
  */
 
 /**
- * Callback for finding a mailbox.
  * @callback findMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object|Boolean} mailbox Mailbox object of the found mailbox, false if not found.
@@ -157,7 +155,6 @@ exports.find = function (mailboxID, callback) {
  */
 
 /**
- * Callback for verifying a mail address.
  * @callback verifyMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} doesExists Boolean which gives if the address is valid.
@@ -192,7 +189,6 @@ exports.verify = function (mailAddress, callback) {
  */
 
 /**
- * Callback for checking the permissions
  * @callback isAdminCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} isAdmin Boolean which gives back if the user is an admin or creator.
@@ -240,7 +236,6 @@ exports.isAdmin = function (mailboxID, userID, cb) {
  */
 
 /**
- * Callback for getting the inbox.
  * @callback getInboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} inbox THe main inbox object.
