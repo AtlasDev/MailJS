@@ -27,7 +27,7 @@
         "database": "mailjs"
     },
     "redis": {
-        "host": "db1.argon.atlasdev.nl",
+        "host": "localhost",
         "port": 6379
     }
 }
