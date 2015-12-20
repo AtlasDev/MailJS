@@ -79,4 +79,41 @@ exports.getDomains = function (userID, callback) {
         return callback(null, domains);
     });
 };
+
+/**
+ * Validate an user as an admin of a domain.
+ * @name isAdmin
+ * @since 0.1.0
+ * @version 1
+ * @param {isAdminCallback} cb Callback function after validating the user
+ */
+
+/**
+ * @callback isAdminCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Boolean} isAdmin Checks if an user is an admin
+ */
+exports.isAdmin = function (domainID, userID, cb) {
+    if(!validator.isMongoId(userID)) {
+        error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(!validator.isMongoId(domainID)) {
+        error = new Error('Invalid domain ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Domain.findOne({ _id: domainID, admin: userID }, function (err, domain) {
+        if(err) {
+            return cb(err);
+        }
+        if(!domain) {
+            return cb(null, false);
+        }
+        return cb(null, true, domain);
+    });
+};
 }());

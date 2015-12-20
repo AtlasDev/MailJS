@@ -26,6 +26,10 @@ var UserSchema = new mongoose.Schema({
         default: [],
         type: [String]
     },
+    domains: {
+        default: [],
+        type: [mongoose.Schema.Types.ObjectId]
+    },
     tfa: {
         default: false,
         type: Boolean

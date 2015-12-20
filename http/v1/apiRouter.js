@@ -11,6 +11,7 @@ var mailboxController = require('./controllers/mailbox.js');
 var sessionController = require('./controllers/session.js');
 var domainController = require('./controllers/domain.js');
 var inboxController = require('./controllers/inbox.js');
+var transferController = require('./controllers/transfer.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
@@ -61,6 +62,9 @@ router.route('/domain')
 router.route('/client')
   .post(authController.isSessionAuthenticated, authController.checkTFA, clientController.postClient)
   .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
+
+router.route('/transfer/:type/:id')
+  .post(authController.isAuthenticated, authController.checkTFA, transferController.createTransferDomain);
 
 /*
 * router.route('/client')

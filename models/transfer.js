@@ -33,7 +33,7 @@ var TransferSchema = new mongoose.Schema({
     }
 });
 
-UserSchema.methods.generate = function(type, cb) {
+TransferSchema.methods.generate = function(type, cb) {
     var uid;
     switch (type) {
         case 1:
@@ -53,7 +53,7 @@ UserSchema.methods.generate = function(type, cb) {
     cb();
 };
 
-UserSchema.methods.isValid = function(cb) {
+TransferSchema.methods.isValid = function(cb) {
     if(new Date(this.createdAt.getTime() + (1000 * 60 * 60* 24)) > new Date.Now()) {
         this.remove(function (err) {
             if(err) {
@@ -73,7 +73,7 @@ UserSchema.methods.isValid = function(cb) {
     return cb(null, true);
 };
 
-UserSchema.methods.use = function(cb) {
+TransferSchema.methods.use = function(cb) {
     this.isValid(function (err, isValid) {
         if(err) {
             return cb(err);

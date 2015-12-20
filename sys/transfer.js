@@ -22,7 +22,7 @@ var mongoose = require('mongoose');
  */
 exports.create = function (object, type, maxUses, cb) {
     var error;
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(object)) {
         error = new Error('Invalid object ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -59,7 +59,7 @@ exports.create = function (object, type, maxUses, cb) {
  * @name findTransfer
  * @since 0.1.0
  * @version 1
- * @param {string} object MongoID of the object to find.
+ * @param {string} id MongoID of the object to find.
  * @param {findTransferCallback} cb Callback for finding a transfer code.
  */
 
@@ -84,7 +84,7 @@ exports.find = function (id, cb) {
             if(err) {
                 return cb(err);
             }
-            if(isValid != true) {
+            if(isValid !== true) {
                 error = new Error('Code not valid anymore.');
                 error.name = 'EEXPIRED';
                 error.type = 410;
@@ -94,4 +94,4 @@ exports.find = function (id, cb) {
         });
     });
 };
-});
+})();

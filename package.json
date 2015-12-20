@@ -1,6 +1,6 @@
 {
   "name": "MailJS",
-  "version": "0.1.0",
+  "version": "0.1.0 Alpha Demo",
   "description": "A simple mail system",
   "scripts": {
     "start": "node app.js",
