@@ -5,9 +5,6 @@ var sys = require('../../../sys/main.js');
 var validator = require('validator');
 
 exports.create = function (req, res) {
-    if(req.body.maxUses && !validator.isInt(req.body.maxUses)) {
-        return res.status(404).json({error: {name: 'EVALIDATION', message: 'Invalid maxUses parameter.'}});
-    }
     var maxUses = req.body.maxUses || 0;
     switch (req.params.type) {
         case "domain":
@@ -31,5 +28,22 @@ exports.create = function (req, res) {
         default:
             return res.status(404).json({error: {name: 'EVALIDATION', message: 'Invalid transfer type.'}});
     }
+};
+
+exports.claim = function (req, res) {
+    sys.transfer.findByCode(req.body.code, function (err, code) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        switch (code.type) {
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+        }
+    });
 };
 }());

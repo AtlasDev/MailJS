@@ -94,6 +94,7 @@ exports.getDomains = function (userID, callback) {
  * @param {Boolean} isAdmin Checks if an user is an admin
  */
 exports.isAdmin = function (domainID, userID, cb) {
+    var error;
     if(!validator.isMongoId(userID)) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
@@ -114,6 +115,59 @@ exports.isAdmin = function (domainID, userID, cb) {
             return cb(null, false);
         }
         return cb(null, true, domain);
+    });
+};
+
+/**
+ * Add a user to a domain
+ * @name addUser
+ * @since 0.1.0
+ * @version 1
+ * @param {addUserCallback} cb Callback function after adding an user.
+ */
+
+/**
+ * @callback addUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} domain Domain where the user was added to.
+ */
+exports.addUser = function (domainID, userID, cb) {
+    var error;
+    if(!validator.isMongoId(userID)) {
+        error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(!validator.isMongoId(domainID)) {
+        error = new Error('Invalid domain ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Domain.findOne({ _id: domainID }, function (err, domain) {
+        if(err) {
+            return cb(err);
+        }
+        if(!domain) {
+            error = new Error('Domain not found.');
+            error.name = "ENOTFOUND";
+            error.type = 404;
+            return cb(err);
+        }
+        if(domain.users.indexOf(userID) > -1) {
+            error = new Error('User already member of this mailbox.');
+            error.name = 'EOCCUPIED';
+            error.type = 400;
+            return cb(err);
+        }
+        domain.users.push(userID);
+        domain.save(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, domain);
+        });
     });
 };
 }());
