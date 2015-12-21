@@ -8,7 +8,7 @@ exports.create = function (req, res) {
     var maxUses = req.body.maxUses || 0;
     switch (req.params.type) {
         case "domain":
-            sys.domain.isAdmin(req.params.domain, req.user._id, function (err, isAdmin, domain) {
+            sys.domain.isAdmin(req.params.id, req.user._id, function (err, isAdmin, domain) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
                 if(isAdmin !== true) {
                     return res.status(401).json({error: {name: "ENOTADMIN", message: "Not an admin of the given domain."}});
@@ -41,7 +41,10 @@ exports.claim = function (req, res) {
 
                 break;
             case 3:
-
+                sys.domain.addUser(code.object, req.user._id, function (err, domain) {
+                    if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                    return res.json({type: 'domain', object: domain});
+                });
                 break;
         }
     });

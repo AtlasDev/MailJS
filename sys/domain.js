@@ -156,7 +156,7 @@ exports.addUser = function (domainID, userID, cb) {
             return cb(err);
         }
         if(domain.users.indexOf(userID) > -1) {
-            error = new Error('User already member of this mailbox.');
+            error = new Error('User already member of this domain.');
             error.name = 'EOCCUPIED';
             error.type = 400;
             return cb(err);
@@ -166,6 +166,7 @@ exports.addUser = function (domainID, userID, cb) {
             if(err) {
                 return cb(err);
             }
+            sys.util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
             return cb(null, domain);
         });
     });

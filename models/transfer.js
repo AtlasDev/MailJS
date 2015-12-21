@@ -54,7 +54,7 @@ TransferSchema.methods.generate = function(type, cb) {
 };
 
 TransferSchema.methods.isValid = function(cb) {
-    if(new Date(this.createdAt.getTime() + (1000 * 60 * 60* 24)) > new Date.Now()) {
+    if(new Date(this.createdAt.getTime() + (1000 * 60 * 60* 24)) > Date.now()) {
         this.remove(function (err) {
             if(err) {
                 return cb(err, false);

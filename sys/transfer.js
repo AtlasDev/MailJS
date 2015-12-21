@@ -126,6 +126,7 @@ exports.findByCode = function (code, cb) {
             if(err) {
                 return cb(err);
             }
+            console.log(isValid);
             if(isValid !== true) {
                 error = new Error('Code not valid anymore.');
                 error.name = 'EEXPIRED';
