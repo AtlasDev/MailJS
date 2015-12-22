@@ -95,7 +95,6 @@ exports.find = function (id, cb) {
     });
 };
 
-
 /**
  * Find an existing transfer code by the code.
  * @name findTransferByCode
@@ -126,7 +125,6 @@ exports.findByCode = function (code, cb) {
             if(err) {
                 return cb(err);
             }
-            console.log(isValid);
             if(isValid !== true) {
                 error = new Error('Code not valid anymore.');
                 error.name = 'EEXPIRED';
