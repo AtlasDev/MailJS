@@ -59,7 +59,7 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
         if(!domain) {
             error = new Error('Domain not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return callback(error);
         }
         if(domain.disabled === true) {
@@ -215,7 +215,7 @@ exports.isAdmin = function (mailboxID, userID, cb) {
         if(mailbox === false) {
             error = new Error('Mailbox not found!');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return cb(error);
         }
         if(mailbox.creator == userID || mailbox.admins.indexOf(userID) > -1) {

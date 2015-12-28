@@ -248,7 +248,7 @@ exports.delete = function (userID, callback) {
         if(user === null) {
             var error = new Error('The given id was not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return callback(error);
         } else {
             clientFunc.deleteUser(userID, function (err) {

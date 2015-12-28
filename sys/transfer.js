@@ -77,7 +77,7 @@ exports.find = function (id, cb) {
         if(!code) {
             error = new Error('Code not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return cb(error);
         }
         code.isValid(function (err, isValid) {
@@ -118,7 +118,7 @@ exports.findByCode = function (code, cb) {
         if(!code) {
             error = new Error('Code not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return cb(error);
         }
         code.isValid(function (err, isValid) {

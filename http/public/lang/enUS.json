@@ -65,6 +65,11 @@
                 "qrTitle": "QR code",
                 "verificationTitle": "Verification number",
                 "altKey": "Or fill in"
+            },
+            "transfer": {
+                "title": "Transfer",
+                "placeholder": "Fill in transfer code",
+                "button": "Transfer"
             }
         },
         "mailbox": {

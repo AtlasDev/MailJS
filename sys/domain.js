@@ -152,7 +152,7 @@ exports.addUser = function (domainID, userID, cb) {
         if(!domain) {
             error = new Error('Domain not found.');
             error.name = "ENOTFOUND";
-            error.type = 404;
+            error.type = 400;
             return cb(err);
         }
         if(domain.users.indexOf(userID) > -1) {
