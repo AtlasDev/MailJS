@@ -15,6 +15,8 @@ var raven    = require('raven');
 
 var worker = function () {
 
+var DBinit = false;
+
 util.log('Booting worker #'+cluster.worker.id, true);
 process.title = config.process_name+' worker #'+cluster.worker.id;
 
@@ -26,16 +28,23 @@ if(config.reportErrors === true) {
 
 mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
 mongoose.connection.on('error', function(err) {
-    util.error('Database errored:', err, true);
+    if(DBinit !== false) {
+        util.error('Database errored:', err, true);
+    } else {
+        util.error('Could not connect to the database! Is it reachable?', null, true);
+    }
 });
 mongoose.connection.on('connected', function () {
+    DBinit = true;
     util.log('Connected to MongoDB on port '+config.db.port, true);
 });
 mongoose.connection.on('reconnected', function () {
     util.log('Reconnected to database after connection has been lost', true);
 });
 mongoose.connection.on('disconnected', function () {
-    util.error('Disconnected from the database!');
+    if(DBinit !== false) {
+        util.error('Disconnected from the database!');
+    }
 });
 
 require('../http/http.js')();
