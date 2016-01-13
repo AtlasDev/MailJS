@@ -50,7 +50,7 @@ var dbstuff = function () {
     console.log('   - password generated');
     sys.user.create('admin', password, 'Admin', 'Adminius', true, function (err, user) {
         if (err) {
-            console.log(colors.red('Failed to create initial user: '.red+err));
+            console.log(colors.red('Failed to create initial user: '.red+err.errmsg+" ("+err.code+")."));
             process.exit(1);
         }
         console.log(' - User created.');

@@ -22,7 +22,7 @@
         ]
     },
     "db": {
-        "host": "localhost",
+        "host": "db1.xenon.atlasdev.nl",
         "port": 27017,
         "database": "mailjs"
     },
