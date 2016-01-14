@@ -40,10 +40,6 @@ var dburl = 'mongodb://'+config.db.username+':'+config.db.password+'@'+config.db
 mongoose.connect(dburl);
 
 mongoose.connection.on('open', function(){
-    dbstuff();
-});
-
-var dbstuff = function () {
     console.log('Creating first user.');
     console.log(' - Generating password..');
     var password = sys.util.uid(12);
@@ -82,4 +78,4 @@ var dbstuff = function () {
             });
         });
     });
-}
+});
