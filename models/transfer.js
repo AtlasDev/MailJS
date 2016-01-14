@@ -85,7 +85,7 @@ TransferSchema.methods.use = function(cb) {
         if(self.maxUses === 0) {
             return cb();
         }
-        self.uses += self.uses;
+        self.uses += 1;
         self.save(function (err) {
             if(err) {
                 return cb(err);
