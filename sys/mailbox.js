@@ -257,4 +257,48 @@ exports.getInbox = function (mailboxID, cb) {
         return cb(null, inbox);
     });
 };
+
+/**
+ * Add a user to a mailbox
+ * @name addUser
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} mailboxID ID of the mailbox to add the user to.
+ * @param {Object} user MongoDB object of the user to add the mailbox to.
+ * @param {addUserCallback} cb Callback function after adding an user.
+ */
+
+/**
+ * @callback addUserCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.addUser = function (mailboxID, user, cb) {
+    var error;
+    if(!validator.isMongoId(mailboxID)) {
+        error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(typeof user !== "object") {
+        error = new Error('User not an object.');
+        error.name = 'EINVALID';
+        error.type = 500;
+        return cb(error);
+    }
+    if(user.mailboxes.indexOf(mailboxID) > -1) {
+        error = new Error('User already member of this mailbox.');
+        error.name = 'EOCCUPIED';
+        error.type = 400;
+        return cb(error);
+    }
+    user.mailboxes.push(mailboxID);
+    user.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        util.log('User `'+user._id+'` has been added to the mailbox `'+mailboxID+'`');
+        return cb(null);
+    });
+};
 }());

@@ -74,6 +74,7 @@ TransferSchema.methods.isValid = function(cb) {
 };
 
 TransferSchema.methods.use = function(cb) {
+    var self = this;
     this.isValid(function (err, isValid) {
         if(err) {
             return cb(err);
@@ -81,11 +82,11 @@ TransferSchema.methods.use = function(cb) {
         if(isValid === false) {
             return cb(new Error('Code is invalid'));
         }
-        if(this.maxUses === 0) {
+        if(self.maxUses === 0) {
             return cb();
         }
-        this.uses += this.uses;
-        this.save(function (err) {
+        self.uses += self.uses;
+        self.save(function (err) {
             if(err) {
                 return cb(err);
             }

@@ -160,7 +160,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         $http(req).then(function(res) {
             $rootScope.isLoading = false;
             notification.send('Transfer code created!', "Code: "+res.data.code.code, 'success');
-            res.data.code.createdAt = new Date(res.data.code.createdAt);
             mailbox.transferCodes.push(res.data.code);
         }, function(res) {
             $rootScope.isLoading = false;

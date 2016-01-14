@@ -49,12 +49,29 @@ exports.claim = function (req, res) {
 
                 break;
             case 2:
-
+                code.isValid(function (err) {
+                    if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                    sys.mailbox.addUser(code.object, req.user, function (err, domain) {
+                        if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                        sys.mailbox.find(code.object, function (err, mailbox) {
+                            if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                            code.use(function (err) {
+                                if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                                return res.json({type: 'mailbox', object: mailbox});
+                            });
+                        });
+                    });
+                });
                 break;
             case 3:
-                sys.domain.addUser(code.object, req.user._id, function (err, domain) {
-                    if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
-                    return res.json({type: 'domain', object: domain});
+                code.isValid(function (err) {
+                    sys.domain.addUser(code.object, req.user._id, function (err, domain) {
+                        if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                        code.use(function (err) {
+                            if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                            return res.json({type: 'domain', object: domain});
+                        });
+                    });
                 });
                 break;
         }

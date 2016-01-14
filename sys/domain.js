@@ -123,6 +123,8 @@ exports.isAdmin = function (domainID, userID, cb) {
  * @name addUser
  * @since 0.1.0
  * @version 1
+ * @param {MongoID} domainID ID of the domain to add the user to.
+ * @param {MongoID} userID ID of the user to be added
  * @param {addUserCallback} cb Callback function after adding an user.
  */
 
@@ -153,13 +155,13 @@ exports.addUser = function (domainID, userID, cb) {
             error = new Error('Domain not found.');
             error.name = "ENOTFOUND";
             error.type = 400;
-            return cb(err);
+            return cb(error);
         }
         if(domain.users.indexOf(userID) > -1) {
             error = new Error('User already member of this domain.');
             error.name = 'EOCCUPIED';
             error.type = 400;
-            return cb(err);
+            return cb(error);
         }
         domain.users.push(userID);
         domain.save(function (err) {
