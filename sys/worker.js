@@ -26,7 +26,7 @@ if(config.reportErrors === true) {
     util.log('Raven error logger enabled.', true);
 }
 
-mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database);
+mongoose.connect('mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database, { user: config.db.username, pass: config.db.password });
 mongoose.connection.on('error', function(err) {
     if(DBinit !== false) {
         util.error('Database errored:', err, true);

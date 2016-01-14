@@ -36,8 +36,8 @@ if(!setupDomain || !validator.isFQDN(setupDomain)) {
 }
 
 console.log('Connecting to the database..');
-var dburl = 'mongodb://'+config.db.username+':'+config.db.password+'@'+config.db.host+':'+config.db.port+'/'+config.db.database;
-mongoose.connect(dburl);
+var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
+mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
 
 mongoose.connection.on('open', function(){
     console.log('Creating first user.');
