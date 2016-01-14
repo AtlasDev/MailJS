@@ -54,19 +54,14 @@ TransferSchema.methods.generate = function(type, cb) {
 };
 
 TransferSchema.methods.isValid = function(cb) {
-    console.log(new Date(this.createdAt.getTime() + 86400000).getTime());
-    console.log(new Date().getTime());
     if(new Date(this.createdAt.getTime() + 86400000).getTime() <= new Date().getTime()) {
         this.remove(function (err) {
             if(err) {
                 return cb(err, false);
             }
         });
-        console.log(this.createdAt);
         return cb(null, false);
     }
-    console.log(this.maxUses);
-    console.log(this.uses);
     if(this.maxUses !== 0 && this.maxUses >= this.uses) {
         this.remove(function (err) {
             if(err) {

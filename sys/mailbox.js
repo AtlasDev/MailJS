@@ -192,6 +192,7 @@ exports.verify = function (mailAddress, callback) {
  * @callback isAdminCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} isAdmin Boolean which gives back if the user is an admin or creator.
+ * @param {Object} mailbox The checked mailbox, null when error is not null.
  */
 exports.isAdmin = function (mailboxID, userID, cb) {
     var error;
@@ -219,9 +220,9 @@ exports.isAdmin = function (mailboxID, userID, cb) {
             return cb(error);
         }
         if(mailbox.creator == userID || mailbox.admins.indexOf(userID) > -1) {
-            return cb(null, true);
+            return cb(null, true, mailbox);
         } else {
-            return cb(null, false);
+            return cb(null, false, mailbox);
         }
     });
 };

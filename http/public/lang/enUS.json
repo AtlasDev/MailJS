@@ -11,6 +11,14 @@
         "connecting": "Connecting...",
         "disconnected": "Disconnected"
     },
+    "transfer": {
+        "transferCodes": "Transfer code's",
+        "create": "Create transfer code",
+        "placeholder": "Max uses of the code",
+        "code": "Code",
+        "expires": "Expires at",
+        "uses": "Uses"
+    },
     "common": {
         "page": "page",
         "mailboxes": "mailboxes",
@@ -35,7 +43,12 @@
         "admin": "Administrator",
         "user": "User",
         "domain": "Domain",
-        "domains": "Domains"
+        "domains": "Domains",
+        "delete": "Delete",
+        "create": "Create",
+        "needAdmin": "You need to be an admin to see this.",
+        "name": "Name",
+        "function": "Function"
     },
     "settings": {
         "settings": "settings",

@@ -99,6 +99,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         };
         $http(req).then(function(res) {
             $scope.viewingMailbox = res.data.mailbox;
+            $scope.viewingMailbox.transferCodes = [];
             if(user.getUser()._id == $scope.viewingMailbox.creator) {
                 $scope.viewingMailbox.function = 3;
             } else if($scope.viewingMailbox.admins.indexOf(user.getUser()._id) != -1) {
@@ -116,13 +117,54 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                     $scope.viewingMailbox.users[i].function = 1;
                 }
                 if($scope.viewingMailbox.users.length == i+1) {
-                    $rootScope.isLoading = false;
-                    $('#viewModal').modal('show');
+                    if($scope.viewingMailbox.admins.indexOf(user.getUser()._id) == -1) {
+                        $rootScope.isLoading = false;
+                        $('#viewModal').modal('show');
+                    } else {
+                        // var req = {
+                        //     method: 'GET',
+                        //     url: '/api/v1/transfer/mailbox/'+res.data.mailbox._id,
+                        //     headers: {
+                        //         'x-token': user.sessionID
+                        //     }
+                        // };
+                        // $http(req).then(function(res) {
+                        //     console.log(res);
+                        //     $rootScope.isLoading = false;
+                        //     $('#viewModal').modal('show');
+                        // }, function(res) {
+                        //     $rootScope.isLoading = false;
+                        //     notification.send('Cannot load info!', res.data.error.message, 'error');
+                        // });
+                        $rootScope.isLoading = false;
+                        $('#viewModal').modal('show');
+                    }
                 }
             }
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Cannot view mailbox!', res.data.error.message, 'error');
+        });
+    };
+
+    $scope.createTransfer = function (mailbox) {
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'POST',
+            url: '/api/v1/transfer/mailbox/'+mailbox._id,
+            data: { maxUses: $scope.maxTransferUses },
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Transfer code created!', "Code: "+res.data.code.code, 'success');
+            res.data.code.createdAt = new Date(res.data.code.createdAt);
+            mailbox.transferCodes.push(res.data.code);
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot create transfer code!', res.data.error.message, 'error');
         });
     };
 

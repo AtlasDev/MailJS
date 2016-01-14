@@ -117,7 +117,7 @@
             <div class="modal-body">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-3">
                             <div class="box box-danger">
                                 <div class="box-header">
                                     <h3 class="box-title">{{'common.users' | translate | capitalize}}</h3>
@@ -126,9 +126,9 @@
                                     <table class="table table-hover">
                                         <tbody>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Function</th>
-                                                <th ng-if="viewingMailbox.function > 1">Actions</th>
+                                                <th>{{'name' | translate}}</th>
+                                                <th>{{'function' | translate}}</th>
+                                                <th ng-if="viewingMailbox.function > 1">{{'actions' | translate}}</th>
                                             </tr>
                                             <tr ng-repeat="mailboxUser in viewingMailbox.users | orderBy: '-function'">
                                                 <td>{{mailboxUser.firstName}} {{mailboxUser.lastName}}</td>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="box box-danger">
                                 <div class="box-header">
                                     <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.title' | translate | capitalize}}</h3>
@@ -215,6 +215,45 @@
                                         <form role="form" ng-submit="deleteMailbox(viewingMailbox)">
                                             <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.delete' | translate}}</button>
                                         </form>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box box-danger" ng-show="viewingMailbox.function != 1">
+                                <div class="box-header">
+                                    <h3 class="box-title">{{'transfer.create' | translate | capitalize}}</h3>
+                                </div>
+                                <div class="box-body">
+                                    <form role="form" ng-submit="createTransfer(viewingMailbox)">
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" id="maxTransferUses" ng-model="maxTransferUses" placeholder="{{'transfer.placeholder' | translate}}" />
+                                        </div>
+                                        <button type="submit" class="btn btn-danger btn-block">{{'common.create' | translate}}</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">{{'transfer.transferCodes' | translate}}</h3>
+                                </div>
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-hover" class="ng-hide" ng-show="viewingMailbox.admins.indexOf(user._id) > -1">
+                                        <tbody>
+                                            <tr>
+                                                <th>{{'transfer.code' | translate}}</th>
+                                                <th>{{'transfer.expires' | translate}}</th>
+                                                <th>{{'transfer.uses' | translate}}</th>
+                                            </tr>
+                                            <tr ng-repeat="transferCode in viewingMailbox.transferCodes | orderBy: '-createdAt'">
+                                                <td class="secret">{{transferCode.code}}</td>
+                                                <td>{{transferCode.createdAt | date : 'H:mm:ss'}}</td>
+                                                <td>{{transferCode.uses}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p ng-show="viewingMailbox.admins.indexOf(user._id) == -1" class="ng-hide">
+                                        {{'common.needAdmin' | translate}}
                                     </p>
                                 </div>
                             </div>
