@@ -36,7 +36,7 @@ if(!setupDomain || !validator.isFQDN(setupDomain)) {
 }
 
 console.log('Connecting to the database..');
-var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
+var dburl = 'mongodb://'+config.db.username+':'+config.db.password+'@'+config.db.host+':'+config.db.port+'/'+config.db.database;
 mongoose.connect(dburl);
 
 mongoose.connection.on('open', function(){
