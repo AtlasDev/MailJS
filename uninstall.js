@@ -26,7 +26,7 @@ if(config.uninstall != true) {
 
 console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
-mongoose.connect(dburl);
+mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
 
 mongoose.connection.on('open', function(){
     console.log('Deleting database..');
