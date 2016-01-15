@@ -138,6 +138,7 @@
 					<div class="pull-right hidden-xs" ng-switch="socketStatus">
 						<div ng-switch-when="0"><i class="fa fa-circle text-danger"></i> {{'connection.disconnected' | translate}}</div>
 						<div ng-switch-when="1"><i class="fa fa-circle text-warning"></i> {{'connection.connecting' | translate}}</div>
+						<div ng-switch-when="3"><i class="fa fa-circle text-warning"></i> {{'connection.authenticating' | translate}}</div>
 						<div ng-switch-when="2"><i class="fa fa-circle text-success"></i> {{'connection.connected' | translate}}</div>
 					</div>
 					<!-- Default to the left -->
