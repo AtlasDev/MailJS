@@ -102,5 +102,5 @@ exports.find = function (req, res) {
         default:
             return res.status(404).json({error: {name: 'EVALIDATION', message: 'Invalid type.'}});
     }
-}
+};
 }());

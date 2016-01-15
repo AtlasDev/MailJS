@@ -70,6 +70,12 @@ exports.create = function (object, type, maxUses, cb) {
  */
 exports.find = function (id, cb) {
     var error;
+    if (!validator.isMongoId(id)) {
+        error = new Error('Invalid transfer ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
     Transfer.findById(id, function (err, code) {
         if(err) {
             return cb(err);
@@ -136,18 +142,39 @@ exports.findByCode = function (code, cb) {
     });
 };
 
+/**
+ * Find all transfer tokens tied to an specified object
+ * @name findTransferByObject
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} objectID The object to find by.
+ * @param {findTransferByObjectCallback} cb Callback for finding all transfer codes.
+ */
+
+/**
+ * @callback findTransferByObjectCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Array} codes list of all found transfer codes.
+ */
 exports.findByObject = function (objectID, type, cb) {
     var error;
-    Transfer.find({onject: objectID, type: type} , function (err, codes) {
+    if (!validator.isMongoId(objectID)) {
+        error = new Error('Invalid object ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    if(!(type == 1 || type == 2 || type == 3)) {
+        error = new Error('Invalid type!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return callback(error);
+    }
+    Transfer.find({object: objectID, type: type} , function (err, codes) {
         if(err) {
             return cb(err);
         }
-        if(!codes) {
-            error = new Error('No codes found.');
-            error.name = 'ENOTFOUND';
-            error.type = 400;
-            return cb(error);
-        }
+        return cb(null, codes);
     });
-}
+};
 })();

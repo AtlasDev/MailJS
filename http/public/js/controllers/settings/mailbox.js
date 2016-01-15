@@ -121,21 +121,23 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                         $rootScope.isLoading = false;
                         $('#viewModal').modal('show');
                     } else {
-                        // var req = {
-                        //     method: 'GET',
-                        //     url: '/api/v1/transfer/mailbox/'+res.data.mailbox._id,
-                        //     headers: {
-                        //         'x-token': user.sessionID
-                        //     }
-                        // };
-                        // $http(req).then(function(res) {
-                        //     console.log(res);
-                        //     $rootScope.isLoading = false;
-                        //     $('#viewModal').modal('show');
-                        // }, function(res) {
-                        //     $rootScope.isLoading = false;
-                        //     notification.send('Cannot load info!', res.data.error.message, 'error');
-                        // });
+                        var req = {
+                            method: 'GET',
+                            url: '/api/v1/transfer/mailbox/'+res.data.mailbox._id,
+                            headers: {
+                                'x-token': user.sessionID
+                            }
+                        };
+                        $http(req).then(function(res) {
+                            for (var i = 0; i < res.data.codes.length; i++) {
+                                $scope.viewingMailbox.transferCodes.push(res.data.codes[i]);
+                            }
+                            $rootScope.isLoading = false;
+                            $('#viewModal').modal('show');
+                        }, function(res) {
+                            $rootScope.isLoading = false;
+                            notification.send('Cannot load transfer token info!', res.data.error.message, 'error');
+                        });
                         $rootScope.isLoading = false;
                         $('#viewModal').modal('show');
                     }
