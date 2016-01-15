@@ -36,6 +36,19 @@
                             </select>
                         </div>
                     </div>
+                    <div class="box box-danger">
+                        <div class="box-header">
+                            <h3 class="box-title">{{'settings.main.transfer.title' | translate | capitalize}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <form role="form" ng-submit="sendTransfer()">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="transferCode" ng-model="transferCode" placeholder="{{'settings.main.transfer.placeholder' | translate}}" />
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-block">{{'settings.main.transfer.button' | translate}}</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-3">
                     <div class="box box-danger">

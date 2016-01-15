@@ -40,7 +40,7 @@ exports.log = function log(msg, startup) {
 
 exports.uid = function uid (len) {
     var buf = [];
-	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#@!-=_+[]{}/?.,<>*&^%$';
     var charlen = chars.length;
 
     for (var i = 0; i < len; ++i) {

@@ -19,7 +19,6 @@ var validator = require('validator');
  */
 
 /**
- * Callback for creating a new user.
  * @callback createUserCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the new created user.
@@ -66,7 +65,6 @@ exports.create = function (username, password, firstName, lastName, isAdmin, cal
  */
 
 /**
- * Callback for finding a user.
  * @callback findUserCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the found user.
@@ -99,7 +97,6 @@ exports.find = function (userID, callback) {
  */
 
 /**
- * Callback for finding a user.
  * @callback findByUsernameUserCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} user User object of the found user, returns false if none.
@@ -126,7 +123,6 @@ exports.findByUsername = function (username, callback) {
  */
 
 /**
- * Callback for finding users by mailbox.
  * @callback findByMailboxUserCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Array|Boolean} users An array of user objects found, false if non found.
@@ -160,7 +156,6 @@ exports.findByMailbox = function (mailboxID, callback) {
  */
 
 /**
- * Callback for finding the users.
  * @callback findAllCallback
  * @param {Error} err Error object, should be undefined.
  * @param {array} users Found users in a array.
@@ -204,7 +199,6 @@ exports.findAll = function (limitBy, skip, callback) {
  */
 
 /**
- * Callback for verifying a user.
  * @callback verifyUserCallback
  * @param {Error} err Error object, should be undefined.
  * @param {boolean} isMatch Gives if the password and username matches.
@@ -237,7 +231,6 @@ exports.verify = function (username, password, callback) {
  */
 
 /**
- * Callback for deleting a user.
  * @callback deleteUserCallback
  * @param {Error} err Error object, should be undefined.
  */
@@ -255,7 +248,7 @@ exports.delete = function (userID, callback) {
         if(user === null) {
             var error = new Error('The given id was not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return callback(error);
         } else {
             clientFunc.deleteUser(userID, function (err) {

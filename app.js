@@ -4,6 +4,12 @@
  * @copyright Dany Sluijk 2015
  */
 
+/* Copyright (C) AtlasDev - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by Dany Sluijk <dany@atlasdev.nl>, January 2015
+ */
+
 'use strict'
 var cluster  = require('cluster');
 var sys      = require('./sys/main.js');

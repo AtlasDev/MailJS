@@ -15,7 +15,6 @@ var userFunc = require('./user.js');
  */
 
 /**
- * Callback for verifying a bearer token.
  * @callback verifyTokenCallback
  * @param {Error} err Error object, should be undefined.
  * @param {boolean} isMatch Gives if the token is valid.
@@ -51,7 +50,6 @@ exports.verify = function (token, callback) {
  */
 
 /**
- * Callback for getting the client.
  * @callback getClientCallback
  * @param {Error} err Error object, should be undefined.
  * @param {object} client The client found.

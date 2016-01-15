@@ -161,20 +161,34 @@ $("#setupCreate").submit(function(event) {
 $("#setupTransfer").submit(function(event) {
     event.preventDefault();
     var code = $("#transferCode").val();
+    if(!(code.length == 18 || code.length == 20)) {
+        showSetupError('Code must be a mailbox transfer code OR an domain transfer code.');
+        return;
+    }
+    var type = (code.length == 18) ? 2 : 3;
     var request = $.ajax({
-        type: 'PATCH',
-        url: '/api/v1/mailbox',
+        type: 'POST',
+        url: '/api/v1/transfer',
         dataType: 'json',
         cache: false,
         headers: {
             'x-token': Cookies.get('MailJS')
         },
         data: {
-            'transfercode': code
+            'code': code,
+            'type': type
         }
     });
     request.done(function(data) {
-        window.location.replace("app.html");
+        if(type == 2) {
+            window.location.replace("app.html");
+            return;
+        }
+        $('#domainCreate')
+            .append($("<option></option>")
+            .attr("value",data.object._id)
+            .text(data.object.domain));
+        showSetupInfo('Domain added, you can now use it!');
     });
     request.fail(function(data) {
         showSetupError(JSON.parse(data.responseText).error.message);
@@ -206,10 +220,10 @@ var showSetup = function () {
     });
     request.done(function(data) {
         $.each(data.domains, function(key, value) {
-             $('#domainCreate')
-                 .append($("<option></option>")
-                 .attr("value",value._id)
-                 .text(value.domain));
+            $('#domainCreate')
+                .append($("<option></option>")
+                .attr("value",value._id)
+                .text(value.domain));
         });
         $('#setupCreate').show();
     });
@@ -223,7 +237,9 @@ var showSetup = function () {
 };
 
 var setName = function (name) {
-    $('#name').text(name);
+    $(".name").each(function( index ) {
+        $(this).text(name);
+    });
 };
 
 var showLoginError = function showError(msg) {
@@ -241,10 +257,14 @@ var showSetupError = function showError(msg) {
     $("#setupError").removeClass('hidden');
 };
 
-
 var showInfo = function showInfo(msg) {
     $("#infoMsg").text(msg);
     $("#info").removeClass('hidden');
+};
+
+var showSetupInfo = function showInfo(msg) {
+    $("#infoSetupMsg").text(msg);
+    $("#infoSetup").removeClass('hidden');
 };
 
 var get = (function(a) {

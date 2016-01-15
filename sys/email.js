@@ -20,7 +20,6 @@ var os = require('os');
  */
 
 /**
- * Callback for creating a new email.
  * @callback createEmailCallback
  * @param {Error} err Error object, should be undefined or passed trough.
  * @param {Object} email The newly created email.
@@ -94,7 +93,6 @@ exports.create = function (mailboxID, mail, cb) {
  */
 
 /**
- * Callback for creating a new email.
  * @callback getEmailsCallback
  * @param {Error} err Error object, should be undefined or passed trough.
  * @param {Object} emails Preview of the found emails.

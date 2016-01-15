@@ -37,20 +37,16 @@ if(!setupDomain || !validator.isFQDN(setupDomain)) {
 
 console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
-mongoose.connect(dburl);
+mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
 
 mongoose.connection.on('open', function(){
-    dbstuff();
-});
-
-var dbstuff = function () {
     console.log('Creating first user.');
     console.log(' - Generating password..');
     var password = sys.util.uid(12);
     console.log('   - password generated');
     sys.user.create('admin', password, 'Admin', 'Adminius', true, function (err, user) {
         if (err) {
-            console.log(colors.red('Failed to create initial user: '.red+err));
+            console.log(colors.red('Failed to create initial user: '.red+err.errmsg+" ("+err.code+")."));
             process.exit(1);
         }
         console.log(' - User created.');
@@ -62,7 +58,7 @@ var dbstuff = function () {
             }
             console.log('Domain created.');
             console.log('Creating initial mailbox..');
-            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, false, true, function (err, mailbox) {
+            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, true, function (err, mailbox) {
                 if (err) {
                     console.log(colors.red('Failed to create initial mailbox: '.red+err));
                     process.exit(1);
@@ -82,4 +78,4 @@ var dbstuff = function () {
             });
         });
     });
-}
+});

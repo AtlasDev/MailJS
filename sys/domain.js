@@ -16,7 +16,6 @@ var validator = require('validator');
  */
 
 /**
- * Callback for creating a new domain.
  * @callback createDomainCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} newDomain Domain object of the created domain.
@@ -62,7 +61,6 @@ exports.create = function (domain, admin, disabled, callback) {
  */
 
 /**
- * Callback for getting all available domains.
  * @callback getDomainsCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Array} domains An array of domain objects
@@ -79,6 +77,100 @@ exports.getDomains = function (userID, callback) {
             return callback(err);
         }
         return callback(null, domains);
+    });
+};
+
+/**
+ * Validate an user as an admin of a domain.
+ * @name isAdmin
+ * @since 0.1.0
+ * @version 1
+ * @param {isAdminCallback} cb Callback function after validating the user
+ */
+
+/**
+ * @callback isAdminCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Boolean} isAdmin Checks if an user is an admin
+ */
+exports.isAdmin = function (domainID, userID, cb) {
+    var error;
+    if(!validator.isMongoId(userID)) {
+        error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(!validator.isMongoId(domainID)) {
+        error = new Error('Invalid domain ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Domain.findOne({ _id: domainID, admin: userID }, function (err, domain) {
+        if(err) {
+            return cb(err);
+        }
+        if(!domain) {
+            return cb(null, false);
+        }
+        return cb(null, true, domain);
+    });
+};
+
+/**
+ * Add a user to a domain
+ * @name addUser
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} domainID ID of the domain to add the user to.
+ * @param {MongoID} userID ID of the user to be added
+ * @param {addUserCallback} cb Callback function after adding an user.
+ */
+
+/**
+ * @callback addUserCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} domain Domain where the user was added to.
+ */
+exports.addUser = function (domainID, userID, cb) {
+    var error;
+    if(!validator.isMongoId(userID)) {
+        error = new Error('Invalid user ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(!validator.isMongoId(domainID)) {
+        error = new Error('Invalid domain ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Domain.findOne({ _id: domainID }, function (err, domain) {
+        if(err) {
+            return cb(err);
+        }
+        if(!domain) {
+            error = new Error('Domain not found.');
+            error.name = "ENOTFOUND";
+            error.type = 400;
+            return cb(error);
+        }
+        if(domain.users.indexOf(userID) > -1) {
+            error = new Error('User already member of this domain.');
+            error.name = 'EOCCUPIED';
+            error.type = 400;
+            return cb(error);
+        }
+        domain.users.push(userID);
+        domain.save(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
+            return cb(null, domain);
+        });
     });
 };
 }());

@@ -19,18 +19,16 @@ var mongoose = require('mongoose');
  * @param {string} domainID ID of the domain to register the mailbox to.
  * @param {string} userID ID of the user to register the mailbox to.
  * @param {string} title Title of the mailbox, used as name when sending emails.
- * @param {string} transferable Set if the mailbox is transferable to other users.
  * @param {string} overwrite Overwrite the disabled check for the domain.
  * @param {createMailboxCallback} callback Callback function after creating the mailbox.
  */
 
 /**
- * Callback for creating a new mailbox.
  * @callback createMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} mailbox Mailbox object of the new created mailbox.
  */
-exports.create = function (local, domainID, userID, title, transferable, overwrite, callback) {
+exports.create = function (local, domainID, userID, title, overwrite, callback) {
     var error;
     if (!validator.isMongoId(userID)) {
         error = new Error('Invalid user ID!');
@@ -61,7 +59,7 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
         if(!domain) {
             error = new Error('Domain not found.');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return callback(error);
         }
         if(domain.disabled === true) {
@@ -89,29 +87,26 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
             mailbox.admins = [ userID ];
             mailbox.title = title;
             mailbox.creator = userID;
-            mailbox.transferable = transferable;
-            mailbox.generateTransferCode(function () {
-                mailbox.save(function (err, mailbox) {
+            mailbox.save(function (err, mailbox) {
+                if(err) {
+                    return callback(err);
+                }
+                inboxFunc.createDefaults(mailbox._id, function (err) {
                     if(err) {
                         return callback(err);
                     }
-                    inboxFunc.createDefaults(mailbox._id, function (err) {
-                        if(err) {
-                            return callback(err);
-                        }
-                        User.findByIdAndUpdate(
-                            userID,
-                            {$push: {"mailboxes": mailbox._id}},
-                            {safe: true, upsert: true},
-                            function(err) {
-                                if(err) {
-                                    return callback(err);
-                                }
-                                util.log('Mailbox `'+mailbox.address+'` created.');
-                                return callback(null, mailbox);
+                    User.findByIdAndUpdate(
+                        userID,
+                        {$push: {"mailboxes": mailbox._id}},
+                        {safe: true, upsert: true},
+                        function(err) {
+                            if(err) {
+                                return callback(err);
                             }
-                        );
-                    });
+                            util.log('Mailbox `'+mailbox.address+'` created.');
+                            return callback(null, mailbox);
+                        }
+                    );
                 });
             });
         });
@@ -128,7 +123,6 @@ exports.create = function (local, domainID, userID, title, transferable, overwri
  */
 
 /**
- * Callback for finding a mailbox.
  * @callback findMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object|Boolean} mailbox Mailbox object of the found mailbox, false if not found.
@@ -161,7 +155,6 @@ exports.find = function (mailboxID, callback) {
  */
 
 /**
- * Callback for verifying a mail address.
  * @callback verifyMailboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} doesExists Boolean which gives if the address is valid.
@@ -186,135 +179,6 @@ exports.verify = function (mailAddress, callback) {
 };
 
 /**
- * Claim a mailbox with a transfer code.
- * @name claimMailbox
- * @since 0.1.0
- * @version 2
- * @param {string} transferCode TransferCode to check.
- * @param {string} userID User ID of the user to add the mailbox to.
- * @param {claimMailboxCallback} callback Callback function after claiming the mailbox.
- */
-
-/**
- * Callback for claiming a mailbox.
- * @callback claimMailboxCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Object} mailbox Mailbox object of the claimed mailbox.
- */
-exports.claimMailbox = function (transferCode, userID, callback) {
-    var error;
-    if (!validator.isMongoId(userID)) {
-        error = new Error('Invalid user ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    Mailbox.findOne({transferCode: transferCode}, function (err, mailbox) {
-        var error;
-        if(err) {
-            return callback(err);
-        }
-        if(!mailbox) {
-            error = new Error('Mailbox not found.');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        if(mailbox.transferable === false) {
-            error = new Error('Mailbox not transferable.');
-            error.name = 'EDENIED';
-            error.type = 400;
-            return callback(error);
-        }
-        User.findById(userID, function (err, user) {
-            var error;
-            if(err) {
-                return callback(err);
-            }
-            if(user.mailboxes.indexOf(mailbox._id) > -1) {
-                error = new Error('User already member of the mailbox.');
-                error.name = 'EOCCUPIED';
-                error.type = 400;
-                return callback(error);
-            }
-            user.mailboxes.push(mailbox._id);
-            user.save(function (err) {
-                if(err) {
-                    return callback(err);
-                }
-                util.log('`'+user.username+'` claimed `'+mailbox.address+'`.');
-                return callback(null, mailbox);
-            });
-        });
-    });
-};
-
-/**
- * Set the transfer boolean of a mailbox.
- * @name setTransferable
- * @since 0.1.0
- * @version 1
- * @param {boolean} transferable The value of the transfer boolean.
- * @param {string} mailboxID Mailbox to be changed.
- * @param {string} userID User to check permissions for.
- * @param {setTransferableCallback} callback Callback function after changing the boolean
- */
-
-/**
- * Callback for setting the transferable boolean.
- * @callback setTransferableCallback
- * @param {Error} err Error object, should be undefined.
- * @param {Object} mailbox Mailbox object of the changed mailbox
- */
-exports.setTransferable = function (transferable, mailboxID, userID, callback) {
-    var error;
-    if (!validator.isBoolean(transferable)) {
-        error = new Error('transferable is not a boolean!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    if (!validator.isMongoId(mailboxID)) {
-        error = new Error('Invalid mailbox ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    if (!validator.isMongoId(userID)) {
-        error = new Error('Invalid user ID!');
-        error.name = 'EVALIDATION';
-        error.type = 400;
-        return callback(error);
-    }
-    Mailbox.findById(mailboxID, function (err, mailbox) {
-        var error;
-        if(err) {
-            return callback(err);
-        }
-        if(!mailbox) {
-            error = new Error('Mailbox not found.');
-            error.name = 'ENOTFOUND';
-            error.type = 404;
-            return callback(error);
-        }
-        if(mailbox.creator == userID || mailbox.admins.indexOf(userID) != -1) {
-            mailbox.transferable = transferable;
-            mailbox.save(function (err) {
-                if(err) {
-                    return callback(err);
-                }
-                return callback(null, mailbox);
-            });
-        } else {
-            error = new Error('Permission denied.');
-            error.name = 'EPERMS';
-            error.type = 403;
-            return callback(error);
-        }
-    });
-};
-
-/**
  * Checks if a user is admin or creator of the given mailbox.
  * @name isAdmin
  * @since 0.1.0
@@ -325,10 +189,10 @@ exports.setTransferable = function (transferable, mailboxID, userID, callback) {
  */
 
 /**
- * Callback for checking the permissions
  * @callback isAdminCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Boolean} isAdmin Boolean which gives back if the user is an admin or creator.
+ * @param {Object} mailbox The checked mailbox, null when error is not null.
  */
 exports.isAdmin = function (mailboxID, userID, cb) {
     var error;
@@ -352,13 +216,13 @@ exports.isAdmin = function (mailboxID, userID, cb) {
         if(mailbox === false) {
             error = new Error('Mailbox not found!');
             error.name = 'ENOTFOUND';
-            error.type = 404;
+            error.type = 400;
             return cb(error);
         }
         if(mailbox.creator == userID || mailbox.admins.indexOf(userID) > -1) {
-            return cb(null, true);
+            return cb(null, true, mailbox);
         } else {
-            return cb(null, false);
+            return cb(null, false, mailbox);
         }
     });
 };
@@ -373,7 +237,6 @@ exports.isAdmin = function (mailboxID, userID, cb) {
  */
 
 /**
- * Callback for getting the inbox.
  * @callback getInboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} inbox THe main inbox object.
@@ -392,6 +255,50 @@ exports.getInbox = function (mailboxID, cb) {
             return cb(err);
         }
         return cb(null, inbox);
+    });
+};
+
+/**
+ * Add a user to a mailbox
+ * @name addUser
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} mailboxID ID of the mailbox to add the user to.
+ * @param {Object} user MongoDB object of the user to add the mailbox to.
+ * @param {addUserCallback} cb Callback function after adding an user.
+ */
+
+/**
+ * @callback addUserCallback
+ * @param {Error} err Error object, should be undefined.
+ */
+exports.addUser = function (mailboxID, user, cb) {
+    var error;
+    if(!validator.isMongoId(mailboxID)) {
+        error = new Error('Invalid mailbox ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    if(typeof user !== "object") {
+        error = new Error('User not an object.');
+        error.name = 'EINVALID';
+        error.type = 500;
+        return cb(error);
+    }
+    if(user.mailboxes.indexOf(mailboxID) > -1) {
+        error = new Error('User already member of this mailbox.');
+        error.name = 'EOCCUPIED';
+        error.type = 400;
+        return cb(error);
+    }
+    user.mailboxes.push(mailboxID);
+    user.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        util.log('User `'+user._id+'` has been added to the mailbox `'+mailboxID+'`');
+        return cb(null);
     });
 };
 }());

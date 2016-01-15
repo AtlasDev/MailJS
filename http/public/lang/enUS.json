@@ -11,6 +11,15 @@
         "connecting": "Connecting...",
         "disconnected": "Disconnected"
     },
+    "transfer": {
+        "transferCodes": "Transfer code's",
+        "create": "Create transfer code",
+        "placeholder": "Max uses of the code",
+        "code": "Code",
+        "expires": "Expires at",
+        "uses": "Uses",
+        "nodata": "No transfer codes live!"
+    },
     "common": {
         "page": "page",
         "mailboxes": "mailboxes",
@@ -35,7 +44,12 @@
         "admin": "Administrator",
         "user": "User",
         "domain": "Domain",
-        "domains": "Domains"
+        "domains": "Domains",
+        "delete": "Delete",
+        "create": "Create",
+        "needAdmin": "You need to be an admin to see this.",
+        "name": "Name",
+        "function": "Function"
     },
     "settings": {
         "settings": "settings",
@@ -65,6 +79,11 @@
                 "qrTitle": "QR code",
                 "verificationTitle": "Verification number",
                 "altKey": "Or fill in"
+            },
+            "transfer": {
+                "title": "Transfer",
+                "placeholder": "Fill in transfer code",
+                "button": "Transfer"
             }
         },
         "mailbox": {
@@ -109,6 +128,18 @@
                     "create": "Create inbox",
                     "placeholder": "Inbox title"
                 }
+            },
+            "viewDomain": {
+                "information": "Information",
+                "userCount": "User count",
+                "functionDisplay": "Your function",
+                "functions": {
+                    "user": "user",
+                    "admin": "admin"
+                },
+                "users": "Users",
+                "transferCodes": "Transfer codes",
+                "createTransfer": "Create transfer codes"
             }
         },
         "sessions": {

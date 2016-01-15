@@ -14,7 +14,6 @@ var validator = require('validator');
  */
 
 /**
- * Callback for create default inboxes
  * @callback createDefaultsCallback
  * @param {Error} err Error object, should be undefined.
  */
@@ -78,7 +77,6 @@ exports.createDefaults = function (mailboxID, callback) {
  */
 
 /**
- * Callback for getting all mailboxes
  * @callback GetInboxesCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Array} inboxes Array of inbox objects.
@@ -109,7 +107,6 @@ exports.getInboxes = function (mailboxID, cb) {
  */
 
 /**
- * Callback for creating a inbox.
  * @callback createInboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} inbox New created inbox.
@@ -150,7 +147,6 @@ exports.createInbox = function (mailboxID, title, cb) {
  */
 
 /**
- * Callback for getting a inbox.
  * @callback getInboxCallback
  * @param {Error} err Error object, should be undefined.
  * @param {Object} inbox Inbox object.

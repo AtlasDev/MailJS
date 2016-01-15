@@ -11,6 +11,7 @@ var mailboxController = require('./controllers/mailbox.js');
 var sessionController = require('./controllers/session.js');
 var domainController = require('./controllers/domain.js');
 var inboxController = require('./controllers/inbox.js');
+var transferController = require('./controllers/transfer.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, loginController.postLogin)
@@ -37,7 +38,6 @@ router.route('/user/:user')
 
 router.route('/mailbox')
   .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
-  .patch(authController.isAuthenticated, authController.checkTFA, mailboxController.patchMailbox)
   .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailboxes);
 
 router.route('/mailbox/:mailbox')
@@ -55,9 +55,6 @@ router.route('/inbox/:inbox/:skip')
 router.route('/inbox/:inbox/:skip/:limit')
   .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
 
-router.route('/mailbox/:mailbox/transferable')
-  .post(authController.isAuthenticated, authController.checkTFA, mailboxController.setTransferable);
-
 router.route('/domain')
   .post(authController.isAuthenticated, authController.checkTFA, domainController.postDomain)
   .get(authController.isAuthenticated, authController.checkTFA, domainController.getDomains);
@@ -65,6 +62,13 @@ router.route('/domain')
 router.route('/client')
   .post(authController.isSessionAuthenticated, authController.checkTFA, clientController.postClient)
   .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
+
+router.route('/transfer/:type/:id')
+  .get(authController.isAuthenticated, authController.checkTFA, transferController.find)
+  .post(authController.isAuthenticated, authController.checkTFA, transferController.create);
+
+router.route('/transfer')
+  .post(authController.isAuthenticated, authController.checkTFA, transferController.claim);
 
 /*
 * router.route('/client')

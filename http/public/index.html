@@ -43,7 +43,7 @@
 				<b>Mail</b>JS
 			</div>
 			<div class="login-box-body">
-				<p class="login-box-msg">Welcome <b id="name"></b>! Please fill in your 2fa code to proceed</p>
+				<p class="login-box-msg">Welcome <b class="name"></b>! Please fill in your 2fa code to proceed</p>
                 <div class="alert alert-danger hidden" id="TFAerror">
                     <strong>Login failed: </strong><div id="TFAerrorMsg"></div>
                 </div>
@@ -62,10 +62,13 @@
 			</div>
 			<div class="login-box-body">
 				<p class="login-box-msg">Welcome <b class="name"></b>!</p>
+                <div class="alert alert-info hidden" id="infoSetup">
+                    <strong>Info: </strong><div id="infoSetupMsg"></div>
+                </div>
 				<div class="alert alert-danger hidden" id="setupError">
 					<strong>Creating mailbox failed: </strong><div id="setupErrorMsg"></div>
 				</div>
-				<p>Please fill in the transfer code gain from a sysadmin, you will be send to the inbox when the code has been valididated.</p>
+				<p>Please fill in the transfer code gain from a sysadmin, you will be send to the mailbox when the code has been validated.</p>
 				<form action="#" id="setupTransfer" name="setupTransfer">
 					<div class="form-group has-feedback">
 						<input id="transferCode" type="text" class="form-control" placeholder="Code"/>

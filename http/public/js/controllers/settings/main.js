@@ -74,6 +74,37 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         }
     };
 
+    $scope.sendTransfer = function () {
+        if(!$scope.transferCode || $scope.transferCode === "") {
+            notification.send('Invalid code', 'Fill in a valid code to proceed.', 'error');
+            return;
+        }
+        if(!($scope.transferCode.length == 15 || $scope.transferCode.length == 18 ||  $scope.transferCode.length == 20)) {
+            notification.send('Invalid code', 'Fill in a valid code to proceed.', 'error');
+            return;
+        }
+        $http({
+            method: 'POST',
+            url: '/api/v1/transfer',
+            headers: {
+                'x-token': user.sessionID
+            },
+            data: {
+                'code': $scope.transferCode
+            }
+        }).then(function(res) {
+            notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'success');
+        }, function(res) {
+            if(res.data.error.message) {
+                notification.send('Could not use transfer code', res.data.error.message, 'error');
+                return;
+            } else {
+                notification.send('Could not use transfer code', 'Internal Server Error', 'error');
+                return;
+            }
+        });
+    };
+
     var loadTFA = function () {
         if(user.getUser().tfa === false) {
             $rootScope.isLoading = true;
