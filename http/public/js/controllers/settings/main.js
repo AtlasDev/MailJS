@@ -93,7 +93,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 'code': $scope.transferCode
             }
         }).then(function(res) {
-            notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'error');
+            notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'success');
         }, function(res) {
             if(res.data.error.message) {
                 notification.send('Could not use transfer code', res.data.error.message, 'error');
