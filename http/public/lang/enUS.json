@@ -9,6 +9,7 @@
     "connection": {
         "connected": "Connected",
         "connecting": "Connecting...",
+        "authenticating": "Authenticating...",
         "disconnected": "Disconnected"
     },
     "transfer": {

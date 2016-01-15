@@ -1,4 +1,4 @@
-app.factory('socket', function ($rootScope) {
+app.factory('socket', function ($rootScope, $cookies) {
     var socket = io.connect(document.location.protocol+'//'+document.location.host);
     var status = 0;
 
@@ -6,7 +6,8 @@ app.factory('socket', function ($rootScope) {
     // socketStatusChange
 
     socket.on('connect', function () {
-        status = 2;
+        status = 3;
+        emit('user:auth', {"token": $cookies.get('MailJS')});
         $rootScope.$emit('socketStatusChange');
     });
     socket.on('disconnect', function () {
@@ -15,6 +16,10 @@ app.factory('socket', function ($rootScope) {
     });
     socket.on('reconnecting', function () {
         status = 1;
+        $rootScope.$emit('socketStatusChange');
+    });
+    socket.on('user:auth', function () {
+        status = 2;
         $rootScope.$emit('socketStatusChange');
     });
 

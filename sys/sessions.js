@@ -102,31 +102,5 @@ Sessions.prototype.getSession = function (token, cb) {
    );
 };
 
-Sessions.prototype.socket = function(socket, cb) {
-   var _this = this;
-   if(!socket.handshake.headers.cookie) {
-       return cb(new Error('Authentication error'));
-   }
-   var cookies = socket.handshake.headers.cookie.split('; ');
-   for (var i = 0; i < cookies.length; i++) {
-       if(cookies[i].split('=')[0]=='MailJS') {
-           var token = cookies[i].split('=');
-           if(token[1] && token[1] !== '') {
-               _this.getSession(token[1], function (err, session) {
-                   if(err) { return cb(new Error('Authentication error')); }
-                   user.find(session.id, function (err, user) {
-                       if(err) {
-                           return cb(new Error('Authentication error'));
-                       }
-                       return cb(null, user, token[1]);
-                   });
-               });
-           } else {
-               return cb(new Error('Authentication error'));
-           }
-       }
-   }
-};
-
 module.exports = new Sessions();
 }());

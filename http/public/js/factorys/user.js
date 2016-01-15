@@ -26,10 +26,6 @@ app.factory('user', function ($window, $cookies, $http, $rootScope) {
             $rootScope.$emit('userLoaded');
         }, function(res) {
             $cookies.remove('MailJS');
-            if(res.status == 401) {
-                $window.location.href = '/index.html?msg=Session%20invalid,%20please%20log%20in%20again.';
-                return;
-            }
             if(res.data.error) {
                 $window.location.href = '/index.html?msg='+res.data.error.message;
                 return;
