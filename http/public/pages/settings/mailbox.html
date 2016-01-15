@@ -248,7 +248,7 @@
                                             <tr ng-repeat="transferCode in viewingMailbox.transferCodes | orderBy: '-createdAt'">
                                                 <td class="secret">{{transferCode.code}}</td>
                                                 <td>{{transferCode.createdAt | date : 'H:mm:ss'}}</td>
-                                                <td>{{transferCode.uses}}/{{transferCode.maxUses || -}}</td>
+                                                <td>{{transferCode.uses}}/{{transferCode.maxUses || '-'}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
