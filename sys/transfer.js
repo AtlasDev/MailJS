@@ -135,4 +135,19 @@ exports.findByCode = function (code, cb) {
         });
     });
 };
+
+exports.findByObject = function (objectID, type, cb) {
+    var error;
+    Transfer.find({onject: objectID, type: type} , function (err, codes) {
+        if(err) {
+            return cb(err);
+        }
+        if(!codes) {
+            error = new Error('No codes found.');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+    });
+}
 })();

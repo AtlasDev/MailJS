@@ -64,6 +64,7 @@ router.route('/client')
   .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
 
 router.route('/transfer/:type/:id')
+  .get(authController.isAuthenticated, authController.checkTFA, transferController.find)
   .post(authController.isAuthenticated, authController.checkTFA, transferController.create);
 
 router.route('/transfer')
