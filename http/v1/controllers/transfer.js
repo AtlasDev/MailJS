@@ -98,6 +98,16 @@ exports.find = function (req, res) {
             break;
         case "domain":
             //type = 3;
+            sys.domain.isAdmin(req.params.id, req.user._id, function (err, isAdmin) {
+                if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+                if(isAdmin !== true) {
+                    return res.status(401).json({error: {name: "ENOTADMIN", message: "Not an admin of the given domain."}});
+                }
+                sys.transfer.findByObject(req.params.id, 3, function (err, codes) {
+                    if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+                    return res.json({type: "domain", codes: codes});
+                });
+            });
             break;
         default:
             return res.status(404).json({error: {name: 'EVALIDATION', message: 'Invalid type.'}});

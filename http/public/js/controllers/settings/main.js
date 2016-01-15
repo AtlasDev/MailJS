@@ -73,6 +73,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             }
         }
     };
+
     $scope.sendTransfer = function () {
         if(!$scope.transferCode || $scope.transferCode === "") {
             notification.send('Invalid code', 'Fill in a valid code to proceed.', 'error');
@@ -92,7 +93,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 'code': $scope.transferCode
             }
         }).then(function(res) {
-            console.log(res);
+            notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'error');
         }, function(res) {
             if(res.data.error.message) {
                 notification.send('Could not use transfer code', res.data.error.message, 'error');

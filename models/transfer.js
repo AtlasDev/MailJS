@@ -82,9 +82,6 @@ TransferSchema.methods.use = function(cb) {
         if(isValid === false) {
             return cb(new Error('Code is invalid'));
         }
-        if(self.maxUses === 0) {
-            return cb();
-        }
         self.uses += 1;
         self.save(function (err) {
             if(err) {

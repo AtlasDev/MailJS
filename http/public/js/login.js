@@ -188,7 +188,7 @@ $("#setupTransfer").submit(function(event) {
             .append($("<option></option>")
             .attr("value",data.object._id)
             .text(data.object.domain));
-        showInfo('Domain added, you can now use it!');
+        showSetupInfo('Domain added, you can now use it!');
     });
     request.fail(function(data) {
         showSetupError(JSON.parse(data.responseText).error.message);
@@ -260,6 +260,11 @@ var showSetupError = function showError(msg) {
 var showInfo = function showInfo(msg) {
     $("#infoMsg").text(msg);
     $("#info").removeClass('hidden');
+};
+
+var showSetupInfo = function showInfo(msg) {
+    $("#infoSetupMsg").text(msg);
+    $("#infoSetup").removeClass('hidden');
 };
 
 var get = (function(a) {

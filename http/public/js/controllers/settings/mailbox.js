@@ -5,6 +5,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
     $rootScope.isLoading = true;
     $scope.showDomainCreateForm = false;
     $scope.domains = [];
+    $scope.viewingDomain = {};
     $scope.viewingMailbox = {};
 
     var init = function () {
@@ -77,9 +78,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
             }
         };
         $http(req).then(function(res) {
-            if(res.data.domain.disabled !== true) {
-                $scope.domains.push(res.data.domain);
-            }
+            $scope.domains.push(res.data.domain);
             $rootScope.isLoading = false;
             notification.send('Domain added!', 'Domain has been added to the database.', 'success');
         }, function(res) {
@@ -119,7 +118,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 if($scope.viewingMailbox.users.length == i+1) {
                     if($scope.viewingMailbox.admins.indexOf(user.getUser()._id) == -1) {
                         $rootScope.isLoading = false;
-                        $('#viewModal').modal('show');
+                        $('#viewMailbox').modal('show');
                     } else {
                         var req = {
                             method: 'GET',
@@ -133,13 +132,11 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                                 $scope.viewingMailbox.transferCodes.push(res.data.codes[i]);
                             }
                             $rootScope.isLoading = false;
-                            $('#viewModal').modal('show');
+                            $('#viewMailbox').modal('show');
                         }, function(res) {
                             $rootScope.isLoading = false;
                             notification.send('Cannot load transfer token info!', res.data.error.message, 'error');
                         });
-                        $rootScope.isLoading = false;
-                        $('#viewModal').modal('show');
                     }
                 }
             }
@@ -149,12 +146,63 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         });
     };
 
-    $scope.createTransfer = function (mailbox) {
+    $scope.viewDomain = function (domain) {
+        $rootScope.isLoading = true;
+        $scope.viewingDomain = domain;
+        $scope.viewingDomain.transferCodes = [];
+        var req = {
+            method: 'GET',
+            url: '/api/v1/transfer/domain/'+$scope.viewingDomain._id,
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            if(res.data.codes.length > 0) {
+                for (var i = 0; i < res.data.codes.length; i++) {
+                    $scope.viewingDomain.transferCodes.push(res.data.codes[i]);
+                    if(i == res.data.codes.length - 1) {
+                        $rootScope.isLoading = false;
+                        $('#viewDomain').modal('show');
+                    }
+                }
+            } else {
+                $rootScope.isLoading = false;
+                $('#viewDomain').modal('show');
+            }
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot load transfer token info!', res.data.error.message, 'error');
+        });
+        return;
+    };
+
+    $scope.createDomainTransfer = function (domain) {
+        $rootScope.isLoading = true;
+        var req = {
+            method: 'POST',
+            url: '/api/v1/transfer/domain/'+domain._id,
+            data: { maxUses: $scope.maxDomainTransferUses },
+            headers: {
+                'x-token': user.sessionID
+            }
+        };
+        $http(req).then(function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Transfer code created!', "Code: "+res.data.code.code, 'success');
+            domain.transferCodes.push(res.data.code);
+        }, function(res) {
+            $rootScope.isLoading = false;
+            notification.send('Cannot create transfer code!', res.data.error.message, 'error');
+        });
+    };
+
+    $scope.createMailboxTransfer = function (mailbox) {
         $rootScope.isLoading = true;
         var req = {
             method: 'POST',
             url: '/api/v1/transfer/mailbox/'+mailbox._id,
-            data: { maxUses: $scope.maxTransferUses },
+            data: { maxUses: $scope.maxMailboxTransferUses },
             headers: {
                 'x-token': user.sessionID
             }

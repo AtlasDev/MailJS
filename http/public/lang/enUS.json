@@ -17,7 +17,8 @@
         "placeholder": "Max uses of the code",
         "code": "Code",
         "expires": "Expires at",
-        "uses": "Uses"
+        "uses": "Uses",
+        "nodata": "No transfer codes live!"
     },
     "common": {
         "page": "page",
@@ -127,6 +128,18 @@
                     "create": "Create inbox",
                     "placeholder": "Inbox title"
                 }
+            },
+            "viewDomain": {
+                "information": "Information",
+                "userCount": "User count",
+                "functionDisplay": "Your function",
+                "functions": {
+                    "user": "user",
+                    "admin": "admin"
+                },
+                "users": "Users",
+                "transferCodes": "Transfer codes",
+                "createTransfer": "Create transfer codes"
             }
         },
         "sessions": {

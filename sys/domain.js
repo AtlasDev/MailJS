@@ -168,7 +168,7 @@ exports.addUser = function (domainID, userID, cb) {
             if(err) {
                 return cb(err);
             }
-            sys.util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
+            util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
             return cb(null, domain);
         });
     });

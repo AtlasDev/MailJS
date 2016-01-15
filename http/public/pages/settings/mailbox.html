@@ -50,12 +50,14 @@
                                 <tbody>
                                     <tr>
                                         <th>{{'common.domain' | translate}}</th>
-                                        <th>{{'common.disabled' | translate}}</th>
+                                        <th>{{'common.disabled' | translate | capitalize}}</th>
+                                        <th>{{'common.actions' | translate}}</th>
                                     </tr>
                                     <tr ng-repeat="domain in domains">
                                         <td>{{domain.domain}}</td>
                                         <td ng-if="domain.disabled == true">{{'common.yes' | translate}}</td>
                                         <td ng-if="domain.disabled == false">{{'common.no' | translate}}</td>
+                                        <td><li class="fa fa-eye pointer" ng-click="viewDomain(domain)"></li></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -108,7 +110,7 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="viewMailbox" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -117,68 +119,6 @@
             <div class="modal-body">
                 <div class="col-md-12">
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="box box-danger">
-                                <div class="box-header">
-                                    <h3 class="box-title">{{'common.users' | translate | capitalize}}</h3>
-                                </div>
-                                <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <tbody>
-                                            <tr>
-                                                <th>{{'name' | translate}}</th>
-                                                <th>{{'function' | translate}}</th>
-                                                <th ng-if="viewingMailbox.function > 1">{{'actions' | translate}}</th>
-                                            </tr>
-                                            <tr ng-repeat="mailboxUser in viewingMailbox.users | orderBy: '-function'">
-                                                <td>{{mailboxUser.firstName}} {{mailboxUser.lastName}}</td>
-                                                <td ng-if="mailboxUser.function == 1">{{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}</td>
-                                                <td ng-if="mailboxUser.function == 2" class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</td>
-                                                <td ng-if="mailboxUser.function == 3" class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</td>
-                                                <td ng-if="viewingMailbox.function > 1"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="box box-danger">
-                                <div class="box-header">
-                                    <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.title' | translate | capitalize}}</h3>
-                                </div>
-                                <div class="box-body table-responsive no-padding">
-                                    <table class="table table-hover">
-                                        <tbody>
-                                            <tr>
-                                                <th>{{'common.title' | translate | capitalize}}</th>
-                                                <th>{{'common.editable' | translate | capitalize}}</th>
-                                                <th ng-if="viewingMailbox.function > 1">{{'common.actions' | translate | capitalize}}</th>
-                                            </tr>
-                                            <tr ng-repeat="mailboxInbox in viewingMailbox.inboxes | orderBy: '-function'">
-                                                <td>{{mailboxInbox.name}}</td>
-                                                <td ng-if="mailboxInbox.editable">{{'common.yes' | translate | capitalize}}</td>
-                                                <td ng-if="!mailboxInbox.editable">{{'common.no' | translate | capitalize}}</td>
-                                                <td ng-if="viewingMailbox.function > 1"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="box box-danger" ng-show="viewingMailbox.function != 1">
-                                <div class="box-header">
-                                    <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.create' | translate | capitalize}}</h3>
-                                </div>
-                                <div class="box-body">
-                                    <form role="form" ng-submit="createInbox()">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="inboxTitle" ng-model="inboxTitle" placeholder="{{'settings.mailbox.viewMailbox.inboxes.placeholder' | translate}}" />
-                                        </div>
-                                        <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.inboxes.create' | translate}}</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-md-3">
                             <div class="box box-danger">
                                 <div class="box-header">
@@ -222,12 +162,49 @@
                         <div class="col-md-3">
                             <div class="box box-danger" ng-show="viewingMailbox.function != 1">
                                 <div class="box-header">
+                                    <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.create' | translate | capitalize}}</h3>
+                                </div>
+                                <div class="box-body">
+                                    <form role="form" ng-submit="createInbox()">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="inboxTitle" ng-model="inboxTitle" placeholder="{{'settings.mailbox.viewMailbox.inboxes.placeholder' | translate}}" />
+                                        </div>
+                                        <button type="submit" class="btn btn-danger btn-block">{{'settings.mailbox.viewMailbox.inboxes.create' | translate}}</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">{{'settings.mailbox.viewMailbox.inboxes.title' | translate | capitalize}}</h3>
+                                </div>
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th>{{'common.title' | translate | capitalize}}</th>
+                                                <th>{{'common.editable' | translate | capitalize}}</th>
+                                                <th ng-if="viewingMailbox.function > 1">{{'common.actions' | translate | capitalize}}</th>
+                                            </tr>
+                                            <tr ng-repeat="mailboxInbox in viewingMailbox.inboxes | orderBy: '-function'">
+                                                <td>{{mailboxInbox.name}}</td>
+                                                <td ng-if="mailboxInbox.editable">{{'common.yes' | translate | capitalize}}</td>
+                                                <td ng-if="!mailboxInbox.editable">{{'common.no' | translate | capitalize}}</td>
+                                                <td ng-if="viewingMailbox.function > 1"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box box-danger" ng-show="viewingMailbox.function != 1">
+                                <div class="box-header">
                                     <h3 class="box-title">{{'transfer.create' | translate | capitalize}}</h3>
                                 </div>
                                 <div class="box-body">
-                                    <form role="form" ng-submit="createTransfer(viewingMailbox)">
+                                    <form role="form" ng-submit="createMailboxTransfer(viewingMailbox)">
                                         <div class="form-group">
-                                            <input type="number" class="form-control" id="maxTransferUses" ng-model="maxTransferUses" placeholder="{{'transfer.placeholder' | translate}}" />
+                                            <input type="number" class="form-control" id="maxMailboxTransferUses" ng-model="maxMailboxTransferUses" placeholder="{{'transfer.placeholder' | translate}}" />
                                         </div>
                                         <button type="submit" class="btn btn-danger btn-block">{{'common.create' | translate}}</button>
                                     </form>
@@ -250,12 +227,138 @@
                                                 <td>{{transferCode.createdAt | date : 'H:mm:ss'}}</td>
                                                 <td>{{transferCode.uses}}/{{transferCode.maxUses || '&infin;'}}</td>
                                             </tr>
+                                            <tr ng-hide="viewingMailbox.transferCodes.length">
+                                                <td>{{'transfer.nodata' | translate}}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                     <p ng-show="viewingMailbox.admins.indexOf(user._id) == -1" class="ng-hide">
                                         {{'common.needAdmin' | translate}}
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">{{'common.users' | translate | capitalize}}</h3>
+                                </div>
+                                <div class="box-body table-responsive no-padding">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <th>{{'name' | translate}}</th>
+                                                <th>{{'function' | translate}}</th>
+                                                <th ng-if="viewingMailbox.function > 1">{{'actions' | translate}}</th>
+                                            </tr>
+                                            <tr ng-repeat="mailboxUser in viewingMailbox.users | orderBy: '-function'">
+                                                <td>{{mailboxUser.firstName}} {{mailboxUser.lastName}}</td>
+                                                <td ng-if="mailboxUser.function == 1">{{'settings.mailbox.viewMailbox.functions.user' | translate | capitalize}}</td>
+                                                <td ng-if="mailboxUser.function == 2" class="admin">{{'settings.mailbox.viewMailbox.functions.admin' | translate | capitalize}}</td>
+                                                <td ng-if="mailboxUser.function == 3" class="creator">{{'settings.mailbox.viewMailbox.functions.creator' | translate | capitalize}}</td>
+                                                <td ng-if="viewingMailbox.function > 1"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="viewDomain" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{viewingDomain.domain}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="box box-danger">
+                            <div class="box-header">
+                                <h3 class="box-title">{{'settings.mailbox.viewDomain.information' | translate | capitalize}}</h3>
+                            </div>
+                            <div class="box-body">
+                                <ul class="list-unstyled">
+                                    <li><b>{{'common.title' | translate}}:</b> {{viewingDomain.domain}}</li>
+                                    <li><b>{{'common.id' | translate}}:</b> {{viewingDomain._id}}</li>
+                                    <li ng-if="viewingDomain.admin != user._id">
+                                        <b>{{'settings.mailbox.viewDomain.functionDisplay' | translate}}:</b>
+                                        {{'settings.mailbox.viewDomain.functions.user' | translate | capitalize}}
+                                    </li>
+                                    <li ng-if="viewingDomain.admin == user._id">
+                                        <b>{{'settings.mailbox.viewDomain.functionDisplay' | translate}}:</b>
+                                        <span class="admin">{{'settings.mailbox.viewDomain.functions.admin' | translate | capitalize}}</span>
+                                    </li>
+                                    <li><b>{{'settings.mailbox.viewDomain.userCount' | translate}}:</b> {{viewingDomain.users.length}}</li>
+                                    <li ng-if="viewingDomain.disabled">
+                                        <b>{{'common.disabled' | translate}}:</b>
+                                        <span>{{'common.yes' | translate | capitalize}}</span>
+                                    </li>
+                                    <li ng-if="!viewingDomain.disabled">
+                                        <b>{{'common.disabled' | translate}}:</b>
+                                        <span>{{'common.no' | translate | capitalize}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="box box-danger" ng-show="viewingDomain.admin == user._id">
+                            <div class="box-header">
+                                <h3 class="box-title">{{'transfer.create' | translate | capitalize}}</h3>
+                            </div>
+                            <div class="box-body">
+                                <form role="form" ng-submit="createDomainTransfer(viewingDomain)">
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" id="maxDomainTransferUses" ng-model="maxDomainTransferUses" placeholder="{{'transfer.placeholder' | translate}}" />
+                                    </div>
+                                    <button type="submit" class="btn btn-danger btn-block">{{'common.create' | translate}}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="box box-danger">
+                            <div class="box-header">
+                                <h3 class="box-title">{{'settings.mailbox.viewDomain.users' | translate | capitalize}}</h3>
+                            </div>
+                            <div class="box-body">
+                                test
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="box box-danger">
+                            <div class="box-header">
+                                <h3 class="box-title">{{'settings.mailbox.viewDomain.transferCodes' | translate | capitalize}}</h3>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table table-hover" class="ng-hide" ng-show="viewingDomain.admin == user._id">
+                                    <tbody>
+                                        <tr>
+                                            <th>{{'transfer.code' | translate}}</th>
+                                            <th>{{'transfer.expires' | translate}}</th>
+                                            <th>{{'transfer.uses' | translate}}</th>
+                                        </tr>
+                                        <tr ng-repeat="transferCode in viewingDomain.transferCodes | orderBy: '-createdAt'">
+                                            <td class="secret">{{transferCode.code}}</td>
+                                            <td>{{transferCode.createdAt | date : 'H:mm:ss'}}</td>
+                                            <td>{{transferCode.uses}}/{{transferCode.maxUses || '&infin;'}}</td>
+                                        </tr>
+                                        <tr ng-hide="viewingDomain.transferCodes.length">
+                                            <td>{{'transfer.nodata' | translate}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p ng-show="viewingDomain.admin != user._id" class="ng-hide">
+                                    {{'common.needAdmin' | translate}}
+                                </p>
                             </div>
                         </div>
                     </div>
