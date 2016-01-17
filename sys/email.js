@@ -109,7 +109,7 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
         }
         return cb(null, email);
     });
-}
+};
 
 /**
  * Get emails from a inbox, does not include content
