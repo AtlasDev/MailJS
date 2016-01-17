@@ -35,10 +35,10 @@
 						</tr>
 						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | limitTo:limit:page*limit-limit">
 							<td><input type="checkbox" ng-model="checked" ng-change="select(mail._id)" ng-checked="selected.indexOf(mail.uuid) > -1" /></td>
-							<td class="mailbox-subject"><div ng-class="{bold: !mail.read}">{{mail.subject}}</div></td>
-							<td class="mailbox-preview">{{mail.preview}}</td>
-							<td class="mailbox-name">{{mail.senderDisplay || mail.sender}}</td>
-							<td class="mailbox-date">{{mail.reportedDate | dateFilter}}</td>
+								<td class="mailbox-subject"><a class="noStyle" href="#/mail/{{mail._id}}"><div ng-class="{bold: !mail.read}">{{mail.subject}}</div></a></a></td>
+								<td class="mailbox-preview"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.preview}}</a></td>
+								<td class="mailbox-name"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.senderDisplay || mail.sender}}</a></td>
+								<td class="mailbox-date"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.reportedDate | dateFilter}}</a></td>
 						</tr>
 					</tbody>
 				</table>

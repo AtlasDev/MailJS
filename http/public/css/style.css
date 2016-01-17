@@ -94,3 +94,11 @@ a:hover {
 button.list-group-item {
 	text-align: center !important;
 }
+
+.noStyle {
+	color: #000 !important;
+}
+
+.noStyle:hover {
+	text-decoration: underline;
+}
