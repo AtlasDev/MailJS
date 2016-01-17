@@ -72,7 +72,8 @@ router.route('/transfer')
   .post(authController.isAuthenticated, authController.checkTFA, transferController.claim);
 
 router.route('/email/:id')
-  .get(authController.isAuthenticated, authController.checkTFA, emailController.get);
+  .get(authController.isAuthenticated, authController.checkTFA, emailController.get)
+  .delete(authController.isAuthenticated, authController.checkTFA, emailController.delete);
 
 /*
 * router.route('/client')

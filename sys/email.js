@@ -140,6 +140,7 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
  * @since 0.1.0
  * @version 1
  * @param {MongoID} emailJD The id of the mailbox to get the emails from.
+ * @param {Array|MongoID} mailboxes Array of mailboxes the user has access to.
  * @param {getEmailCallback} callback Callback function after getting the email.
  */
 
@@ -148,7 +149,7 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
  * @param {Error} err Error object, should be undefined or passed trough.
  * @param {Object} email The email object.
  */
-exports.getEmail = function (emailID, cb) {
+exports.getEmail = function (emailID, mailboxes, cb) {
     var error;
     if (!validator.isMongoId(emailID)) {
         error = new Error('Invalid email ID!');
@@ -166,7 +167,61 @@ exports.getEmail = function (emailID, cb) {
             error.type = 400;
             return cb(error);
         }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
         return cb(null, mail);
+    });
+};
+
+/**
+ * Delete a specific email
+ * @name DeleteEmail
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} emailJD The id of the mailbox to be deleted.
+ * @param {Array|MongoID} mailboxes Array of mailboxes the user has access to.
+ * @param {deleteEmailCallback} callback Callback function after deleting the mail.
+ */
+
+/**
+ * @callback deleteEmailCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {Object} email The email object deleted.
+ */
+exports.deleteEmail = function (emailID, mailboxes, cb) {
+    var error;
+    if (!validator.isMongoId(emailID)) {
+        error = new Error('Invalid email ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Email.findById(emailID, function (err, mail) {
+        if(err) {
+            return cb(err);
+        }
+        if(!mail) {
+            error = new Error('Mail not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
+        mail.remove(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, mail);
+        });
     });
 };
 }());

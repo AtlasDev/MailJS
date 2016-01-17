@@ -9,7 +9,7 @@
                 <div class="btn-group">
                     <button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
 					<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
-					<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+    				<button class="btn btn-default" ng-click="deleteMail()"><i class="fa fa-trash-o"></i> {{'common.delete' | translate | capitalize}}</button>
                 </div>
             </div>
             <div class="mailbox-read-message mailContent" ng-bind-html="mail.content"></div>
@@ -62,7 +62,7 @@
             <div class="btn-group">
 				<button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
 				<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
-				<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+				<button class="btn btn-default" ng-click="deleteMail()"><i class="fa fa-trash-o"></i> {{'common.delete' | translate | capitalize}}</button>
 			</div>
         </div>
     </div>

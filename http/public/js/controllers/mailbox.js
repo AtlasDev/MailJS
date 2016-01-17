@@ -8,17 +8,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, $http, 
 	$scope.page = 1;
 	$scope.limit = 40;
 	$scope.mailCount = 0;
-	$scope.selected = [];
 	var currentInbox;
-	$scope.select = function (id) {
-		if($scope.selected.indexOf(id) > -1) {
-			$scope.selected.splice($scope.selected.indexOf(id), 1);
-			return;
-		} else {
-			$scope.selected.push(id);
-			return;
-		}
-	};
 	var getMailPage = function (page, cb) {
 		var req = {
 			method: 'GET',

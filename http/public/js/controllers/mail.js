@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $location, user, $http, notification) {
+app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, user, $http, notification) {
 	$rootScope.isLoading = true;
 	$scope.mail = {};
 
@@ -19,7 +19,26 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $location,
 		}, function(res) {
 			$rootScope.isLoading = false;
 			notification.send('Could not get mail!', res.data.message, 'error');
-			$location.path('#/');
+			$window.location.href = '#';
+		});
+	};
+
+	$scope.deleteMail = function () {
+		$rootScope.isLoading = true;
+		var req = {
+			method: 'DELETE',
+			url: '/api/v1/email/' + $routeParams.uuid,
+			headers: {
+				'x-token': user.sessionID
+			}
+		};
+		$http(req).then(function(res) {
+			$rootScope.isLoading = false;
+			notification.send('Email deleted.', $scope.mail.subject, 'info');
+			$window.location.href = '#/mailbox/'+$scope.mail.inbox;
+		}, function(res) {
+			$rootScope.isLoading = false;
+			notification.send('Could not delete mail!', 'Subject: '+res.data.message, 'error');
 		});
 	};
 
