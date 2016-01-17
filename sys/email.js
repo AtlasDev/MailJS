@@ -6,6 +6,7 @@ var validator = require('validator');
 var inbox = require('./inbox.js');
 var mailbox = require('./mailbox.js');
 var os = require('os');
+var striptags = require('striptags');
 
 /**
  * Create a new email
@@ -69,7 +70,10 @@ exports.create = function (mailboxID, mail, cb) {
         email.sender = mail.from[0].address;
         email.senderDisplay = mail.from[0].name;
         email.subject = mail.subject;
-        email.content = content;
+        email.content = striptags(content, [
+            'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
+            'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
+        ]);
         if(mail.text) {
             email.preview = mail.text.trim().substr(0, 100);
         } else {
