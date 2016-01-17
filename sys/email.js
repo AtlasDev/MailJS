@@ -63,32 +63,53 @@ exports.create = function (mailboxID, mail, cb) {
             error.type = 400;
             return cb(error);
         }
-        var email = new Email();
-        email.inbox = inbox._id;
-        email.mailbox = mailboxID;
-        email.creationDate = new Date();
-        email.reportedDate = mail.receivedDate || new Date();
-        email.sender = mail.from[0].address;
-        email.senderDisplay = mail.from[0].name;
-        email.subject = mail.subject;
-        email.content = striptags(content.trim(), [
-            'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
-            'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
-        ]);
-        if(mail.text) {
-            email.preview = mail.text.trim().substr(0, 100);
-        } else {
-            email.preview = '';
-        }
-        email.receivedBy = os.hostname();
-        email.save(function (err) {
-            if(err) {
-                return cb(err);
+        if(mail.attachments) {
+            mail.attachmentsMeta = [];
+            for (var i = 0; i < mail.attachments.length; i++) {
+                mail.attachmentsMeta[i] = mail.attachments[i];
+                mail.attachmentsMeta[i].content = undefined;
+                if(i == mail.attachments.length - 1) {
+                    createHelper(mail, content, inbox, mailboxID, cb);
+                }
             }
-            return cb(null, email);
-        });
+        } else {
+            createHelper(mail, content, inbox, mailboxID, cb);
+        }
     });
 };
+
+//Helper for the create function
+var createHelper = function (mail, content, inbox, mailboxID, cb) {
+    var email = new Email();
+    email.inbox = inbox._id;
+    email.mailbox = mailboxID;
+    email.creationDate = new Date();
+    email.reportedDate = mail.receivedDate || new Date();
+    email.sender = mail.from[0].address;
+    email.senderDisplay = mail.from[0].name;
+    email.subject = mail.subject;
+    email.content = striptags(content.trim(), [
+        'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
+        'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
+    ]);
+    email.attachments = mail.attachments;
+    email.attachmentsMeta = mail.attachmentsMeta;
+    if(mail.attachments) {
+        email.attachmentsCount = mail.attachments.length;
+    }
+    if(mail.text) {
+        email.preview = mail.text.trim().substr(0, 100);
+    } else {
+        email.preview = '';
+    }
+    email.receivedBy = os.hostname();
+    email.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, email);
+    });
+}
 
 /**
  * Get emails from a inbox, does not include content
@@ -126,11 +147,11 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
         error.type = 400;
         return cb(error);
     }
-    Email.find({inbox: inboxID}).sort('reportedDate').skip(skip).limit(limit).select('-content').exec(function (err, emails) {
+    Email.find({inbox: inboxID}).sort('-reportedDate').skip(skip).limit(limit).select('-content -attachments -attachmentsMeta').exec(function (err, mails) {
         if(err) {
             return cb(err);
         }
-        return cb(null, emails);
+        return cb(null, mails);
     });
 };
 
@@ -157,7 +178,7 @@ exports.getEmail = function (emailID, mailboxes, cb) {
         error.type = 400;
         return cb(error);
     }
-    Email.findById(emailID, function (err, mail) {
+    Email.findById(emailID).select('-attachments').exec(function (err, mail) {
         if(err) {
             return cb(err);
         }
@@ -200,7 +221,7 @@ exports.deleteEmail = function (emailID, mailboxes, cb) {
         error.type = 400;
         return cb(error);
     }
-    Email.findById(emailID, function (err, mail) {
+    Email.findById(emailID).select('-attachments').exec(function (err, mail) {
         if(err) {
             return cb(err);
         }
