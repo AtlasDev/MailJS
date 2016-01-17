@@ -107,3 +107,7 @@ button.list-group-item {
 	margin: 10px;
 	padding-left: 25px !important;
 }
+
+.red {
+	color: rgb(208, 30, 30) !important;
+}
