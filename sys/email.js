@@ -70,7 +70,11 @@ exports.create = function (mailboxID, mail, cb) {
         email.senderDisplay = mail.from[0].name;
         email.subject = mail.subject;
         email.content = content;
-        email.preview = mail.text.trim().substr(0, 100);
+        if(mail.text) {
+            email.preview = mail.text.trim().substr(0, 100);
+        } else {
+            email.preview = '';
+        }
         email.receivedBy = os.hostname();
         email.save(function (err) {
             if(err) {
