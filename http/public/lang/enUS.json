@@ -4,7 +4,8 @@
         "subject": "Subject",
         "preview": "Preview",
         "sender": "From",
-        "date": "Received"
+        "date": "Received",
+        "noEmail": "You are clean!"
     },
     "connection": {
         "connected": "Connected",

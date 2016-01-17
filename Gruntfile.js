@@ -62,6 +62,7 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-translate.min.js',
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
+                    'http/public/js/angular/angular-sanitize.min.js',
                     'http/public/js/other/adminlte.min.js',
 
                     'http/public/js/app.js',
@@ -217,7 +218,8 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: [
-                    'http/public/**/*.js'
+                    'http/public/**/*.js',
+                    'http/public/**/*.css'
                 ],
                 tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:fonts'],
                 options: {
