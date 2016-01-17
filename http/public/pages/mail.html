@@ -2,20 +2,18 @@
     <div class="box box-danger">
         <div class="box-body no-padding">
             <div class="mailbox-read-info">
-                <h3>{{subject}}</h3>
-                <h5>From: {{sender}} <span class="mailbox-read-time pull-right">{{date | date:'HH:mm d MMM yyyy'}}</span></h5>
-            </div><!-- /.mailbox-read-info -->
+                <h3>{{mail.subject}}</h3>
+                <h5>From: {{mail.senderDisplay}} ({{mail.sender}}) <span class="mailbox-read-time pull-right">{{mail.reportedDate | date:'HH:mm d MMM yyyy'}}</span></h5>
+            </div>
             <div class="offset mailbox-controls with-border">
                 <div class="btn-group">
                     <button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
 					<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
 					<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
                 </div>
-            </div><!-- /.mailbox-controls -->
-            <div class="mailbox-read-message">
-                {{content}}
-            </div><!-- /.mailbox-read-message -->
-        </div><!-- /.box-body -->
+            </div>
+            <div class="mailbox-read-message mailContent" ng-bind-html="mail.content"></div>
+        </div>
         <!-- <div class="box-footer">
             <ul class="mailbox-attachments clearfix">
                 <li>
@@ -59,13 +57,13 @@
                     </div>
                 </li>
             </ul>
-        </div><!-- /.box-footer -->
+        </div>-->
         <div class="box-footer">
             <div class="btn-group">
 				<button class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
 				<button class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
 				<button class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
 			</div>
-        </div><!-- /.box-footer -->
-    </div><!-- /. box -->
+        </div>
+    </div>
 </section>

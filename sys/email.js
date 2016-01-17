@@ -65,12 +65,13 @@ exports.create = function (mailboxID, mail, cb) {
         }
         var email = new Email();
         email.inbox = inbox._id;
+        email.mailbox = mailboxID;
         email.creationDate = new Date();
         email.reportedDate = mail.receivedDate || new Date();
         email.sender = mail.from[0].address;
         email.senderDisplay = mail.from[0].name;
         email.subject = mail.subject;
-        email.content = striptags(content, [
+        email.content = striptags(content.trim(), [
             'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
             'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
         ]);
@@ -90,11 +91,11 @@ exports.create = function (mailboxID, mail, cb) {
 };
 
 /**
- * Get emails from a inbox
+ * Get emails from a inbox, does not include content
  * @name getEmails
  * @since 0.1.0
  * @version 1
- * @param {String} mailboxID The id of the mailbox to get the emails from.
+ * @param {MongoID} mailboxID The id of the mailbox to get the emails from.
  * @param {Number} limit Amount to limit the to gain emails.
  * @param {String} skip Skip an amount of emails before returning.
  * @param {getEmailsCallback} callback Callback function after getting the emails.
@@ -130,6 +131,42 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
             return cb(err);
         }
         return cb(null, emails);
+    });
+};
+
+/**
+ * Get an specific email
+ * @name getEmail
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} emailJD The id of the mailbox to get the emails from.
+ * @param {getEmailCallback} callback Callback function after getting the email.
+ */
+
+/**
+ * @callback getEmailCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {Object} email The email object.
+ */
+exports.getEmail = function (emailID, cb) {
+    var error;
+    if (!validator.isMongoId(emailID)) {
+        error = new Error('Invalid email ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Email.findById(emailID, function (err, mail) {
+        if(err) {
+            return cb(err);
+        }
+        if(!mail) {
+            error = new Error('Mail not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        return cb(null, mail);
     });
 };
 }());

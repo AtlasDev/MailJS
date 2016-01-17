@@ -62,6 +62,7 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-translate.min.js',
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
+                    'http/public/js/angular/angular-sanitize.min.js',
                     'http/public/js/other/adminlte.min.js',
 
                     'http/public/js/app.js',

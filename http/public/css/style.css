@@ -102,3 +102,8 @@ button.list-group-item {
 .noStyle:hover {
 	text-decoration: underline;
 }
+
+.mailContent {
+	margin: 10px;
+	padding-left: 25px !important;
+}
