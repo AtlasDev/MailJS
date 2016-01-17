@@ -38,7 +38,27 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, u
 			$window.location.href = '#/mailbox/'+$scope.mail.inbox;
 		}, function(res) {
 			$rootScope.isLoading = false;
-			notification.send('Could not delete mail!', 'Subject: '+res.data.message, 'error');
+			notification.send('Could not delete mail!', 'Subject: '+res.data.error.message, 'error');
+		});
+	};
+
+	$scope.downloadAttachment = function (attachment) {
+		$rootScope.isLoading = true;
+		var req = {
+			method: 'GET',
+			url: '/api/v1/email/' + $routeParams.uuid + '/attachment/' + attachment.contentId,
+			headers: {
+				'x-token': user.sessionID,
+				'Content-Type': undefined,
+				'Accept': attachment.contentType,
+				'Content-Encoding': 'base64'
+			}
+		};
+		$http(req).then(function(res) {
+			$rootScope.isLoading = false;
+		}, function(res) {
+			$rootScope.isLoading = false;
+			notification.send('Could not get attachment!', res.data.error.message, 'error');
 		});
 	};
 

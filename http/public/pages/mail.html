@@ -19,7 +19,7 @@
                             <span class="mailbox-attachment-name"><i class="fa {{getAttachmentType(attachment.contentType)}}"></i> {{attachment.fileName}}</span>
                             <span class="mailbox-attachment-size">
                                 {{attachment.length | bytes}}
-                                <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-download"></i></a>
+                                <a ng-click="downloadAttachment(attachment)" href="" class="btn btn-default btn-xs pull-right"><i class="fa fa-download"></i></a>
                             </span>
                         </div>
                     </li>

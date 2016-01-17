@@ -15,4 +15,13 @@ exports.delete = function (req, res) {
         return res.json({mail: mail});
     });
 };
+
+exports.getAttachment = function (req, res) {
+    sys.email.getAttachment(req.params.attachmentID, req.user.mailboxes, function (err, attachment) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        res.setHeader('Content-Disposition', 'attachment; filename=\"' + attachment.fileName+'\"');
+        res.setHeader('Content-Type', attachment.contentType);
+        res.send(new Buffer(attachment.content, 'base64'));
+    });
+};
 }());

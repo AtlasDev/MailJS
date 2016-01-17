@@ -7,6 +7,7 @@ var inbox = require('./inbox.js');
 var mailbox = require('./mailbox.js');
 var os = require('os');
 var striptags = require('striptags');
+var util = require('./util.js');
 
 /**
  * Create a new email
@@ -65,9 +66,12 @@ exports.create = function (mailboxID, mail, cb) {
         }
         if(mail.attachments) {
             mail.attachmentsMeta = [];
+            mail.attachmentsIDs = [];
             for (var i = 0; i < mail.attachments.length; i++) {
-                mail.attachmentsMeta[i] = mail.attachments[i];
+                mail.attachmentsMeta[i] = util.copyObject(mail.attachments[i]);
                 mail.attachmentsMeta[i].content = undefined;
+                mail.attachments[i].content = mail.attachments[i].content;
+                mail.attachmentsIDs[i] = mail.attachments[i].contentId;
                 if(i == mail.attachments.length - 1) {
                     createHelper(mail, content, inbox, mailboxID, cb);
                 }
@@ -94,6 +98,7 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
     ]);
     email.attachments = mail.attachments;
     email.attachmentsMeta = mail.attachmentsMeta;
+    email.attachmentsIDs = mail.attachmentsIDs;
     if(mail.attachments) {
         email.attachmentsCount = mail.attachments.length;
     }
@@ -243,6 +248,30 @@ exports.deleteEmail = function (emailID, mailboxes, cb) {
             }
             return cb(null, mail);
         });
+    });
+};
+
+exports.getAttachment = function (attachmentID, mailboxes, cb) {
+    var error;
+    Email.find({attachmentsIDs: attachmentID}, function (err, emails) {
+        var mail = emails[0];
+        if(!mail) {
+            error = new Error('Attachment not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
+        for (var i = 0; i < mail.attachments.length; i++) {
+            if(mail.attachments[i].contentId) {
+                return cb(null, mail.attachments[i]);
+            }
+        }
     });
 };
 }());

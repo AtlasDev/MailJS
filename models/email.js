@@ -15,6 +15,7 @@ var EmailSchema  = new mongoose.Schema({
     subject: { type: String, required: true },
     attachmentsCount: { type: Number, default: 0 },
     attachmentsMeta: { type: [], default: [] },
+    attachmentsIDs: { type: [String], default: [] },
     attachments: { type: [], default: [] },
     receivedBy: { type: String, required: true }
 });

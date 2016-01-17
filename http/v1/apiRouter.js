@@ -75,6 +75,9 @@ router.route('/email/:id')
   .get(authController.isAuthenticated, authController.checkTFA, emailController.get)
   .delete(authController.isAuthenticated, authController.checkTFA, emailController.delete);
 
+router.route('/email/:id/attachment/:attachmentID')
+  .get(authController.isAuthenticated, authController.checkTFA, emailController.getAttachment);
+
 /*
 * router.route('/client')
 *   .post(authController.isAuthenticated, clientController.postClients)
