@@ -4,19 +4,16 @@
 var User = require('../../../models/user.js');
 var sys = require('../../../sys/main.js');
 exports.postUser = function(req, res) {
-    sys.perms.checkOauth(req, res, function (err) {
+    if(!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName) {
+        res.status(400).json({error: {name: "EMISSING", message: 'Request data is missing.'}});
+        return;
+    }
+    sys.user.create(req.body.username, req.body.password, req.body.firstName, req.body.lastName, false, function (err, user) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(!req.body.username || !req.body.password || !req.body.firstName || !req.body.lastName) {
-            res.status(400).json({error: {name: "EMISSING", message: 'Request data is missing.'}});
-            return;
-        }
-        sys.user.create(req.body.username, req.body.password, req.body.firstName, req.body.lastName, false, function (err, user) {
-            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            var responseUser = user;
-            responseUser.password = undefined;
-            responseUser.tfaToken = undefined;
-            return res.json({ message: 'User added!', data: user });
-        });
+        var responseUser = user;
+        responseUser.password = undefined;
+        responseUser.tfaToken = undefined;
+        return res.json({ message: 'User added!', data: user });
     });
 };
 
@@ -28,68 +25,58 @@ exports.currentUser = function (req, res) {
 };
 
 exports.getUser = function(req, res) {
-    sys.perms.checkOauth(req, res, function (err) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(req.query.getBy && (req.query.getBy != 'ID' || req.query.getBy != 'username')) {
-            return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
-        }
-        if(req.query.getBy == 'username') {
-            sys.user.findByUsername(req.query.user, function (err, user) {
-                if(err) {
-                    res.status(500).json({error: {name: err.name, message: err.message}});
-                    sys.util.error(err, true);
-                    return;
-                }
-                if(user === false) {
-                    return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
-                }
-                return res.json({user: user});
-            });
-        } else {
-            sys.user.find(req.params.user, function (err, user) {
-                if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-                if(user === false) {
-                    return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
-                }
-                user.username = undefined;
-                user.password = undefined;
-                user.tfaToken = undefined;
-                return res.json({user: user});
-            });
-        }
-    });
+    if(req.query.getBy && (req.query.getBy != 'ID' || req.query.getBy != 'username')) {
+        return res.status(400).json({error: {name: "EINVALID", message: 'Invalid getBy parameter.'}});
+    }
+    if(req.query.getBy == 'username') {
+        sys.user.findByUsername(req.query.user, function (err, user) {
+            if(err) {
+                res.status(500).json({error: {name: err.name, message: err.message}});
+                sys.util.error(err, true);
+                return;
+            }
+            if(user === false) {
+                return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
+            }
+            return res.json({user: user});
+        });
+    } else {
+        sys.user.find(req.params.user, function (err, user) {
+            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+            if(user === false) {
+                return res.status(404).json({error: {name: "ENOTFOUND", message: 'Could not find user.'}});
+            }
+            user.username = undefined;
+            user.password = undefined;
+            user.tfaToken = undefined;
+            return res.json({user: user});
+        });
+    }
 };
 
 exports.getUsers = function(req, res) {
-    sys.perms.checkOauth(req, res, function (err) {
+    if(req.query.limitBy) {
+        if(isNaN(req.query.limitBy)) {
+            return res.status(400).json({error: {name: "EINVALID", message: 'LimitBy should be a number.'}});
+        }
+    }
+    if(req.query.skip) {
+        if(isNaN(req.query.skip)) {
+            res.status(400).json({error: {name: "EINVALID", message: 'Skip should be a number.'}});
+            return;
+        }
+    }
+    sys.user.findAll(req.query.LimitBy, req.query.skip, function (err, users) {
         if (err) {
             res.status(500).json({error: {name: err.name, message: err.message}});
             sys.util.error(err, true);
             return;
         }
-        if(req.query.limitBy) {
-            if(isNaN(req.query.limitBy)) {
-                return res.status(400).json({error: {name: "EINVALID", message: 'LimitBy should be a number.'}});
-            }
-        }
-        if(req.query.skip) {
-            if(isNaN(req.query.skip)) {
-                res.status(400).json({error: {name: "EINVALID", message: 'Skip should be a number.'}});
-                return;
-            }
-        }
-        sys.user.findAll(req.query.LimitBy, req.query.skip, function (err, users) {
-            if (err) {
-                res.status(500).json({error: {name: err.name, message: err.message}});
-                sys.util.error(err, true);
-                return;
-            }
-            users.forEach(function (user) {
-                user.password = undefined;
-                user.tfaToken = undefined;
-            });
-            res.json({users: users});
+        users.forEach(function (user) {
+            user.password = undefined;
+            user.tfaToken = undefined;
         });
+        res.json({users: users});
     });
 };
 

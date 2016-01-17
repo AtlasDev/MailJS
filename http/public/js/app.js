@@ -30,6 +30,10 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/settings/sessions.html',
 			controller  : 'sessionsSettingsCtrl'
 		})
+		.when('/oauthSettings', {
+			templateUrl : 'pages/settings/oauth.html',
+			controller  : 'oauthSettingsCtrl'
+		})
 		.when('/userSettings', {
 			templateUrl : 'pages/settings/users.html',
 			controller  : 'userSettingsCtrl'
