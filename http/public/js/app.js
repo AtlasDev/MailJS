@@ -66,3 +66,18 @@ app.filter('firstLetter', function () {
 		return input.charAt(0);
     };
 });
+
+app.filter('dateFilter', function () {
+    return function (input) {
+		if (!input) {
+			return input;
+		}
+		var now = new Date();
+		input = new Date(input);
+		if(input.getFullYear() == now.getFullYear() && input.getMonth() == now.getMonth() && input.getDate() == now.getDate()) {
+			return input.toLocaleTimeString();
+		} else {
+			return input.toLocaleDateString();
+		}
+    };
+});

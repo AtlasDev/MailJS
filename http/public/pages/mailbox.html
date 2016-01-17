@@ -38,7 +38,7 @@
 							<td class="mailbox-subject"><div ng-class="{bold: !mail.read}">{{mail.subject}}</div></td>
 							<td class="mailbox-preview">{{mail.preview}}</td>
 							<td class="mailbox-name">{{mail.senderDisplay || mail.sender}}</td>
-							<td class="mailbox-date">{{mail.reportedDate | date:'HH:mm d MMM yyyy' || mail.creationDate | date:'HH:mm d MMM yyyy'}}</td>
+							<td class="mailbox-date">{{mail.reportedDate | dateFilter}}</td>
 						</tr>
 					</tbody>
 				</table>

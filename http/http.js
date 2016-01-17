@@ -62,6 +62,13 @@ app.use(function(err, req, res, next) {
 
 socketio(http, app);
 
+app.use('/api/*', function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
+
 app.use('/api/v1', v1apiRouter);
 
 http.listen(config.http.port);

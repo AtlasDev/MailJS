@@ -64,8 +64,8 @@ exports.create = function (mailboxID, mail, cb) {
         }
         var email = new Email();
         email.inbox = inbox._id;
-        email.creationDate = Math.round((new Date()).getTime() / 1000);
-        email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
+        email.creationDate = new Date();
+        email.reportedDate = mail.receivedDate || new Date();
         email.sender = mail.from[0].address;
         email.senderDisplay = mail.from[0].name;
         email.subject = mail.subject;
