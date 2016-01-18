@@ -63,6 +63,7 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
                     'http/public/js/other/adminlte.min.js',
+                    'http/public/js/other/select2.full.min.js',
 
                     'http/public/js/app.js',
                     'http/public/js/controllers/**/*.js',
@@ -200,7 +201,8 @@ module.exports = function (grunt) {
                         'http/public/css/bootstrap3-wysihtml5.min.css',
                         'http/public/css/font-awesome.min.css',
                         'http/public/css/ionicons.min.css',
-                        'http/public/css/AdminLTE.min.css'
+                        'http/public/css/AdminLTE.min.css',
+                        'http/public/css/select2.min.css'
                     ],
                     'http/public/dist/css/login.min.css': [
                         'http/public/css/bootstrap.min.css',
