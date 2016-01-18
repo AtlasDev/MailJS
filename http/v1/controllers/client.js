@@ -3,15 +3,12 @@
 
 var sys = require('../../../sys/main.js');
 exports.postClient = function(req, res) {
-    sys.perms.checkOauth(req, res, function (err) {
+    if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
+        return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
+    }
+    sys.client.create(req.user, req.body.name, req.body.description, req.body.url, req.body.scopes, function (err, client) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
-            return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
-        }
-        sys.client.create(req.user, req.body.name, req.body.description, req.body.url, req.body.scopes, function (err, client) {
-            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            return res.json({ message: 'Client added.', client: client });
-        });
+        return res.json({ message: 'Client added.', client: client });
     });
 };
 
