@@ -21,7 +21,8 @@ exports.getAttachment = function (req, res) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         res.setHeader('Content-Disposition', 'attachment; filename=\"' + attachment.fileName+'\"');
         res.setHeader('Content-Type', attachment.contentType);
-        res.send(new Buffer(attachment.content, 'base64'));
+        res.type(attachment.contentType);
+        res.end(attachment.content.buffer, 'binary');
     });
 };
 }());

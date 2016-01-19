@@ -310,11 +310,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'http/public/img/',
-                    src: [
-                        '**/*.{png,jpg,gif}'
-                    ],
-                    dest: 'http/public/dist/img/'
+                    cwd: 'http/public/',
+                    src: ['**/*.{png,jpg,gif,icon}'],
+                    dest: 'http/public/dist/'
                 }]
             }
         },

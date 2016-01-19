@@ -74,7 +74,6 @@ router.route('/invitation')
   .post(authController.isAuthenticated, authController.checkTFA, invitationController.create);
 
 router.route('/transfer')
-  .post(authController.isAuthenticated, authController.checkTFA, transferController.claim);
   .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.claim);
 
 router.route('/oauth2/authorize')

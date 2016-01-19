@@ -70,7 +70,6 @@ exports.create = function (mailboxID, mail, cb) {
             for (var i = 0; i < mail.attachments.length; i++) {
                 mail.attachmentsMeta[i] = util.copyObject(mail.attachments[i]);
                 mail.attachmentsMeta[i].content = undefined;
-                mail.attachments[i].content = mail.attachments[i].content;
                 mail.attachmentsIDs[i] = mail.attachments[i].contentId;
                 if(i == mail.attachments.length - 1) {
                     createHelper(mail, content, inbox, mailboxID, cb);
