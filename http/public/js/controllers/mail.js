@@ -34,11 +34,11 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, u
 		};
 		$http(req).then(function(res) {
 			$rootScope.isLoading = false;
-			notification.send('Email deleted.', $scope.mail.subject, 'info');
+			notification.send('Email deleted.', '', 'info');
 			$window.location.href = '#/mailbox/'+$scope.mail.inbox;
 		}, function(res) {
 			$rootScope.isLoading = false;
-			notification.send('Could not delete mail!', 'Subject: '+res.data.error.message, 'error');
+			notification.send('Could not delete mail!', res.data.error.message, 'error');
 		});
 	};
 
@@ -49,12 +49,12 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, u
 			url: '/api/v1/email/' + $routeParams.uuid + '/attachment/' + attachment.contentId,
 			headers: {
 				'x-token': user.sessionID,
-				'Content-Type': undefined,
-				'Accept': attachment.contentType,
-				'Content-Encoding': 'base64'
+				'Accept': attachment.contentType
 			}
 		};
 		$http(req).then(function(res) {
+			$rootScope.isLoading = false;
+			var x=window.open('data:'+attachment.contentType+';base64,'+res.data);
 			$rootScope.isLoading = false;
 		}, function(res) {
 			$rootScope.isLoading = false;

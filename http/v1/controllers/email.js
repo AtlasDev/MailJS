@@ -20,9 +20,9 @@ exports.getAttachment = function (req, res) {
     sys.email.getAttachment(req.params.attachmentID, req.user.mailboxes, function (err, attachment) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         res.setHeader('Content-Disposition', 'attachment; filename=\"' + attachment.fileName+'\"');
-        res.setHeader('Content-Type', attachment.contentType);
+        res.setHeader('Content-Transfer-Encoding', 'base64');
         res.type(attachment.contentType);
-        res.end(attachment.content.buffer, 'binary');
+        res.end(attachment.content);
     });
 };
 }());

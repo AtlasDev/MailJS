@@ -51,7 +51,8 @@
         "create": "Create",
         "needAdmin": "You need to be an admin to see this.",
         "name": "Name",
-        "function": "Function"
+        "function": "Function",
+        "empty": "<Empty>"
     },
     "settings": {
         "settings": "settings",

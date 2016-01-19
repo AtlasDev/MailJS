@@ -10,13 +10,13 @@ var EmailSchema  = new mongoose.Schema({
     reportedDate: { type: Date },
     sender: { type: String, required: true },
     senderDisplay: { type: String },
-    content: { type: String, required: true },
-    preview: { type: String, required: true },
-    subject: { type: String, required: true },
+    content: { type: String, default: '' },
+    preview: { type: String, default: '' },
+    subject: { type: String, default: '' },
     attachmentsCount: { type: Number, default: 0 },
     attachmentsMeta: { type: [], default: [] },
     attachmentsIDs: { type: [String], default: [] },
-    attachments: { type: [], default: [] },
+    attachments: { type: Array, default: [] },
     receivedBy: { type: String, required: true }
 });
 

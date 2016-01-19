@@ -31,8 +31,8 @@
 						</tr>
 						<tr ng-repeat="mail in mails | orderBy:orderItem:reverse | limitTo:limit:page*limit-limit">
 							<td><span ng-show="mail.attachmentsCount > 0" class="fa fa-paperclip"></td>
-							<td class="mailbox-subject"><a class="noStyle" href="#/mail/{{mail._id}}"><div ng-class="{bold: !mail.read}">{{mail.subject}}</div></a></a></td>
-							<td class="mailbox-preview"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.preview}}</a></td>
+							<td class="mailbox-subject"><a class="noStyle" href="#/mail/{{mail._id}}"><div ng-class="{bold: !mail.read}">{{mail.subject || 'common.empty' | translate}}</div></a></a></td>
+							<td class="mailbox-preview"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.preview || 'common.empty' | translate}}</a></td>
 							<td class="mailbox-name"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.senderDisplay || mail.sender}}</a></td>
 							<td class="mailbox-date"><a class="noStyle" href="#/mail/{{mail._id}}">{{mail.reportedDate | dateFilter}}</a></td>
 						</tr>

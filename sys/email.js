@@ -41,7 +41,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (typeof mail.subject != "string") {
+    if (mail.subject && typeof mail.subject != "string") {
         error = new Error('Invalid subject!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -68,6 +68,7 @@ exports.create = function (mailboxID, mail, cb) {
             mail.attachmentsMeta = [];
             mail.attachmentsIDs = [];
             for (var i = 0; i < mail.attachments.length; i++) {
+                mail.attachments[i].content = mail.attachments[i].content.toString('base64');
                 mail.attachmentsMeta[i] = util.copyObject(mail.attachments[i]);
                 mail.attachmentsMeta[i].content = undefined;
                 mail.attachmentsIDs[i] = mail.attachments[i].contentId;
@@ -267,7 +268,7 @@ exports.getAttachment = function (attachmentID, mailboxes, cb) {
             return cb(error);
         }
         for (var i = 0; i < mail.attachments.length; i++) {
-            if(mail.attachments[i].contentId) {
+            if(mail.attachments[i].contentId == attachmentID) {
                 return cb(null, mail.attachments[i]);
             }
         }

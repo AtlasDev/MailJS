@@ -2,7 +2,7 @@
     <div class="box box-danger">
         <div class="box-body no-padding">
             <div class="mailbox-read-info">
-                <h3>{{mail.subject}}</h3>
+                <h3>{{mail.subject || 'common.empty' | translate}}</h3>
                 <h5>From: {{mail.senderDisplay}} ({{mail.sender}}) <span class="mailbox-read-time pull-right">{{mail.reportedDate | date:'HH:mm d MMM yyyy'}}</span></h5>
             </div>
             <div class="offset mailbox-controls with-border">
