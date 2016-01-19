@@ -13,6 +13,7 @@ var sessionController = require('./controllers/session.js');
 var domainController = require('./controllers/domain.js');
 var inboxController = require('./controllers/inbox.js');
 var transferController = require('./controllers/transfer.js');
+var emailController = require('./controllers/email.js');
 
 router.route('/login')
   .post(authController.isUserAuthenticated, sys.perms.checkOauth, loginController.postLogin)
@@ -77,5 +78,12 @@ router.route('/oauth2/authorize')
 
 router.route('/oauth2/token')
   .post(authController.isClientAuthenticated, sys.perms.checkOauth, oauth2Controller.token);
+
+router.route('/email/:id')
+  .get(authController.isAuthenticated, authController.checkTFA, emailController.get)
+  .delete(authController.isAuthenticated, authController.checkTFA, emailController.delete);
+
+router.route('/email/:id/attachment/:attachmentID')
+  .get(authController.isAuthenticated, authController.checkTFA, emailController.getAttachment);
 
 module.exports = router;
