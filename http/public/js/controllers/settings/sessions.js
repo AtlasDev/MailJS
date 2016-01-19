@@ -37,7 +37,7 @@ app.controller("sessionsSettingsCtrl", function($rootScope, $scope, $http, user,
                 switch (os.version) {
                     case '7':
                         return 'win7';
-                    case ('10' | '8'):
+                    case ('10' || '8'):
                         return 'win10';
                     default:
                         return 'win';
