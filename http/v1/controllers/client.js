@@ -2,6 +2,8 @@
 'use strict';
 
 var sys = require('../../../sys/main.js');
+var validator = require('validator');
+
 exports.postClient = function(req, res) {
     if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {
         return res.status(400).json({error: {name: "EINVALID", message: 'Invalid parameters.'}});
@@ -21,7 +23,7 @@ exports.getOwnClients = function(req, res) {
         for (var i = 0, len = clients.length; i < len; i++) {
             clients[i].secret = undefined;
         }
-        return res.json({message: 'Clients recieved.', amount: clients.length, clients: clients});
+        return res.json({message: 'Clients recieved.', clients: clients});
     });
 };
 

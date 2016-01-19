@@ -4,7 +4,8 @@
         "subject": "Subject",
         "preview": "Preview",
         "sender": "From",
-        "date": "Received"
+        "date": "Received",
+        "noEmail": "You are clean!"
     },
     "connection": {
         "connected": "Connected",
@@ -155,6 +156,32 @@
                 "reads": "Reads",
                 "writes": "Writes",
                 "TFA": "2FA done"
+            }
+        },
+        "oauth": {
+            "title": "oAuth",
+            "message": "Here you can manage the apps which have access to your account.",
+            "list": {
+                "title": {
+                    "own": "Own apps",
+                    "auth": "Authorized apps"
+                },
+                "name": "Name",
+                "id": "ID",
+                "url": "URL",
+                "description": "Description",
+                "scopes": "Scopes"
+            },
+            "create": {
+                "title": "Create a new app",
+                "name": "Name of the app",
+                "url": "Callback URL",
+                "description": "Description",
+                "submit": "Create the app",
+                "modal": {
+                    "title": "Your client info",
+                    "description": "Your client has been created! use the following information to create oAuth tokens. Write this down, you won't be able to recover these codes!"
+                }
             }
         },
         "user": {

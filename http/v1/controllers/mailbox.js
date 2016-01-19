@@ -28,28 +28,22 @@ exports.postMailbox = function (req, res) {
     if(!req.body.local || !req.body.domain || !req.body.title) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Request data is missing.'}});
     }
-    sys.perms.checkOauth(req, res, function (err) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
         sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, false, function (err, mailbox) {
             if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
             return res.json({mailbox: mailbox});
         });
-    });
 };
 
 exports.getMailbox = function (req, res) {
-    sys.perms.checkOauth(req, res, function (err) {
-        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-        if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
-            if(user.isAdmin) {
-                runGetMailbox(req, res);
-            } else {
-                return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
-            }
-        } else {
+    if(req.user.mailboxes.indexOf(req.params.mailbox) == -1) {
+        if(user.isAdmin) {
             runGetMailbox(req, res);
+        } else {
+            return res.status(404).json({error: {name: 'ENOTFOUND', message: 'Could not find mailbox.'}});
         }
-    });
+    } else {
+        runGetMailbox(req, res);
+    }
 };
 
 function runGetMailbox(req, res) {

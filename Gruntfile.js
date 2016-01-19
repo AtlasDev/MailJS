@@ -62,7 +62,9 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-translate.min.js',
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
+                    'http/public/js/angular/angular-sanitize.min.js',
                     'http/public/js/other/adminlte.min.js',
+                    'http/public/js/other/select2.full.min.js',
 
                     'http/public/js/app.js',
                     'http/public/js/controllers/**/*.js',
@@ -200,7 +202,8 @@ module.exports = function (grunt) {
                         'http/public/css/bootstrap3-wysihtml5.min.css',
                         'http/public/css/font-awesome.min.css',
                         'http/public/css/ionicons.min.css',
-                        'http/public/css/AdminLTE.min.css'
+                        'http/public/css/AdminLTE.min.css',
+                        'http/public/css/select2.min.css'
                     ],
                     'http/public/dist/css/login.min.css': [
                         'http/public/css/bootstrap.min.css',
@@ -217,7 +220,8 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: [
-                    'http/public/**/*.js'
+                    'http/public/**/*.js',
+                    'http/public/**/*.css'
                 ],
                 tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:fonts'],
                 options: {

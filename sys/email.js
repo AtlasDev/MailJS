@@ -6,6 +6,8 @@ var validator = require('validator');
 var inbox = require('./inbox.js');
 var mailbox = require('./mailbox.js');
 var os = require('os');
+var striptags = require('striptags');
+var util = require('./util.js');
 
 /**
  * Create a new email
@@ -62,31 +64,64 @@ exports.create = function (mailboxID, mail, cb) {
             error.type = 400;
             return cb(error);
         }
-        var email = new Email();
-        email.inbox = inbox._id;
-        email.creationDate = Math.round((new Date()).getTime() / 1000);
-        email.reportedDate = Math.round(mail.receivedDate.getTime() / 1000) || Math.round((new Date()).getTime() / 1000);
-        email.sender = mail.from[0].address;
-        email.senderDisplay = mail.from[0].name;
-        email.subject = mail.subject;
-        email.content = content;
-        email.preview = mail.text.trim().substr(0, 100);
-        email.receivedBy = os.hostname();
-        email.save(function (err) {
-            if(err) {
-                return cb(err);
+        if(mail.attachments) {
+            mail.attachmentsMeta = [];
+            mail.attachmentsIDs = [];
+            for (var i = 0; i < mail.attachments.length; i++) {
+                mail.attachmentsMeta[i] = util.copyObject(mail.attachments[i]);
+                mail.attachmentsMeta[i].content = undefined;
+                mail.attachments[i].content = mail.attachments[i].content;
+                mail.attachmentsIDs[i] = mail.attachments[i].contentId;
+                if(i == mail.attachments.length - 1) {
+                    createHelper(mail, content, inbox, mailboxID, cb);
+                }
             }
-            return cb(null, email);
-        });
+        } else {
+            createHelper(mail, content, inbox, mailboxID, cb);
+        }
+    });
+};
+
+//Helper for the create function
+var createHelper = function (mail, content, inbox, mailboxID, cb) {
+    var email = new Email();
+    email.inbox = inbox._id;
+    email.mailbox = mailboxID;
+    email.creationDate = new Date();
+    email.reportedDate = mail.receivedDate || new Date();
+    email.sender = mail.from[0].address;
+    email.senderDisplay = mail.from[0].name;
+    email.subject = mail.subject;
+    email.content = striptags(content.trim(), [
+        'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
+        'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
+    ]);
+    email.attachments = mail.attachments;
+    email.attachmentsMeta = mail.attachmentsMeta;
+    email.attachmentsIDs = mail.attachmentsIDs;
+    if(mail.attachments) {
+        email.attachmentsCount = mail.attachments.length;
+    }
+    if(mail.text) {
+        email.preview = mail.text.trim().substr(0, 100);
+    } else {
+        email.preview = '';
+    }
+    email.receivedBy = os.hostname();
+    email.save(function (err) {
+        if(err) {
+            return cb(err);
+        }
+        return cb(null, email);
     });
 };
 
 /**
- * Get emails from a inbox
+ * Get emails from a inbox, does not include content
  * @name getEmails
  * @since 0.1.0
  * @version 1
- * @param {String} mailboxID The id of the mailbox to get the emails from.
+ * @param {MongoID} mailboxID The id of the mailbox to get the emails from.
  * @param {Number} limit Amount to limit the to gain emails.
  * @param {String} skip Skip an amount of emails before returning.
  * @param {getEmailsCallback} callback Callback function after getting the emails.
@@ -117,11 +152,126 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
         error.type = 400;
         return cb(error);
     }
-    Email.find({inbox: inboxID}).sort('reportedDate').skip(skip).limit(limit).select('-content').exec(function (err, emails) {
+    Email.find({inbox: inboxID}).sort('-reportedDate').skip(skip).limit(limit).select('-content -attachments -attachmentsMeta').exec(function (err, mails) {
         if(err) {
             return cb(err);
         }
-        return cb(null, emails);
+        return cb(null, mails);
+    });
+};
+
+/**
+ * Get an specific email
+ * @name getEmail
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} emailJD The id of the mailbox to get the emails from.
+ * @param {Array|MongoID} mailboxes Array of mailboxes the user has access to.
+ * @param {getEmailCallback} callback Callback function after getting the email.
+ */
+
+/**
+ * @callback getEmailCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {Object} email The email object.
+ */
+exports.getEmail = function (emailID, mailboxes, cb) {
+    var error;
+    if (!validator.isMongoId(emailID)) {
+        error = new Error('Invalid email ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Email.findById(emailID).select('-attachments').exec(function (err, mail) {
+        if(err) {
+            return cb(err);
+        }
+        if(!mail) {
+            error = new Error('Mail not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
+        return cb(null, mail);
+    });
+};
+
+/**
+ * Delete a specific email
+ * @name DeleteEmail
+ * @since 0.1.0
+ * @version 1
+ * @param {MongoID} emailJD The id of the mailbox to be deleted.
+ * @param {Array|MongoID} mailboxes Array of mailboxes the user has access to.
+ * @param {deleteEmailCallback} callback Callback function after deleting the mail.
+ */
+
+/**
+ * @callback deleteEmailCallback
+ * @param {Error} err Error object, should be undefined or passed trough.
+ * @param {Object} email The email object deleted.
+ */
+exports.deleteEmail = function (emailID, mailboxes, cb) {
+    var error;
+    if (!validator.isMongoId(emailID)) {
+        error = new Error('Invalid email ID!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    Email.findById(emailID).select('-attachments').exec(function (err, mail) {
+        if(err) {
+            return cb(err);
+        }
+        if(!mail) {
+            error = new Error('Mail not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
+        mail.remove(function (err) {
+            if(err) {
+                return cb(err);
+            }
+            return cb(null, mail);
+        });
+    });
+};
+
+exports.getAttachment = function (attachmentID, mailboxes, cb) {
+    var error;
+    Email.find({attachmentsIDs: attachmentID}, function (err, emails) {
+        var mail = emails[0];
+        if(!mail) {
+            error = new Error('Attachment not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        if(mailboxes.indexOf(mail.mailbox) == -1) {
+            error = new Error('Permissions denied!');
+            error.name = 'EPERM';
+            error.type = 401;
+            return cb(error);
+        }
+        for (var i = 0; i < mail.attachments.length; i++) {
+            if(mail.attachments[i].contentId) {
+                return cb(null, mail.attachments[i]);
+            }
+        }
     });
 };
 }());
