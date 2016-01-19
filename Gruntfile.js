@@ -223,7 +223,7 @@ module.exports = function (grunt) {
                     'http/public/**/*.js',
                     'http/public/**/*.css'
                 ],
-                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:fonts'],
+                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:favicon', 'copy:fonts'],
                 options: {
                     atBegin: true
                 }
@@ -248,9 +248,9 @@ module.exports = function (grunt) {
             },
             img: {
                 files: [
-                    'http/public/img/**/*.{png,jpg,gif}'
+                    'http/public/img/**/*.{png,jpg,gif,ico}'
                 ],
-                tasks: ['imagemin:public'],
+                tasks: ['imagemin:public', 'copy:favicon'],
                 options: {
                     atBegin: true
                 }
@@ -274,6 +274,10 @@ module.exports = function (grunt) {
                 cwd: 'http/public/fonts/',
                 src: '**',
                 dest: 'http/public/dist/fonts'
+            },
+            favicon: {
+                src: ['http/public/img/favicon.ico'],
+                dest: 'http/public/dist/img/favicon.ico'
             },
             public: {
                 files: [
@@ -310,9 +314,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'http/public/',
-                    src: ['**/*.{png,jpg,gif,icon}'],
-                    dest: 'http/public/dist/'
+                    cwd: 'http/public/img',
+                    src: ['**/*.{png,jpg,gif}'],
+                    dest: 'http/public/dist/img'
                 }]
             }
         },
@@ -409,6 +413,7 @@ module.exports = function (grunt) {
         'uglify:public',
         'uglify:dist',
         'imagemin:public',
+        'copy:favicon',
         'copy:json',
         'copy:fonts',
         'copy:public',
