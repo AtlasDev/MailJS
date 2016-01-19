@@ -1,6 +1,7 @@
 var express = require('express');
 
 var router = express.Router();
+var sys = require('../../sys/main.js');
 var authController = require('./controllers/auth.js');
 var userController = require('./controllers/user.js');
 var loginController = require('./controllers/login.js');
@@ -15,61 +16,68 @@ var transferController = require('./controllers/transfer.js');
 var emailController = require('./controllers/email.js');
 
 router.route('/login')
-  .post(authController.isUserAuthenticated, loginController.postLogin)
-  .delete(authController.isSessionAuthenticated, loginController.deleteLogin)
-  .patch(authController.isSessionAuthenticated, loginController.patchLogin);
+  .post(authController.isUserAuthenticated, sys.perms.checkOauth, loginController.postLogin)
+  .delete(authController.isSessionAuthenticated, sys.perms.checkOauth , loginController.deleteLogin)
+  .patch(authController.isSessionAuthenticated, sys.perms.checkOauth, loginController.patchLogin);
 
 router.route('/user')
-  .post(authController.isAuthenticated, authController.checkTFA, userController.postUser)
-  .get(authController.isAuthenticated, authController.checkTFA, userController.getUsers);
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, userController.postUser)
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, userController.getUsers);
 
 router.route('/2fa')
-  .get(authController.isSessionAuthenticated, authController.checkTFA, tfaController.getTFA)
-  .delete(authController.isSessionAuthenticated, authController.checkTFA, tfaController.deleteTFA)
-  .post(authController.isSessionAuthenticated, authController.checkTFA, tfaController.postTFA);
+  .get(authController.isSessionAuthenticated, sys.perms.checkOauth, authController.checkTFA, tfaController.getTFA)
+  .delete(authController.isSessionAuthenticated, sys.perms.checkOauth, authController.checkTFA, tfaController.deleteTFA)
+  .post(authController.isSessionAuthenticated, sys.perms.checkOauth, authController.checkTFA, tfaController.postTFA);
 
 router.route('/user/current')
-  .get(authController.isAuthenticated, authController.checkTFA, userController.currentUser);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, userController.currentUser);
 
 router.route('/user/session')
-  .get(authController.isAuthenticated, authController.checkTFA, sessionController.getSessions);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, sessionController.getSessions);
 
 router.route('/user/:user')
-  .get(authController.isAuthenticated, authController.checkTFA, userController.getUser);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, userController.getUser);
 
 router.route('/mailbox')
-  .post(authController.isAuthenticated, authController.checkTFA, mailboxController.postMailbox)
-  .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailboxes);
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, mailboxController.postMailbox)
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, mailboxController.getMailboxes);
 
 router.route('/mailbox/:mailbox')
-  .get(authController.isAuthenticated, authController.checkTFA, mailboxController.getMailbox);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, mailboxController.getMailbox);
 
 router.route('/inbox')
-  .post(authController.isAuthenticated, authController.checkTFA, inboxController.postInbox);
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, inboxController.postInbox);
 
 router.route('/inbox/:inbox')
-  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, inboxController.getInbox);
 
 router.route('/inbox/:inbox/:skip')
-  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, inboxController.getInbox);
 
 router.route('/inbox/:inbox/:skip/:limit')
-  .get(authController.isAuthenticated, authController.checkTFA, inboxController.getInbox);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, inboxController.getInbox);
 
 router.route('/domain')
-  .post(authController.isAuthenticated, authController.checkTFA, domainController.postDomain)
-  .get(authController.isAuthenticated, authController.checkTFA, domainController.getDomains);
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, domainController.postDomain)
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, domainController.getDomains);
 
 router.route('/client')
-  .post(authController.isSessionAuthenticated, authController.checkTFA, clientController.postClient)
-  .get(authController.isAuthenticated, authController.checkTFA, clientController.getOwnClients);
+  .post(authController.isSessionAuthenticated, sys.perms.checkOauth, authController.checkTFA, clientController.postClient)
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, clientController.getOwnClients);
 
 router.route('/transfer/:type/:id')
-  .get(authController.isAuthenticated, authController.checkTFA, transferController.find)
-  .post(authController.isAuthenticated, authController.checkTFA, transferController.create);
+  .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.find)
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.create);
 
 router.route('/transfer')
-  .post(authController.isAuthenticated, authController.checkTFA, transferController.claim);
+  .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.claim);
+
+router.route('/oauth2/authorize')
+  .get(authController.isAuthenticated, sys.perms.checkOauth, oauth2Controller.authorization)
+  .post(authController.isAuthenticated, sys.perms.checkOauth, oauth2Controller.decision);
+
+router.route('/oauth2/token')
+  .post(authController.isClientAuthenticated, sys.perms.checkOauth, oauth2Controller.token);
 
 router.route('/email/:id')
   .get(authController.isAuthenticated, authController.checkTFA, emailController.get)
@@ -77,19 +85,5 @@ router.route('/email/:id')
 
 router.route('/email/:id/attachment/:attachmentID')
   .get(authController.isAuthenticated, authController.checkTFA, emailController.getAttachment);
-
-/*
-* router.route('/client')
-*   .post(authController.isAuthenticated, clientController.postClients)
-*   .delete(authController.isAuthenticated, clientController.deleteClients)
-*   .get(authController.isAuthenticated, clientController.getClients);
-*
-* router.route('/oauth2/authorize')
-*   .get(authController.isAuthenticated, oauth2Controller.authorization)
-*   .post(authController.isAuthenticated, oauth2Controller.decision);
-*
-* router.route('/oauth2/token')
-*   .post(authController.isClientAuthenticated, oauth2Controller.token);
-*/
 
 module.exports = router;

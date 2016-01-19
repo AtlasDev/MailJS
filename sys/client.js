@@ -79,7 +79,7 @@ exports.get = function (userID, limitBy, skip, callback) {
         error.type = 400;
         return callback(error);
     }
-    if (!validator.isInt(userID)) {
+    if (!validator.isInt(skip)) {
         error = new Error('Invalid skip value!');
         error.name = 'EVALIDATION';
         error.type = 400;
