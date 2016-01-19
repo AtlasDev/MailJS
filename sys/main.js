@@ -12,6 +12,7 @@ exports.token = require('./token.js');
 exports.sessions = require('./sessions.js');
 exports.email = require('./email.js');
 exports.transfer = require('./transfer.js');
+exports.invitation = require('invitation.js');
 
 exports.redis = require('./redis.js');
 exports.util = require('./util.js');

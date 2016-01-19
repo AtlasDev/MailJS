@@ -13,6 +13,7 @@ var sessionController = require('./controllers/session.js');
 var domainController = require('./controllers/domain.js');
 var inboxController = require('./controllers/inbox.js');
 var transferController = require('./controllers/transfer.js');
+var invitationController = require('./controllers/invitation.js');
 var emailController = require('./controllers/email.js');
 
 router.route('/login')
@@ -69,7 +70,11 @@ router.route('/transfer/:type/:id')
   .get(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.find)
   .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.create);
 
+router.route('/invitation')
+  .post(authController.isAuthenticated, authController.checkTFA, invitationController.create);
+
 router.route('/transfer')
+  .post(authController.isAuthenticated, authController.checkTFA, transferController.claim);
   .post(authController.isAuthenticated, sys.perms.checkOauth, authController.checkTFA, transferController.claim);
 
 router.route('/oauth2/authorize')
