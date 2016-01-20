@@ -19,7 +19,6 @@ exports.postDomain = function (req, res) {
     if(req.user.isAdmin === false) {
         return res.status(403).json({error: {name: 'EPERM', message: 'Permission denied.'}});
     }
-    if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
     var disabled = req.body.disabled || false;
     sys.domain.create(req.body.domain, req.user._id, disabled, function (err, domain) {
         if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});

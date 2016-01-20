@@ -161,8 +161,8 @@ exports.findByMailbox = function (mailboxID, callback) {
  * @param {array} users Found users in a array.
  */
 exports.findAll = function (limitBy, skip, callback) {
-    limitBy = limitBy || 20;
-    skip = skip || 0;
+    limitBy = parseInt(limitBy) || 20;
+    skip = parseInt(skip) || 0;
     var error;
     if (!validator.isInt(limitBy)) {
         error = new Error('Invalid limitBy value!');
