@@ -1,8 +1,9 @@
 (function () {
 'use strict';
 
-var colors = require('colors');
 var cluster = require('cluster');
+
+require('colors');
 
 exports.error = function error(msg, stack, quit) {
 	var name = '';

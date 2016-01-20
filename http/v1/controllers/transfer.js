@@ -2,7 +2,6 @@
 'use strict';
 
 var sys = require('../../../sys/main.js');
-var validator = require('validator');
 
 exports.create = function (req, res) {
     var maxUses = req.body.maxUses || 0;

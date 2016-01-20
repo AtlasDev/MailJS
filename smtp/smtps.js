@@ -5,7 +5,6 @@ var SMTPServer = require('smtp-server').SMTPServer;
 var sys = require('../sys/main.js');
 var config = require('../config.json');
 var lookup = require('dnsbl-lookup');
-var os = require('os');
 var MailParser = require('mailparser').MailParser;
 
 module.exports = function () {

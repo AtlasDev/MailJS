@@ -2,7 +2,6 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var sys = require('../sys/main.js');
 
 var MailboxSchema = new mongoose.Schema({
     address: { type: String, required: true, unique: true },

@@ -40,7 +40,7 @@ sys.util.log('NodeJS ' + process.version, true);
 sys.util.log('V8 engine v' + process.versions.v8, true);
 console.log('');
 
-if(config.configured != true) {
+if(config.configured !== true) {
     sys.util.error('MailJS not configured! Please edit config.json!', null, true)
 }
 
@@ -49,7 +49,7 @@ for(var i = 0; i < os.cpus().length; i++) {
     cluster.fork();
 }
 
-if(config.reportErrors == true) {
+if(config.reportErrors === true) {
     var ravenClient = new raven.Client(config.ravenURL);
     ravenClient.patchGlobal();
     sys.util.log('Raven error logger enabled.', true);

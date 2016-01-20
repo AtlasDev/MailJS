@@ -19,7 +19,7 @@ console.log('NodeJS ' + process.version);
 console.log('V8 engine v' + process.versions.v8);
 console.log('');
 
-if(config.uninstall != true) {
+if(config.uninstall !== true) {
     console.log('Safety switch saved the data!'.red);
     process.exit(0);
 }
