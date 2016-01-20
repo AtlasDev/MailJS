@@ -1,6 +1,6 @@
 {
   "name": "MailJS",
-  "version": "0.1.0-Alpha",
+  "version": "0.1.1-Alpha",
   "description": "A simple mail system",
   "homepage": "https://www.mailjs.net",
   "scripts": {
