@@ -1,6 +1,6 @@
 {
   "name": "MailJS",
-  "version": "0.1.1-Alpha",
+  "version": "0.1.0-Alpha",
   "description": "A simple mail system",
   "homepage": "https://www.mailjs.net",
   "scripts": {
@@ -11,6 +11,11 @@
     "type": "git",
     "url": "https://github.com/AtlasDev/MailJS.git"
   },
+  "bugs": {
+    "url": "https://github.com/AtlasDev/MailJS/issues",
+    "email": "info@mailjs.net"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.14.2",
@@ -20,6 +25,7 @@
     "dnsbl-lookup": "^0.3.3",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
+    "kerberos": "0.0.18",
     "mailparser": "^0.5.3",
     "mongoose": "^4.3.5",
     "oauth2orize": "^1.2.0",
