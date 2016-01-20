@@ -1,11 +1,9 @@
 (function () {
 'use strict';
 
-var config = require('../config.json');
 var RedisSessions = require("redis-sessions");
 var redis = require('./redis.js');
 var user = require('./user.js');
-var mongoose = require('mongoose');
 
 function Sessions() {
    /*jshint validthis: true */

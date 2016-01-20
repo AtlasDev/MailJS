@@ -3,7 +3,6 @@
 
 var Email = require('../models/email.js');
 var validator = require('validator');
-var inbox = require('./inbox.js');
 var mailbox = require('./mailbox.js');
 var os = require('os');
 var striptags = require('striptags');

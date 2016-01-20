@@ -6,7 +6,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var SessionStrategy = require('passport-sessiontoken').Strategy;
-var mongoose = require('mongoose');
 var sys = require('../../../sys/main.js');
 
 passport.serializeUser(function(user, done) {

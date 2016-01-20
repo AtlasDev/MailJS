@@ -11,21 +11,58 @@ module.exports = function (grunt) {
                     'http/public/dist/js/login.min.js': ['http/public/dist/js/login.min.js']
                 },
                 options: {
-                    banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
-                    mangle: false,
-                    screwIE8: true
+                    banner: '/*\n   <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev\n'+
+                        '   Copyright (C) AtlasDev - All Rights Reserved\n'+
+                        '   Unauthorized copying of this file, via any medium is strictly prohibited\n'+
+                        '   Proprietary and confidential\n'+
+                        '   Written by Dany Sluijk <dany@atlasdev.nl>, January 2016\n*/\n',
+                    mangle: true,
+                    screwIE8: true,
+                    compress: {
+                        sequences: true,
+                        properties: true,
+                        conditionals: true,
+                        comparisons: true,
+                        evaluate: true,
+                        booleans: true,
+                        loops: true,
+                        unused: true,
+                        if_return: true,
+                        join_vars: true,
+                        keep_fargs: true,
+                        keep_fnames: true
+                    }
                 }
             },
             dist: {
                 files: [{
                     expand: true,
-                    src: ['**/*.js', '!http/doc/**', '!http/docfiles/**', '!http/public/**', '!node_modules/**', '!builds/**', '!Gruntfile.js'],
+                    src: ['./**/*.js', './http/*.js', './http/v*/*.js', '!./node_modules/**', '!./Gruntfile.js', '!./builds/**', '!./http/public/**', '!./http/doc/**', '!./http/docfiles/**'],
                     dest: 'tmp'
                 }],
                 options: {
-                    banner: '/* <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev*/',
-                    mangle: false,
-                    screwIE8: true
+                    banner: '/*\n   <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev\n'+
+                        '   Copyright (C) AtlasDev - All Rights Reserved\n'+
+                        '   Unauthorized copying of this file, via any medium is strictly prohibited\n'+
+                        '   Proprietary and confidential\n'+
+                        '   Written by Dany Sluijk <dany@atlasdev.nl>, January 2016\n*/\n',
+                    mangle: true,
+                    screwIE8: true,
+                    compress: {
+                        sequences: true,
+                        properties: true,
+                        conditionals: true,
+                        comparisons: true,
+                        evaluate: true,
+                        booleans: true,
+                        loops: true,
+                        unused: true,
+                        if_return: true,
+                        join_vars: true,
+                        warnings: true,
+                        keep_fargs: true,
+                        keep_fnames: true
+                    }
                 }
             }
         },
@@ -260,8 +297,8 @@ module.exports = function (grunt) {
             json: {
                 files: [
                     {
-                        src: 'config.json',
-                        dest: 'tmp/'
+                        src: 'config.default.json',
+                        dest: 'tmp/config.json'
                     },
                     {
                         src: 'package.json',
@@ -284,15 +321,8 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         src: [
-                            'http/*.js',
-                            'http/v**/**',
                             'http/views/**',
-                            'http/public/dist/**',
-                            'http/public/lang/**',
-                            'http/public/pages/**',
-                            'http/public/*.html',
-                            '!http/doc/**',
-                            '!http/docfiles/**'
+                            'http/public/**'
                         ],
                         dest: 'tmp'
                     }

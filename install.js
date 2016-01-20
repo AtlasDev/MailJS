@@ -5,7 +5,7 @@ var pack = require('./package.json');
 var sys = require('./sys/main.js');
 var validator = require('validator');
 
-if(config.noinstall == true) {
+if(config.noinstall === true) {
     process.exit(0);
 }
 

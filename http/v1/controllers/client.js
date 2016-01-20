@@ -2,7 +2,6 @@
 'use strict';
 
 var sys = require('../../../sys/main.js');
-var validator = require('validator');
 
 exports.postClient = function(req, res) {
     if(!req.body.name || !req.body.description || !req.body.scopes || !req.body.url || !(req.body.scopes instanceof Array)) {

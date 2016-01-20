@@ -1,8 +1,8 @@
 (function () {
 'use strict';
 
-var sys = require('../../../sys/main.js');
 var speakeasy = require('speakeasy');
+
 exports.postLogin = function(req, res) {
     req.session.upgrade(req.user._id, 86400, function (err) {
         if(err) {
