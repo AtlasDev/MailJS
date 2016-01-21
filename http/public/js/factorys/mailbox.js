@@ -37,6 +37,11 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
         for(var i = 0; i<mailboxes.length; i++) {
             if(mailboxes[i]._id == id) {
                 current = mailboxes[i];
+                for (var j = 0; j < current.inboxes.length; j++) {
+                    if(current.inboxes[j].type == "Inbox") {
+                        $location.path("/mailbox/"+current.inboxes[j]._id);
+                    }
+                }
                 $rootScope.$emit('currentMailboxChange', current);
                 break;
             }
