@@ -22,11 +22,11 @@
         ]
     },
     "db": {
-        "host": "db1.xenon.atlasdev.nl",
+        "host": "localhost",
         "port": 27017,
         "database": "mailjs",
-        "username": "mailjs",
-        "password": "MailJS"
+        "username": "",
+        "password": ""
     },
     "redis": {
         "host": "localhost",
