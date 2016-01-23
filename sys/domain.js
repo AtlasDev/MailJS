@@ -4,6 +4,7 @@
 var Domain = require('../models/domain.js');
 var util = require('./util.js');
 var validator = require('validator');
+var redis = require('./redis.js');
 
 /**
  * Create a new domain.
@@ -21,7 +22,6 @@ var validator = require('validator');
  * @param {Object} newDomain Domain object of the created domain.
  */
 exports.create = function (domain, admin, disabled, callback) {
-    //TODO: generate and save certificates for the domain (when Let's Encrypt for nodejs gets released).
     //TODO: handle dubble domains nicer
     var error;
     if(!validator.isBoolean(disabled)) {
@@ -30,12 +30,11 @@ exports.create = function (domain, admin, disabled, callback) {
         error.type = 400;
         return callback(error);
     }
-    var domainRegex = new RegExp(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
-    if(!domainRegex.test(domain) || domain.length >= 265) {
-        error = new Error('Invalid domain!');
+    if(!validator.isFQDN(domain)) {
+        error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     var newDomain = new Domain({
         domain: domain,
@@ -173,4 +172,57 @@ exports.addUser = function (domainID, userID, cb) {
         });
     });
 };
+
+/**
+ * Generate a trusted certificate with Lets Encrypt, adds mail. subdomain.
+ * @name createCert
+ * @since 0.1.1
+ * @version 1
+ * @param {String} domain Domain to generate the certificate for
+ * @param {createCertCallback} cb Callback function after creating the domain.
+ */
+
+/**
+ * @callback createCertCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} cert Object containing the (re)generated certificate.
+ * @param {String} key Private key of the certificate.
+ * @param {String} caCert CA certificate.
+ * @param {String} accountKey account key of the domain.
+ */
+exports.createCert = function (domain, cb) {
+    var error;
+    var letiny = require('letiny');
+    if(!validator.isFQDN(domain)) {
+        error = new Error('Domain not an FQDN!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    redis.get("certs:"+domain, function (err, reply) {
+        if(err) {
+            return cb(err);
+        }
+        if(reply == "") {
+            letiny.getCert({
+                email: 'info@'+domain,
+                domains: [domain, 'mail.'+domain],
+                webroot: '../http/LE',
+                agreeTerms: true
+            }, function(err, cert, key, caCert, accountKey) {
+                util.log('Certificate for `'+domain+'` generated.');
+                console.log(err || cert+'\n'+key+'\n'+caCert);
+                console.log(accountKey);
+            });
+        } else {
+            //refresh certs
+            var oldCert;
+            try {
+                oldCert = JSON.parse
+            } catch (e) {
+                util.error('Invalid JSON.', e);
+            }
+        }
+    });
+}
 }());

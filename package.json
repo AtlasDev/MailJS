@@ -1,7 +1,7 @@
 {
   "name": "MailJS",
   "version": "0.1.1-Alpha",
-  "description": "A simple mail system",
+  "description": "Redefine your mail.",
   "homepage": "https://www.mailjs.net",
   "scripts": {
     "start": "node app.js",
