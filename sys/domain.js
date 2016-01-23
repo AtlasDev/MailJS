@@ -192,6 +192,7 @@ exports.addUser = function (domainID, userID, cb) {
  */
 exports.createCert = function (domain, cb) {
     var error;
+    var cert;
     var letiny = require('letiny');
     if(!validator.isFQDN(domain)) {
         error = new Error('Domain not an FQDN!');
@@ -210,18 +211,41 @@ exports.createCert = function (domain, cb) {
                 webroot: '../http/LE',
                 agreeTerms: true
             }, function(err, cert, key, caCert, accountKey) {
-                util.log('Certificate for `'+domain+'` generated.');
-                console.log(err || cert+'\n'+key+'\n'+caCert);
-                console.log(accountKey);
+                if(err) {
+                    return cb(err);
+                }
+                var cert = {
+                    cert: cert,
+                    key: key,
+                    caCert: caCert,
+                    accountKey: accountKey
+                };
+                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    util.log('Certificate for `'+domain+'` generated.');
+                    console.log(err || cert);
+                });
             });
         } else {
             //refresh certs
             var oldCert;
             try {
-                oldCert = JSON.parse
+                oldCert = JSON.parse;
             } catch (e) {
                 util.error('Invalid JSON.', e);
             }
+            letiny.getCert({
+                email: 'info@'+domain,
+                domains: [domain, 'mail.'+domain],
+                webroot: '../http/LE',
+                agreeTerms: true,
+                accountKey: oldCert.accountKey,
+                privateKey: oldCert.key
+            }, function (err, cert, key, caCert, accountKey) {
+
+            });
         }
     });
 }
