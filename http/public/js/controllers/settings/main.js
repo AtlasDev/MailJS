@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification, user, $cookies) {
+app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $http, $window, notification, user, $cookies, mailbox) {
     $rootScope.isLoading = false;
     $scope.lang = $translate.use();
     $scope.notifyTimeout = parseInt(notification.notifyTimeout/1000);
@@ -75,6 +75,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
     };
 
     $scope.sendTransfer = function () {
+        $rootScope.isLoading = true;
         if(!$scope.transferCode || $scope.transferCode === "") {
             notification.send('Invalid code', 'Fill in a valid code to proceed.', 'error');
             return;
@@ -93,8 +94,13 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                 'code': $scope.transferCode
             }
         }).then(function(res) {
+            $rootScope.isLoading = false;
+            if(res.data.type == "mailbox") {
+                mailbox.addMailbox(res.data.object);
+            }
             notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'success');
         }, function(res) {
+            $rootScope.isLoading = false;
             if(res.data.error.message) {
                 notification.send('Could not use transfer code', res.data.error.message, 'error');
                 return;
