@@ -21,14 +21,14 @@ var redis = require('./redis.js');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} newDomain Domain object of the created domain.
  */
-exports.create = function (domain, admin, disabled, callback) {
+exports.create = function (domain, admin, disabled, cb) {
     //TODO: handle dubble domains nicer
     var error;
     if(!validator.isBoolean(disabled)) {
         error = new Error('Disabled is not a boolean!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     if(!validator.isFQDN(domain)) {
         error = new Error('Domain not an FQDN!');
@@ -42,12 +42,17 @@ exports.create = function (domain, admin, disabled, callback) {
         admin: admin,
         users: [admin]
     });
-    newDomain.save(function(err) {
-        if (err) {
-            return callback(err, null);
+    exports.createCert(domain, function (err) {
+        if(err) {
+            return cb(err);
         }
-        util.log('Domain `'+newDomain.domain+'` created.');
-        return callback(null, newDomain);
+        newDomain.save(function(err) {
+            if (err) {
+                return cb(err, null);
+            }
+            util.log('Domain `'+newDomain.domain+'` created.');
+            return cb(null, newDomain);
+        });
     });
 };
 
@@ -204,17 +209,17 @@ exports.createCert = function (domain, cb) {
         if(err) {
             return cb(err);
         }
-        if(reply == "") {
+        if(!reply) {
             letiny.getCert({
                 email: 'info@'+domain,
                 domains: [domain, 'mail.'+domain],
-                webroot: '../http/LE',
+                webroot: './http/LE',
                 agreeTerms: true
             }, function(err, cert, key, caCert, accountKey) {
                 if(err) {
                     return cb(err);
                 }
-                var cert = {
+                cert = {
                     cert: cert,
                     key: key,
                     caCert: caCert,
@@ -239,12 +244,27 @@ exports.createCert = function (domain, cb) {
             letiny.getCert({
                 email: 'info@'+domain,
                 domains: [domain, 'mail.'+domain],
-                webroot: '../http/LE',
+                webroot: './http/LE',
                 agreeTerms: true,
                 accountKey: oldCert.accountKey,
                 privateKey: oldCert.key
             }, function (err, cert, key, caCert, accountKey) {
-
+                if(err) {
+                    return cb(err);
+                }
+                cert = {
+                    cert: cert,
+                    key: key,
+                    caCert: caCert,
+                    accountKey: accountKey
+                };
+                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    util.log('Certificate for `'+domain+'` refreshed.');
+                    console.log(err || cert);
+                });
             });
         }
     });

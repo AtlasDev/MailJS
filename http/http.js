@@ -24,6 +24,8 @@ require('ejs');
 var app = express();
 var http = require('http').Server(app);
 
+app.use('/', express.static(__dirname + '/LE'));
+
 if(config.servePublic !== false) {
     app.use(express.static(__dirname + '/public'));
 }
