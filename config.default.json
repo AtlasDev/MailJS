@@ -5,14 +5,14 @@
     "uninstall": false,
     "maxExits": 10,
     "servePublic": true,
-    "sessions": {
-        "cleanerInterval": 5,
-        "timeout": 180
-    },
+    "stagingCerts": false,
     "ravenURL": "https://cd0fa88eb40b4ecb877d00de8020b8eb:72d01c0491014645b0e63ae29bdea40a@app.getsentry.com/50149",
     "reportErrors": true,
     "http": {
         "port": 80
+    },
+    "https": {
+        "port": 443
     },
     "smtp": {
         "submission": 25,
