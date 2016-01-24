@@ -11,7 +11,21 @@ module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
     //Emails are stored in the database to be opened by there owner.
     var smtp = new SMTPServer({
-        secure: false,
+        secure: true,
+        SNICallback: function (domain, cb) {
+            sys.domain.getCert(domain, function (err, cert) {
+                if(err) {
+                    return cb(err);
+                }
+                var context = tls.createSecureContext({
+                    key: cert.key,
+                    cert: cert.cert + '\n' + cert.caCert,
+                    honorCipherOrder: true
+                });
+                return cb(null, context);
+            });
+        },
+        honorCipherOrder: true,
         banner: 'MailJS ESMTPS service, welcome.',
         authMethods: [],
         disabledCommands: ['AUTH'],

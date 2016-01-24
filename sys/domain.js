@@ -200,13 +200,14 @@ exports.addUser = function (domainID, userID, cb) {
 exports.createCert = function (domain, cb) {
     var error;
     var cert;
-    var options
+    var options;
     if(!validator.isFQDN(domain)) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
+    domain = domain.toLowerCase().trim();
     redis.get("certs:"+domain, function (err, reply) {
         if(err) {
             return cb(err);
@@ -217,8 +218,8 @@ exports.createCert = function (domain, cb) {
                 domains: [domain, 'mail.'+domain],
                 webroot: './http/LE',
                 agreeTerms: true
-            }
-            if(config.stagingCerts == true) {
+            };
+            if(config.stagingCerts === true) {
                 options.url = 'https://acme-staging.api.letsencrypt.org';
             }
             letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
@@ -263,7 +264,7 @@ exports.createCert = function (domain, cb) {
                 accountKey: oldCert.accountKey,
                 privateKey: oldCert.key
             };
-            if(config.stagingCerts == true) {
+            if(config.stagingCerts === true) {
                 options.url = 'https://acme-staging.api.letsencrypt.org';
             }
             letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
@@ -304,7 +305,7 @@ exports.createCert = function (domain, cb) {
  */
 exports.getCert = function (domain, cb) {
     var error;
-    domain = domain.replace(/^(mail\.)/,"");
+    domain = domain.replace(/^(mail\.)/,"").toLowerCase().trim();
     if(!validator.isFQDN(domain)) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';

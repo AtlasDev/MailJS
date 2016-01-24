@@ -71,7 +71,7 @@ httpsApp.use(function(req, res, next) {
 httpApp.use('/', express.static(__dirname + '/LE'));
 
 httpApp.use('*', function (req, res, next) {
-    return res.redirect('https://'+req.headers['host']+req.url)
+    return res.redirect('https://'+req.headers.host+req.url);
 });
 
 if(config.servePublic !== false) {
