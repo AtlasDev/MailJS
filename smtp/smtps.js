@@ -6,6 +6,7 @@ var sys = require('../sys/main.js');
 var config = require('../config.json');
 var lookup = require('dnsbl-lookup');
 var MailParser = require('mailparser').MailParser;
+var tls = require('tls');
 
 module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
@@ -25,6 +26,24 @@ module.exports = function () {
                 return cb(null, context);
             });
         },
+        ciphers: [
+            "ECDHE-RSA-AES256-SHA384",
+            "DHE-RSA-AES256-SHA384",
+            "ECDHE-RSA-AES256-SHA256",
+            "DHE-RSA-AES256-SHA256",
+            "ECDHE-RSA-AES128-SHA256",
+            "DHE-RSA-AES128-SHA256",
+            "HIGH",
+            "!aNULL",
+            "!eNULL",
+            "!EXPORT",
+            "!DES",
+            "!RC4",
+            "!MD5",
+            "!PSK",
+            "!SRP",
+            "!CAMELLIA"
+        ].join(':'),
         honorCipherOrder: true,
         banner: 'MailJS ESMTPS service, welcome.',
         authMethods: [],
