@@ -4,6 +4,12 @@
 var Domain = require('../models/domain.js');
 var util = require('./util.js');
 var validator = require('validator');
+var redis = require('./redis.js');
+var letiny = require('letiny');
+var config = require('../config.json');
+
+//Preload CA file
+var ca = require('fs').readFileSync('./sys/ca.pem', 'utf8');
 
 /**
  * Create a new domain.
@@ -20,22 +26,20 @@ var validator = require('validator');
  * @param {Error} err Error object, should be undefined.
  * @param {Object} newDomain Domain object of the created domain.
  */
-exports.create = function (domain, admin, disabled, callback) {
-    //TODO: generate and save certificates for the domain (when Let's Encrypt for nodejs gets released).
+exports.create = function (domain, admin, disabled, cb) {
     //TODO: handle dubble domains nicer
     var error;
     if(!validator.isBoolean(disabled)) {
         error = new Error('Disabled is not a boolean!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
-    var domainRegex = new RegExp(/[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})$/i);
-    if(!domainRegex.test(domain) || domain.length >= 265) {
-        error = new Error('Invalid domain!');
+    if(!validator.isFQDN(domain)) {
+        error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
-        return callback(error);
+        return cb(error);
     }
     var newDomain = new Domain({
         domain: domain,
@@ -43,12 +47,17 @@ exports.create = function (domain, admin, disabled, callback) {
         admin: admin,
         users: [admin]
     });
-    newDomain.save(function(err) {
-        if (err) {
-            return callback(err, null);
+    exports.createCert(domain, function (err) {
+        if(err) {
+            return cb(err);
         }
-        util.log('Domain `'+newDomain.domain+'` created.');
-        return callback(null, newDomain);
+        newDomain.save(function(err) {
+            if (err) {
+                return cb(err, null);
+            }
+            util.log('Domain `'+newDomain.domain+'` created.');
+            return cb(null, newDomain);
+        });
     });
 };
 
@@ -171,6 +180,168 @@ exports.addUser = function (domainID, userID, cb) {
             util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
             return cb(null, domain);
         });
+    });
+};
+
+/**
+ * Generate a trusted certificate with Lets Encrypt, adds mail. subdomain.
+ * @name createCert
+ * @since 0.1.1
+ * @version 1
+ * @param {String} domain Domain to generate the certificate for
+ * @param {createCertCallback} cb Callback function after creating the domain.
+ */
+
+/**
+ * @callback createCertCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} cert Object containing the (re)generated certificate.
+ */
+exports.createCert = function (domain, cb) {
+    var error;
+    var cert;
+    var options;
+    if(!validator.isFQDN(domain)) {
+        error = new Error('Domain not an FQDN!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    domain = domain.toLowerCase().trim();
+    redis.get("certs:"+domain, function (err, reply) {
+        if(err) {
+            return cb(err);
+        }
+        if(!reply) {
+            options = {
+                email: 'info@'+domain,
+                domains: [domain, 'mail.'+domain],
+                webroot: './http/LE',
+                agreeTerms: true
+            };
+            if(config.stagingCerts === true) {
+                options.url = 'https://acme-staging.api.letsencrypt.org';
+            }
+            letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
+                if(err) {
+                    return cb(err);
+                }
+                cert = {
+                    cert: cert,
+                    key: key,
+                    caCert: caCert,
+                    accountKey: accountKey
+                };
+                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    util.log('Certificate for `'+domain+'` generated.');
+                    return cb(null, cert);
+                });
+            });
+        } else {
+            //refresh certs
+            var oldCert;
+            try {
+                oldCert = JSON.parse(reply);
+            } catch (e) {
+                return cb(e);
+            }
+            var oneMonth = new Date();
+            oneMonth.setDate(oneMonth.getMonth()+1);
+            if(letiny.getExpirationDate(oldCert.cert).getTime() < oneMonth.getTime()) {
+                error = new Error('Domain has over 1 month of life!');
+                error.name = 'ENOTEXPIRED';
+                error.type = 400;
+                return cb(error);
+            }
+            options = {
+                email: 'info@'+domain,
+                domains: [domain, 'mail.'+domain],
+                webroot: './http/LE',
+                agreeTerms: true,
+                accountKey: oldCert.accountKey,
+                privateKey: oldCert.key
+            };
+            if(config.stagingCerts === true) {
+                options.url = 'https://acme-staging.api.letsencrypt.org';
+            }
+            letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
+                if(err) {
+                    return cb(err);
+                }
+                cert = {
+                    cert: cert,
+                    key: key,
+                    caCert: caCert,
+                    accountKey: accountKey
+                };
+                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    util.log('Certificate for `'+domain+'` refreshed.');
+                    return cb(null, cert);
+                });
+            });
+        }
+    });
+};
+
+/**
+ * Get a certificate
+ * @name getCert
+ * @since 0.1.1
+ * @version 1
+ * @param {String} domain Domain to get the cert for.
+ * @param {getCertCallback} cb Callback function after getting the cert.
+ */
+
+/**
+ * @callback getCertCallback
+ * @param {Error} err Error object, should be undefined.
+ * @param {Object} cert Object containing the certificate.
+ */
+exports.getCert = function (domain, cb) {
+    var error;
+    domain = domain.replace(/^(mail\.)/,"").toLowerCase().trim();
+    if(!validator.isFQDN(domain)) {
+        error = new Error('Domain not an FQDN!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
+    redis.get("certs:"+domain, function (err, reply) {
+        if(err) {
+            return cb(err);
+        }
+        if(!reply) {
+            error = new Error('Certificate not found!');
+            error.name = 'ENOTFOUND';
+            error.type = 400;
+            return cb(error);
+        }
+        var cert;
+        try {
+            cert = JSON.parse(reply);
+        } catch (e) {
+            return cb(e);
+        }
+        var oneMonth = new Date();
+        oneMonth.setDate(oneMonth.getMonth()+1);
+        if(letiny.getExpirationDate(cert.cert).getTime() <= new Date().getTime()) {
+            exports.createCert(domain, function (err, cert) {
+                if(err) {
+                    return cb(err);
+                }
+                cert.caCert = ca;
+                return cb(null, cert);
+            });
+        } else {
+            cert.caCert = ca;
+            return cb(null, cert);
+        }
     });
 };
 }());

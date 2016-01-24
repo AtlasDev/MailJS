@@ -18,19 +18,69 @@ var v1apiRouter = require('./v1/apiRouter.js');
 var socketio = require('./socketio.js');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
+var tls = require('tls');
 
 require('ejs');
 
-var app = express();
-var http = require('http').Server(app);
+var httpApp = express();
+var httpsApp = express();
+var http = require('http').createServer(httpApp);
+var https = require('https').createServer({
+    SNICallback: function (domain, cb) {
+        sys.domain.getCert(domain, function (err, cert) {
+            if(err) {
+                return cb(err);
+            }
+            var context = tls.createSecureContext({
+                key: cert.key,
+                cert: cert.cert + '\n' + cert.caCert,
+                honorCipherOrder: true
+            });
+            return cb(null, context);
+        });
+    },
+    ciphers: [
+        "ECDHE-RSA-AES256-SHA384",
+        "DHE-RSA-AES256-SHA384",
+        "ECDHE-RSA-AES256-SHA256",
+        "DHE-RSA-AES256-SHA256",
+        "ECDHE-RSA-AES128-SHA256",
+        "DHE-RSA-AES128-SHA256",
+        "HIGH",
+        "!aNULL",
+        "!eNULL",
+        "!EXPORT",
+        "!DES",
+        "!RC4",
+        "!MD5",
+        "!PSK",
+        "!SRP",
+        "!CAMELLIA"
+    ].join(':'),
+    honorCipherOrder: true
+}, httpsApp);
+
+httpsApp.use(function(req, res, next) {
+    res.set('Strict-Transport-Security', 'max-age=31536000');
+    res.set('X-Powered-By', 'MailJS');
+    res.set('X-Frame-Options', 'DENY');
+    res.set('Content-Security-Policy', 'style-src \'unsafe-inline\' \'self\'; default-src \'self\'');
+    next();
+});
+
+httpApp.use('/', express.static(__dirname + '/LE'));
+
+httpApp.use('*', function (req, res, next) {
+    return res.redirect('https://'+req.headers.host+req.url);
+});
 
 if(config.servePublic !== false) {
-    app.use(express.static(__dirname + '/public'));
+    httpsApp.use(express.static(__dirname + '/public'));
 }
 
-app.use(express.query());
-app.use(cookieParser());
-app.use(redisSessions({
+httpsApp.use(express.query());
+httpsApp.use(cookieParser());
+httpsApp.use(redisSessions({
     app: "MailJS",
     namespace: 'sess',
     host: config.redis.host,
@@ -40,17 +90,17 @@ app.use(redisSessions({
     }
 }));
 
-app.set('view engine', 'ejs');
-app.set('views',__dirname + '/views');
+httpsApp.set('view engine', 'ejs');
+httpsApp.set('views',__dirname + '/views');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+httpsApp.use(bodyParser.json());
+httpsApp.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use(passport.initialize());
+httpsApp.use(passport.initialize());
 
-app.use(function(err, req, res, next) {
+httpsApp.use(function(err, req, res, next) {
     if(err.name == 'SyntaxError') {
         return res.status(400).json({error: {
             name: 'EINVALID',
@@ -61,19 +111,21 @@ app.use(function(err, req, res, next) {
     res.status(500).send('Internal Server Error');
 });
 
-socketio(http, app);
+socketio(https, httpsApp);
 
-app.use('/api/*', function (req, res, next) {
+httpsApp.use('/api/*', function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
     next();
 });
 
-app.use('/api/v1', v1apiRouter);
+httpsApp.use('/api/v1', v1apiRouter);
 
-http.listen(config.http.port);
+http.listen(config.http.port, config.http.host);
+https.listen(config.https.port, config.https.host);
 sys.util.log('HTTP server started at port '+config.http.port, true);
+sys.util.log('HTTPS server started at port '+config.https.port, true);
 
 };
 

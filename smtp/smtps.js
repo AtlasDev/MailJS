@@ -6,12 +6,45 @@ var sys = require('../sys/main.js');
 var config = require('../config.json');
 var lookup = require('dnsbl-lookup');
 var MailParser = require('mailparser').MailParser;
+var tls = require('tls');
 
 module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
     //Emails are stored in the database to be opened by there owner.
     var smtp = new SMTPServer({
-        secure: false,
+        secure: true,
+        SNICallback: function (domain, cb) {
+            sys.domain.getCert(domain, function (err, cert) {
+                if(err) {
+                    return cb(err);
+                }
+                var context = tls.createSecureContext({
+                    key: cert.key,
+                    cert: cert.cert + '\n' + cert.caCert,
+                    honorCipherOrder: true
+                });
+                return cb(null, context);
+            });
+        },
+        ciphers: [
+            "ECDHE-RSA-AES256-SHA384",
+            "DHE-RSA-AES256-SHA384",
+            "ECDHE-RSA-AES256-SHA256",
+            "DHE-RSA-AES256-SHA256",
+            "ECDHE-RSA-AES128-SHA256",
+            "DHE-RSA-AES128-SHA256",
+            "HIGH",
+            "!aNULL",
+            "!eNULL",
+            "!EXPORT",
+            "!DES",
+            "!RC4",
+            "!MD5",
+            "!PSK",
+            "!SRP",
+            "!CAMELLIA"
+        ].join(':'),
+        honorCipherOrder: true,
         banner: 'MailJS ESMTPS service, welcome.',
         authMethods: [],
         disabledCommands: ['AUTH'],

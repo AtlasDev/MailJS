@@ -39,6 +39,8 @@ console.log('Connecting to the database..');
 var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
 mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
 
+require('./http/http.js')();
+
 mongoose.connection.on('open', function(){
     console.log('Creating first user.');
     console.log(' - Generating password..');
