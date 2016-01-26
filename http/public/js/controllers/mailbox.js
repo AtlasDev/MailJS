@@ -38,7 +38,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, $http, 
 			}
 		}
 	};
-    if(typeof user.getUser()._id == "undefined") {
+    if(typeof mailbox.getCurrent() == "undefined") {
         $rootScope.$on('currentMailboxChange', function () {
             init();
         });

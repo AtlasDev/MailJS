@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox, md5) {
 	$rootScope.isLoading = true;
 
     $scope.socketStatus = socket.getStatus();
@@ -9,6 +9,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 	$scope.mailboxes = [];
 	$scope.currentMailbox = {};
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
+	$scope.mailHash = "";
 
     $rootScope.$on('userLoaded', function () {
         $scope.isInit = true;
@@ -22,6 +23,7 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 
     $rootScope.$on('currentMailboxChange', function (event, mailbox) {
         $scope.currentMailbox = mailbox;
+		$scope.mailHash = md5.createHash(mailbox.address);
     });
 
     $rootScope.$on('mailboxesChange', function (event, mailboxes) {

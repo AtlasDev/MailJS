@@ -4,7 +4,7 @@
 var speakeasy = require('speakeasy');
 
 exports.postLogin = function(req, res) {
-    req.session.upgrade(req.user._id, 86400, function (err) {
+    req.session.upgrade(req.user._id, 259200, function (err) {
         if(err) {
             return res.status(500).json({error: {name: err.name, message: err.message} });
         }

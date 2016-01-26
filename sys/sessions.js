@@ -34,7 +34,7 @@ Sessions.prototype.create = function(username, ip, other, callback) {
            app: _this.appName,
            id: user._id,
            ip: ip,
-           ttl: 86400,
+           ttl: 259200,
            d: options
        },
        function(err, resp) {
