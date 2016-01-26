@@ -8,9 +8,6 @@ var redis = require('./redis.js');
 var letiny = require('letiny');
 var config = require('../config.json');
 
-//Preload CA file
-var ca = require('fs').readFileSync('./sys/ca.pem', 'utf8');
-
 /**
  * Create a new domain.
  * @name createDomain
@@ -335,11 +332,9 @@ exports.getCert = function (domain, cb) {
                 if(err) {
                     return cb(err);
                 }
-                cert.caCert = ca;
                 return cb(null, cert);
             });
         } else {
-            cert.caCert = ca;
             return cb(null, cert);
         }
     });
