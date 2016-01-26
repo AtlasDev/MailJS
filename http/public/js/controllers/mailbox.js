@@ -1,14 +1,11 @@
 (function () {
 'use strict';
 
-app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, $http, user, notification, mailbox) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
-	$scope.mailbox = $routeParams.mailbox;
+	$scope.mailbox = $routeParams.inbox;
 	$scope.page = 1;
-	$scope.limit = 40;
-	$scope.mailCount = 0;
-	var currentInbox;
 	var getMailPage = function (page, cb) {
 		var req = {
 			method: 'GET',
@@ -22,7 +19,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, $http, 
 			return cb(res.data.emails);
 		}, function(res) {
 			$rootScope.isLoading = false;
-			notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+			notification.send('Could not get mail!', res.data.message, 'error');
 			return cb(null);
 		});
 	};
