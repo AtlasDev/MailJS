@@ -88,7 +88,7 @@ module.exports = function (grunt) {
                     'http/public/js/other/qrcode.js',
                     'http/public/js/other/UAParser.min.js',
                     'http/public/js/angular/angular.min.js',
-                    'http/public/js/angular/angular-gravitar.min.js',
+                    'http/public/js/angular/angular-md5.min.js',
                     'http/public/js/angular/angular-animate.js',
                     'http/public/js/angular/angular-mask.js',
                     'http/public/js/angular/angular-qrcode.js',

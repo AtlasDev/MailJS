@@ -45,14 +45,14 @@
 									<!-- Menu Toggle Button -->
 									<a href="" class="dropdown-toggle" data-toggle="dropdown">
 										<!-- The user image in the navbar-->
-										<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="user-image" alt="{{user.firstName}} {{user.lastName}}" />
+										<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&d=retro" class="user-image" alt="{{user.firstName}} {{user.lastName}}" />
 										<!-- hidden-xs hides the username on small devices so only the image appears. -->
 										<span class="hidden-xs">{{user.firstName}} {{user.lastName}}</span>
 									</a>
 									<ul class="dropdown-menu">
 										<!-- The user image in the menu -->
 										<li class="user-header">
-											<img gravatar-src="'{{user.email}}'" gravatar-size="100" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
+											<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&d=retro" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 											<p>
 												{{user.firstName}} {{user.lastName}}
 												<small ng-if="user.isAdmin == true">{{'common.admin' | translate}}</small>

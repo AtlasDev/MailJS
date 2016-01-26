@@ -1,4 +1,4 @@
-var app = angular.module("mail", ['ngRoute', 'ui.gravatar', 'ngCookies', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask', 'ngSanitize']);
+var app = angular.module("mail", ['ngRoute', 'ngCookies', 'angular-md5', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask', 'ngSanitize']);
 
 app.config(function($routeProvider) {
 	$routeProvider
