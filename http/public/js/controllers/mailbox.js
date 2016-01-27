@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
 	$scope.mailbox = $routeParams.inbox;

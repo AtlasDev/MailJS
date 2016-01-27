@@ -4,6 +4,14 @@ app.factory('inbox', function ($rootScope, $http, user, notification) {
     var getInbox = function getInbox(inbox, page, cb) {
         if(inboxes[inbox]) {
 
+        } else {
+            reqInbox(inbox, page, function (err, inbox) {
+                if(err) {
+
+        			$rootScope.isLoading = false;
+        			notification.send('Could not get mail!', res.data.message, 'error');
+                }
+            });
         }
 		var req = {
 			method: 'GET',
