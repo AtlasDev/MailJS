@@ -24,7 +24,7 @@ exports.error = function error(msg, stack, quit) {
 	return true;
 };
 
-exports.log = function log(msg, startup) {
+exports.log = function log(msg, startup, warn) {
 	var name = '';
 	if(cluster.isWorker) {
 		name = '[#'+cluster.worker.id+'] ';
@@ -33,6 +33,8 @@ exports.log = function log(msg, startup) {
 	}
     if(startup === true) {
         console.log(name+'Start'.green + '    ' + msg);
+    } else if(warn == true) {
+        console.log(name+'Warn'.cyan + '     ' + msg);
     } else {
         console.log(name+'Log'.cyan + '      ' + msg);
     }

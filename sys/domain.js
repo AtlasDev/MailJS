@@ -195,6 +195,10 @@ exports.addUser = function (domainID, userID, cb) {
  * @param {Object} cert Object containing the (re)generated certificate.
  */
 exports.createCert = function (domain, cb) {
+    if(config.generateCerts === false) {
+        util.log('Certificate generation disabled. please re-enable it if not using it for testing purposes.', false, true);
+        return cb(null, null);
+    }
     var error;
     var cert;
     var options;
@@ -216,9 +220,6 @@ exports.createCert = function (domain, cb) {
                 webroot: './http/LE',
                 agreeTerms: true
             };
-            if(config.stagingCerts === true) {
-                options.url = 'https://acme-staging.api.letsencrypt.org';
-            }
             letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
                 if(err) {
                     return cb(err);
@@ -261,9 +262,6 @@ exports.createCert = function (domain, cb) {
                 accountKey: oldCert.accountKey,
                 privateKey: oldCert.key
             };
-            if(config.stagingCerts === true) {
-                options.url = 'https://acme-staging.api.letsencrypt.org';
-            }
             letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
                 if(err) {
                     return cb(err);
@@ -332,6 +330,7 @@ exports.getCert = function (domain, cb) {
                 if(err) {
                     return cb(err);
                 }
+                util.log('Certificate for the domain `'+newDomain.domain+'` regenerated.');
                 return cb(null, cert);
             });
         } else {
