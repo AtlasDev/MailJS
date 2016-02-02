@@ -15,7 +15,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var config = require('../config.json');
 var v1apiRouter = require('./v1/apiRouter.js');
-var socketio = require('./socketio.js');
+//var socketio = require('./socketio.js');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
 var tls = require('tls');
@@ -114,7 +114,7 @@ httpsApp.use(function(err, req, res, next) {
     res.status(500).send('Internal Server Error');
 });
 
-socketio(https, httpsApp);
+sys.ws.start(https);
 
 httpsApp.use('/api/*', function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
