@@ -7,6 +7,7 @@ var validator = require('validator');
 var redis = require('./redis.js');
 var letiny = require('letiny');
 var config = require('../config.json');
+var fs = require('fs');
 
 /**
  * Create a new domain.
@@ -196,7 +197,7 @@ exports.addUser = function (domainID, userID, cb) {
  */
 exports.createCert = function (domain, cb) {
     if(config.generateCerts === false) {
-        util.log('Certificate generation disabled. please re-enable it if not using it for testing purposes.', false, true);
+        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
         return cb(null, null);
     }
     var error;
@@ -306,6 +307,17 @@ exports.getCert = function (domain, cb) {
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
+    }
+    if(config.generateCerts === false) {
+        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
+        util.log('Loading untrusted, substitute certificate.', false, true);
+        try {
+            var subCert = fs.readFileSync('./server.crt', 'utf8');
+            var subKey = fs.readFileSync('./server.key', 'utf8');
+        } catch (e) {
+            util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
+        }
+        return cb(null, {cert: subCert, key: subKey});
     }
     redis.get("certs:"+domain, function (err, reply) {
         if(err) {

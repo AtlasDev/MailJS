@@ -33,8 +33,8 @@ exports.log = function log(msg, startup, warn) {
 	}
     if(startup === true) {
         console.log(name+'Start'.green + '    ' + msg);
-    } else if(warn == true) {
-        console.log(name+'Warn'.cyan + '     ' + msg);
+    } else if(warn === true) {
+        console.log(name+'Warn'.yellow + '     ' + msg.yellow);
     } else {
         console.log(name+'Log'.cyan + '      ' + msg);
     }
