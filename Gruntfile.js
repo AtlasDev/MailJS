@@ -96,6 +96,7 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-route.min.js',
                     'http/public/js/angular/angular-toastr.tpls.min.js',
                     'http/public/js/angular/angular-cookies.min.js',
+                    'http/public/js/angular/angular-ws.min.js',
                     'http/public/js/angular/angular-translate.min.js',
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',

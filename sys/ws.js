@@ -84,7 +84,7 @@ exported.start = function (server) {
                     ws.close();
                     return;
                 }
-                if(msg.eventName == "login") {
+                if(msg.eventName == "auth") {
                     if(!msg.data || !msg.data.token) {
                         ws.send(JSON.stringify({
                             type: 'error',

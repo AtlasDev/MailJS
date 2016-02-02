@@ -45,10 +45,5 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     $scope.isFullscreen = function () {
         return fullscreen.isFullscreen();
     };
-
-	socket.on('error:auth', function () {
-		$cookies.remove('MailJS');
-		$window.location.href = '/index.html?msg=Authentication%20failure!';
-	});
 });
 }());
