@@ -6,35 +6,23 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, i
 	$scope.title = 'Mailbox';
 	$scope.mailbox = $routeParams.inbox;
 	$scope.page = 1;
-	var getMailPage = function (page, cb) {
-		var req = {
-			method: 'GET',
-			url: '/api/v1/inbox/'+$routeParams.mailbox+'/'+(page-1)*$scope.limit+'/'+$scope.limit,
-			headers: {
-				'x-token': user.sessionID
-			}
-		};
-		$http(req).then(function(res) {
-			$rootScope.isLoading = false;
-			return cb(res.data.emails);
-		}, function(res) {
-			$rootScope.isLoading = false;
-			notification.send('Could not get mail!', res.data.message, 'error');
-			return cb(null);
-		});
-	};
+
 	var init = function() {
-		getMailPage(1, function (emails) {
+		inbox.get($routeParams.inbox, 1, function (err, emails) {
+			$rootScope.isLoading = false;
+			if(err) {
+				notification.send('Could not get mail!', err.message, 'error');
+			}
 			$scope.mails = emails;
 		});
-		currentInbox = mailbox.getCurrent();
-		for (var i = 0; i < currentInbox.inboxes.length; i++) {
-			if(currentInbox.inboxes[i]._id == $routeParams.mailbox) {
-				$scope.mailbox = currentInbox.inboxes[i].name;
+		for (var i = 0; i < mailbox.getCurrent().inboxes.length; i++) {
+			if(mailbox.getCurrent().inboxes[i]._id == $routeParams.inbox) {
+				$scope.mailbox = mailbox.getCurrent().inboxes[i].name;
 				break;
 			}
 		}
 	};
+
     if(typeof mailbox.getCurrent() == "undefined") {
         $rootScope.$on('currentMailboxChange', function () {
             init();
