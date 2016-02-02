@@ -2,7 +2,7 @@ var app = angular.module("mail", ['ngRoute', 'ngCookies', 'angular-md5', 'pascal
 
 app.config(function($routeProvider) {
 	$routeProvider
-		.when('/mailbox/:mailbox', {
+		.when('/mailbox/:inbox', {
 			templateUrl : 'pages/mailbox.html',
 			controller  : 'mailboxCtrl'
 		})

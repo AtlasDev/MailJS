@@ -7,9 +7,7 @@ var validator = require('validator');
 var redis = require('./redis.js');
 var letiny = require('letiny');
 var config = require('../config.json');
-
-//Preload CA file
-var ca = require('fs').readFileSync('./sys/ca.pem', 'utf8');
+var fs = require('fs');
 
 /**
  * Create a new domain.
@@ -198,6 +196,10 @@ exports.addUser = function (domainID, userID, cb) {
  * @param {Object} cert Object containing the (re)generated certificate.
  */
 exports.createCert = function (domain, cb) {
+    if(config.generateCerts === false) {
+        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
+        return cb(null, null);
+    }
     var error;
     var cert;
     var options;
@@ -219,9 +221,6 @@ exports.createCert = function (domain, cb) {
                 webroot: './http/LE',
                 agreeTerms: true
             };
-            if(config.stagingCerts === true) {
-                options.url = 'https://acme-staging.api.letsencrypt.org';
-            }
             letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
                 if(err) {
                     return cb(err);
@@ -264,9 +263,6 @@ exports.createCert = function (domain, cb) {
                 accountKey: oldCert.accountKey,
                 privateKey: oldCert.key
             };
-            if(config.stagingCerts === true) {
-                options.url = 'https://acme-staging.api.letsencrypt.org';
-            }
             letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
                 if(err) {
                     return cb(err);
@@ -312,6 +308,19 @@ exports.getCert = function (domain, cb) {
         error.type = 400;
         return cb(error);
     }
+    if(config.generateCerts === false) {
+        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
+        util.log('Loading untrusted, substitute certificate.', false, true);
+        var subCert;
+        var subKey;
+        try {
+            subCert = fs.readFileSync('./server.crt', 'utf8');
+            subKey = fs.readFileSync('./server.key', 'utf8');
+        } catch (e) {
+            util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
+        }
+        return cb(null, {cert: subCert, key: subKey});
+    }
     redis.get("certs:"+domain, function (err, reply) {
         if(err) {
             return cb(err);
@@ -335,11 +344,10 @@ exports.getCert = function (domain, cb) {
                 if(err) {
                     return cb(err);
                 }
-                cert.caCert = ca;
+                util.log('Certificate for the domain `'+newDomain.domain+'` regenerated.');
                 return cb(null, cert);
             });
         } else {
-            cert.caCert = ca;
             return cb(null, cert);
         }
     });
