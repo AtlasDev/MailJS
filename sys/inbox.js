@@ -3,6 +3,7 @@
 
 var Inbox = require('../models/inbox.js');
 var validator = require('validator');
+var sys = require('./main.js');
 
 /**
  * Create default inboxes for a mailbox
@@ -133,6 +134,14 @@ exports.createInbox = function (mailboxID, title, cb) {
         if(err) {
             return cb(err);
         }
+        var message = JSON.stringify({
+            type: 'event',
+            eventName: 'M:inboxAdded',
+            data: {
+                inbox: inbox
+            }
+        });
+        sys.ws.send('M:'+inbox.mailbox, message);
         return cb(null, inbox);
     });
 };

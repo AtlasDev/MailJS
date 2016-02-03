@@ -25,7 +25,6 @@
 
 var redis = require('redis');
 var Ws = require('ws').Server;
-var emitter = require('events').EventEmitter;
 var util  = require('./util.js');
 var config = require('../config.json');
 var sys = require('./main.js');
@@ -34,14 +33,10 @@ var uuid = require('uuid');
 
 var sub = redis.createClient(config.redis.port, config.redis.host);
 var pub = require('./redis.js');
-var EventEmitter = require('events');
-var server;
 var exported = function () {};
 
 var users = {};
 var mailboxes = {};
-
-require('util').inherits(exported, emitter);
 
 exported();
 
@@ -204,7 +199,9 @@ var handleClient = function handleClient(ws, user) {
             }
         }), handleSend);
         ws.on('close', function close() {
-            removeSocket(ws.user._id, ws.id);
+            if(ws.user) {
+                removeSocket(ws.user._id, ws.id);
+            }
         });
         return;
     });
@@ -285,7 +282,6 @@ var handleSend = function handleSend(err) {
 };
 
 var sendUser = function (userID, message) {
-    var error;
     var user = users[userID];
     if(!user) {
         return;
@@ -297,7 +293,6 @@ var sendUser = function (userID, message) {
 };
 
 sub.on("message", function (channel, message) {
-    var error;
     try {
         message = JSON.parse(message);
     } catch (e) {
@@ -322,7 +317,6 @@ sub.on("message", function (channel, message) {
 
 exported.send = function send(channel, message, cb) {
     pub.publish(channel, message);
-    return cb();
 };
 
 module.exports = exported;

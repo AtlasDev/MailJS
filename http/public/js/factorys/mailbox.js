@@ -1,4 +1,4 @@
-app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
+app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, socket, notification) {
     var current;
     var mailboxes = [];
 
@@ -86,6 +86,17 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
     function getCurrent() {
         return current;
     }
+
+    socket.getSocket().onMessage(function (event) {
+        var message = JSON.parse(event.data);
+        if(message.type == 'event' && message.eventName == 'M:emailReceived') {
+            message.data.email.senderDisplay = message.data.email.senderDisplay || message.data.email.sender;
+            notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null, function () {
+                changeMailbox(message.data.email.mailbox);
+                $location.path("/mail/"+message.data.email._id);
+            });
+        }
+    });
 
     function addMailbox(mailbox) {
         mailboxes.push(mailbox);

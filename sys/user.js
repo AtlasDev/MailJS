@@ -1,10 +1,9 @@
 (function () {
 'use strict';
 
-var util = require('./util.js');
 var User = require('../models/user.js');
-var clientFunc = require('./client.js');
 var validator = require('validator');
+var sys = require('./main.js');
 
 /**
  * Create a new user.
@@ -50,7 +49,7 @@ exports.create = function (username, password, firstName, lastName, isAdmin, cal
             err.type = 500;
             return callback(err, null);
         }
-        util.log('User `'+user.username+'` created.');
+        sys.util.log('User `'+user.username+'` created.');
         return callback(null, user);
     });
 };
@@ -251,11 +250,11 @@ exports.delete = function (userID, callback) {
             error.type = 400;
             return callback(error);
         } else {
-            clientFunc.deleteUser(userID, function (err) {
+            sys.client.deleteUser(userID, function (err) {
                 if(err) {
                     return callback(err);
                 }
-                util.log('User `'+user._id+'` deleted.');
+                sys.util.log('User `'+user._id+'` deleted.');
                 return callback(null);
             });
         }

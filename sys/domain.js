@@ -2,12 +2,11 @@
 'use strict';
 
 var Domain = require('../models/domain.js');
-var util = require('./util.js');
 var validator = require('validator');
-var redis = require('./redis.js');
 var letiny = require('letiny');
 var config = require('../config.json');
 var fs = require('fs');
+var sys = require('./main.js');
 
 /**
  * Create a new domain.
@@ -53,7 +52,15 @@ exports.create = function (domain, admin, disabled, cb) {
             if (err) {
                 return cb(err, null);
             }
-            util.log('Domain `'+newDomain.domain+'` created.');
+            var message = JSON.stringify({
+                type: 'event',
+                eventName: 'U:domainAdded',
+                data: {
+                    domain: newDomain
+                }
+            });
+            sys.ws.send('U:'+admin, message);
+            sys.util.log('Domain `'+newDomain.domain+'` created.');
             return cb(null, newDomain);
         });
     });
@@ -175,7 +182,7 @@ exports.addUser = function (domainID, userID, cb) {
             if(err) {
                 return cb(err);
             }
-            util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
+            sys.util.log('User `'+userID+'` has been added to the domain `'+domain.domain+'`');
             return cb(null, domain);
         });
     });
@@ -197,11 +204,10 @@ exports.addUser = function (domainID, userID, cb) {
  */
 exports.createCert = function (domain, cb) {
     if(config.generateCerts === false) {
-        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
+        sys.util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
         return cb(null, null);
     }
     var error;
-    var cert;
     var options;
     if(!validator.isFQDN(domain)) {
         error = new Error('Domain not an FQDN!');
@@ -210,7 +216,7 @@ exports.createCert = function (domain, cb) {
         return cb(error);
     }
     domain = domain.toLowerCase().trim();
-    redis.get("certs:"+domain, function (err, reply) {
+    sys.redis.get("certs:"+domain, function (err, reply) {
         if(err) {
             return cb(err);
         }
@@ -231,11 +237,11 @@ exports.createCert = function (domain, cb) {
                     caCert: caCert,
                     accountKey: accountKey
                 };
-                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                sys.redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
                     if(err) {
                         return cb(err);
                     }
-                    util.log('Certificate for `'+domain+'` generated.');
+                    sys.util.log('Certificate for `'+domain+'` generated.');
                     return cb(null, cert);
                 });
             });
@@ -273,11 +279,11 @@ exports.createCert = function (domain, cb) {
                     caCert: caCert,
                     accountKey: accountKey
                 };
-                redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                sys.redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
                     if(err) {
                         return cb(err);
                     }
-                    util.log('Certificate for `'+domain+'` refreshed.');
+                    sys.util.log('Certificate for `'+domain+'` refreshed.');
                     return cb(null, cert);
                 });
             });
@@ -309,19 +315,19 @@ exports.getCert = function (domain, cb) {
         return cb(error);
     }
     if(config.generateCerts === false) {
-        util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
-        util.log('Loading untrusted, substitute certificate.', false, true);
+        sys.util.log('Certificate generation disabled. please re-enable it if you are not using it for testing purposes.', false, true);
+        sys.util.log('Loading untrusted, substitute certificate.', false, true);
         var subCert;
         var subKey;
         try {
             subCert = fs.readFileSync('./server.crt', 'utf8');
             subKey = fs.readFileSync('./server.key', 'utf8');
         } catch (e) {
-            util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
+            sys.util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
         }
         return cb(null, {cert: subCert, key: subKey});
     }
-    redis.get("certs:"+domain, function (err, reply) {
+    sys.redis.get("certs:"+domain, function (err, reply) {
         if(err) {
             return cb(err);
         }
@@ -344,7 +350,7 @@ exports.getCert = function (domain, cb) {
                 if(err) {
                     return cb(err);
                 }
-                util.log('Certificate for the domain `'+newDomain.domain+'` regenerated.');
+                sys.util.log('Certificate for the domain `'+newDomain.domain+'` regenerated.');
                 return cb(null, cert);
             });
         } else {

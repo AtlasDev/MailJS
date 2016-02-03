@@ -8,10 +8,9 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
 
     ws.onMessage(function (event) {
         var message = JSON.parse(event.data);
-        console.log('New message', message);
         if(message.type == 'error') {
-            notification.send('An error has occured!', event.error.message+' ('+event.error.name+')', 'error');
-            if(event.error.name == "EAUTH") {
+            notification.send('An error has occured!', message.error.message+' ('+message.error.name+')', 'error');
+            if(message.error.name == "EAUTH") {
         		$cookies.remove('MailJS');
         		$window.location.href = '/index.html?msg=Authentication%20failure!';
             }
@@ -31,8 +30,6 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
                     status = 2;
                     $rootScope.$emit('socketStatusChange');
                     break;
-                default:
-                    $rootScope.$emit('socketMessage', message);
             }
         }
     });
@@ -51,7 +48,12 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
         return status;
     }
 
+    function getSocket() {
+        return ws;
+    }
+
     return {
-        getStatus: getStatus
+        getStatus: getStatus,
+        getSocket: getSocket
     };
 });

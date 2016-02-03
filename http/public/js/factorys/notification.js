@@ -29,7 +29,7 @@ app.factory('notification', function (toastr) {
     }
 
     function send(title, message, type, icon, callback) {
-        if(message.length > 150) {
+        if(message && message.length > 150) {
             message = message.substring(0,150)+"...";
         }
         if(type == 'success') {
@@ -54,6 +54,7 @@ app.factory('notification', function (toastr) {
             var notification = new Notification(title, options);
             setTimeout(notification.close.bind(notification), notifyTimeout);
             notification.onclick = function(x) {
+                notification.close();
                 window.focus();
                 if(callback) {
                     callback();
@@ -98,6 +99,7 @@ app.factory('notification', function (toastr) {
                         setTimeout(notification.close.bind(notification), 10000);
                         notification.onclick = function(x) {
                             window.focus();
+                            notification.close();
                         };
                         return true;
                     } else {

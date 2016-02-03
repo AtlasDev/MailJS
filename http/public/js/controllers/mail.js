@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, user, $http, notification) {
+app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, user, $http, notification, mailbox, $location) {
 	$rootScope.isLoading = true;
 	$scope.mail = {};
 
@@ -19,7 +19,11 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, u
 		}, function(res) {
 			$rootScope.isLoading = false;
 			notification.send('Could not get mail!', res.data.message, 'error');
-			$window.location.href = '#';
+			for (var j = 0; j < mailbox.getCurrent().inboxes.length; j++) {
+				if(mailbox.getCurrent().inboxes[j].type == "Inbox") {
+					$location.path("/mailbox/"+mailbox.getCurrent().inboxes[j]._id);
+				}
+			}
 		});
 	};
 
