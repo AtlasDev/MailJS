@@ -7,6 +7,7 @@ var mailbox = require('./mailbox.js');
 var os = require('os');
 var striptags = require('striptags');
 var util = require('./util.js');
+var sys = require('./main.js');
 
 /**
  * Create a new email
@@ -111,6 +112,18 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
         if(err) {
             return cb(err);
         }
+        var message = JSON.stringify({
+            type: 'event',
+            eventName: 'M:received',
+            data: {
+                email: email
+            }
+        });
+        sys.ws.send('M:'+mailboxID, message, function (err) {
+            if(err) {
+                return cb(err);
+            }
+        });
         return cb(null, email);
     });
 };

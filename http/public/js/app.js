@@ -1,4 +1,4 @@
-var app = angular.module("mail", ['ngRoute', 'ws', 'ngCookies', 'angular-md5', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask', 'ngSanitize']);
+var app = angular.module("mail", ['ngRoute', 'ngWebSocket', 'ngCookies', 'angular-md5', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask', 'ngSanitize']);
 
 app.config(function($routeProvider) {
 	$routeProvider
@@ -41,10 +41,6 @@ app.config(function($routeProvider) {
 		.otherwise({
 			redirectTo: '/'
 		});
-});
-
-app.config(function (wsProvider) {
-	wsProvider.setUrl('wss://'+document.location.host);
 });
 
 app.config(function($translateProvider) {
