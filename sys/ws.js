@@ -137,13 +137,6 @@ exported.prototype.start = function (server) {
                                     ws.close();
                                     return;
                                 }
-                                ws.send(JSON.stringify({
-                                    type: 'event',
-                                    eventName: 'S:authSuccess',
-                                    data: {
-                                        user: user
-                                    }
-                                }), handleError);
                                 handleClient(ws, user);
                             });
                         });
@@ -198,17 +191,31 @@ exported.prototype.start = function (server) {
 };
 
 var handleClient = function handleClient(ws, user) {
-    // TODO: join channels
-    // for (var i = 0; i < user.mailboxes.length; i++) {
-    //     socket.join('m:'+user.mailboxes[i]);
-    // }
-    // socket.join('u:'+user._id);
-    users.push(user);
+    addUser(user, function (err) {
+        if(err) {
+            ws.send(JSON.stringify({
+                type: 'error',
+                error: {
+                    name: err.name,
+                    message: err.message
+                }
+            }), handleError);
+            ws.close();
+            return;
+        }
+        ws.send(JSON.stringify({
+            type: 'event',
+            eventName: 'S:authSuccess',
+            data: {
+                user: user
+            }
+        }), handleError);
+    });
 };
 
-var addToMailbox = function addToMailbox(user, mailbox, cb) {
+var addToMailbox = function addToMailbox(user, mailboxID, cb) {
     var error;
-    if (!validator.isMongoId(mailbox)) {
+    if (!validator.isMongoId(mailboxID)) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -220,20 +227,47 @@ var addToMailbox = function addToMailbox(user, mailbox, cb) {
         error.type = 400;
         return cb(error);
     }
-    if(mailboxes[mailbox]) {
-        mailboxes[mailbox].users.push(user);
+    if(mailboxes[mailboxID]) {
+        mailboxes[mailboxID].users.push(user._id);
+        return cb();
     } else {
-        sys.mailbox.find(mailbox, function (err, mailbox) {
+        sys.mailbox.find(mailboxID, function (err, mailbox) {
             if(err) {
                 return cb(err);
             }
+            mailboxes[mailbox._id] = mailbox;
+            mailboxes[mailbox].users = [user._id];
+            return cb();
         });
     }
-}
+};
+
+var addUser = function addUser(user, ws, cb) {
+    var error;
+    if(users[user._id]) {
+        users[user._id].ws.push(ws);
+    } else {
+        users[user._id] = user;
+        users[user._id].ws = [ws];
+
+        var resting = user.mailboxes.length;
+        for (var i = 0; i < user.mailboxes.length; i++) {
+            addToMailbox(user, user.mailboxes[i], function (err) {
+                if(err) {
+                    return cb(err);
+                }
+                resting -= 1;
+                if(resting === 0) {
+                    return cb()
+                }
+            });
+        }
+    }
+};
 
 var handleError = function handleError(err) {
     util.error('Websocket errored!', err);
-}
+};
 
 exported.prototype.send = function send(type, cb) {
 
