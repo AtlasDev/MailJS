@@ -323,7 +323,11 @@ module.exports = function (grunt) {
                         expand: true,
                         src: [
                             'http/views/**',
-                            'http/public/**'
+                            'http/public/**',
+                            '!http/public/css/**',
+                            '!http/public/fonts/**',
+                            '!http/public/img/**',
+                            '!http/public/js/**'
                         ],
                         dest: 'tmp'
                     }
