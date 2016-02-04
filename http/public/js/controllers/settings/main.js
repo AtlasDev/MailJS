@@ -12,7 +12,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         $translate.use($scope.lang);
     };
     $scope.updateTimeout = function () {
-        var newTimeout = notification.setTimeout($scope.notifyTimeout);
+        var newTimeout = notification.setNotiTimeout($scope.notifyTimeout);
         if(newTimeout !== false) {
             $scope.notifyTimeout = newTimeout;
         }

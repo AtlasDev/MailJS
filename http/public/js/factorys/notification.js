@@ -52,13 +52,15 @@ app.factory('notification', function (toastr) {
                   icon: icon
             };
             var notification = new Notification(title, options);
-            setTimeout(notification.close.bind(notification), notifyTimeout);
+            notification.onshow = function() {
+                setTimeout(notification.close.bind(notification), notifyTimeout);
+            };
             notification.onclick = function(x) {
-                notification.close();
-                window.focus();
                 if(callback) {
                     callback();
                 }
+                window.focus();
+                notification.close();
             };
             return true;
         } else {
@@ -66,15 +68,15 @@ app.factory('notification', function (toastr) {
         }
     }
 
-    function setTimeout(timeout) {
+    function setNotiTimeout(timeout) {
         timeout = parseInt(timeout);
         if(timeout*1000 < 1) {
             localStorage.setItem('notifyTimeout', 1000);
-            notifyTimeout = 1;
+            notifyTimeout = 1000;
             return 1;
         }
         localStorage.setItem('notifyTimeout', timeout*1000);
-        notifyTimeout = timeout;
+        notifyTimeout = timeout*1000;
         return timeout;
     }
 
@@ -116,7 +118,7 @@ app.factory('notification', function (toastr) {
     return {
         send: send,
         check: check,
-        setTimeout: setTimeout,
+        setNotiTimeout: setNotiTimeout,
         hasAPI: hasAPI,
         askPermissions: askPermissions,
         notifyTimeout: notifyTimeout
