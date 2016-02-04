@@ -199,9 +199,7 @@ var handleClient = function handleClient(ws, user) {
             }
         }), handleSend);
         ws.on('close', function close() {
-            if(ws.user) {
-                removeSocket(ws.user._id, ws.id);
-            }
+            removeSocket(ws.id);
         });
         return;
     });
@@ -222,8 +220,10 @@ var addToMailbox = function addToMailbox(user, mailboxID, cb) {
         return cb(error);
     }
     if(mailboxes[mailboxID]) {
-        mailboxes[mailboxID].push(user._id);
-        return cb();
+        if(mailboxes[mailboxID].indexOf(user._id) != -1) {
+            mailboxes[mailboxID].push(user._id);
+            return cb();
+        }
     } else {
         mailboxes[mailboxID] = [user._id];
         sub.subscribe('M:'+mailboxID);
@@ -257,19 +257,22 @@ var addUser = function addUser(user, ws, cb) {
     }
 };
 
-var removeSocket = function (userID, wsID) {
-    var user = users[userID];
-    if(!user) {return;}
-    user.ws[wsID] = undefined;
-    if(user.ws.length <= 0) {
-        sub.unsubscibe('U:'+user);
-        users[userID] = undefined;
-    }
-    for (var i = 0; i < user.mailboxes.length; i++) {
-        mailboxes[user.mailboxes[i]][user._id] = undefined;
-        if(mailboxes[user.mailboxes[i]].length <= 0) {
-            sub.unsubscibe('M:'+mailbox._id);
-            mailboxes[user.mailboxes[i]] = undefined;
+var removeSocket = function (wsID) {
+    var uid;
+    for (uid in users) {
+        if(users[uid].ws[wsID]) {
+            delete users[uid].ws[wsID];
+            if(Object.keys(users[uid].ws).length === 0) {
+                sub.unsubscribe('U:'+uid);
+                for (var i = 0; i < users[uid].mailboxes.length; i++) {
+                    delete mailboxes[users[uid].mailboxes[i]][uid];
+                    if(mailboxes[users[uid].mailboxes[i]].length <= 0) {
+                        sub.unsubscribe('M:'+mailboxes[users[uid].mailboxes[i]]);
+                        delete mailboxes[users[uid].mailboxes[i]];
+                    }
+                }
+                delete users[uid];
+            }
         }
     }
 };
@@ -288,7 +291,11 @@ var sendUser = function (userID, message) {
     }
     var socket;
     for(socket in user.ws) {
-        user.ws[socket].send(JSON.stringify(message));
+        if(user.ws[socket].readyState == 1) {
+            user.ws[socket].send(JSON.stringify(message));
+        } else if(user.ws[socket].readyState == 3) {
+            removeSocket(userID, socket);
+        }
     }
 };
 
