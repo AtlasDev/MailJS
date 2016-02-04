@@ -89,12 +89,23 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, s
 
     socket.getSocket().onMessage(function (event) {
         var message = JSON.parse(event.data);
-        if(message.type == 'event' && message.eventName == 'M:emailReceived') {
-            message.data.email.senderDisplay = message.data.email.senderDisplay || message.data.email.sender;
-            notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null, function () {
-                changeMailbox(message.data.email.mailbox);
-                $location.path("/mail/"+message.data.email._id);
-            });
+        if(message.type == 'event') {
+            if(message.eventName == 'M:emailReceived') {
+                message.data.email.senderDisplay = message.data.email.senderDisplay || message.data.email.sender;
+                notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null, function () {
+                    changeMailbox(message.data.email.mailbox);
+                    $location.path("/mail/"+message.data.email._id);
+                });
+            } else if(message.eventName == 'M:inboxCreated') {
+                for (var i = 0; i < mailboxes.length; i++) {
+                    if(mailboxes[i]._id == message.data.inbox.mailbox) {
+                        mailboxes[i].inboxes.push(message.data.inbox);
+                        notification.send('New inbox `'+message.data.inbox.name+'`.', null, 'info', null, function () {
+                            changeMailbox(message.data.email.mailbox);
+                        });
+                    }
+                }
+            }
         }
     });
 

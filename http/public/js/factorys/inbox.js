@@ -35,17 +35,6 @@ app.factory('inbox', function ($http, user, socket) {
 		});
     };
 
-    socket.getSocket().onMessage(function (event) {
-        var message = JSON.parse(event.data);
-        if(message.type == 'event' && message.eventName == 'M:inboxCreated') {
-            inboxes.push(message.data.inbox);
-            notification.send('New inbox `'+message.data.inbox.name+'`.', 'info', null, function () {
-                changeMailbox(message.data.email.mailbox);
-                $location.path("/mailbox/"+message.data.inbox._id);
-            });
-        }
-    });
-
     return {
         get: get
     };

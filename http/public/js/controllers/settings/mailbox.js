@@ -247,7 +247,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         $http(req).then(function(res) {
             $scope.viewingMailbox.inboxes.push(res.data.inbox);
             $rootScope.isLoading = false;
-            notification.send('Inbox added!', 'Inbox `'+res.data.inbox.title+'` created successfully.', 'success');
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Cannot add inbox!', res.data.error.message, 'error');
