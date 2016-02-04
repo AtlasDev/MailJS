@@ -29,7 +29,7 @@ app.factory('notification', function (toastr) {
     }
 
     function send(title, message, type, icon, callback) {
-        if(message.length > 150) {
+        if(message && message.length > 150) {
             message = message.substring(0,150)+"...";
         }
         if(type == 'success') {
@@ -41,10 +41,10 @@ app.factory('notification', function (toastr) {
         }
         if(typeof icon == "function") {
             callback = icon;
-            icon = '/favicon-96x96.png';
+            icon = '/dist/img/favicon-96x96.png';
         }
         if(icon === null) {
-            icon = '/favicon-96x96.png';
+            icon = '/dist/img/favicon-96x96.png';
         }
         if(check() === true && screenFocus === false) {
             var options = {
@@ -52,12 +52,15 @@ app.factory('notification', function (toastr) {
                   icon: icon
             };
             var notification = new Notification(title, options);
-            setTimeout(notification.close.bind(notification), notifyTimeout);
+            notification.onshow = function() {
+                setTimeout(notification.close.bind(notification), notifyTimeout);
+            };
             notification.onclick = function(x) {
-                window.focus();
                 if(callback) {
                     callback();
                 }
+                window.focus();
+                notification.close();
             };
             return true;
         } else {
@@ -65,15 +68,15 @@ app.factory('notification', function (toastr) {
         }
     }
 
-    function setTimeout(timeout) {
+    function setNotiTimeout(timeout) {
         timeout = parseInt(timeout);
         if(timeout*1000 < 1) {
             localStorage.setItem('notifyTimeout', 1000);
-            notifyTimeout = 1;
+            notifyTimeout = 1000;
             return 1;
         }
         localStorage.setItem('notifyTimeout', timeout*1000);
-        notifyTimeout = timeout;
+        notifyTimeout = timeout*1000;
         return timeout;
     }
 
@@ -92,12 +95,13 @@ app.factory('notification', function (toastr) {
                         localStorage.setItem('notifications', true);
                         var options = {
                               body: 'The notification system works! You will get a notification everytime you get a new E-mail. You can always disable it in the settings if it gets annoying.',
-                              icon: '/favicon-96x96.png'
+                              icon: '/dist/img/favicon-96x96.png'
                         };
                         var notification = new Notification('Awesome!', options);
                         setTimeout(notification.close.bind(notification), 10000);
                         notification.onclick = function(x) {
                             window.focus();
+                            notification.close();
                         };
                         return true;
                     } else {
@@ -114,7 +118,7 @@ app.factory('notification', function (toastr) {
     return {
         send: send,
         check: check,
-        setTimeout: setTimeout,
+        setNotiTimeout: setNotiTimeout,
         hasAPI: hasAPI,
         askPermissions: askPermissions,
         notifyTimeout: notifyTimeout

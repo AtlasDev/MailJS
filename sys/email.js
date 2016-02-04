@@ -3,10 +3,9 @@
 
 var Email = require('../models/email.js');
 var validator = require('validator');
-var mailbox = require('./mailbox.js');
 var os = require('os');
 var striptags = require('striptags');
-var util = require('./util.js');
+var sys = require('./main.js');
 
 /**
  * Create a new email
@@ -34,6 +33,12 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
+    if (!mail.from) {
+        error = new Error('No from specified!');
+        error.name = 'EVALIDATION';
+        error.type = 400;
+        return cb(error);
+    }
     if (!validator.isEmail(mail.from[0].address)) {
         error = new Error('Invalid sender!');
         error.name = 'EVALIDATION';
@@ -52,7 +57,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    mailbox.getInbox(mailboxID, function (err, inbox) {
+    sys.mailbox.getInbox(mailboxID, function (err, inbox) {
         var error;
         if(err) {
             return cb(err);
@@ -68,7 +73,7 @@ exports.create = function (mailboxID, mail, cb) {
             mail.attachmentsIDs = [];
             for (var i = 0; i < mail.attachments.length; i++) {
                 mail.attachments[i].content = mail.attachments[i].content.toString('base64');
-                mail.attachmentsMeta[i] = util.copyObject(mail.attachments[i]);
+                mail.attachmentsMeta[i] = sys.util.copyObject(mail.attachments[i]);
                 mail.attachmentsMeta[i].content = undefined;
                 mail.attachmentsIDs[i] = mail.attachments[i].contentId;
                 if(i == mail.attachments.length - 1) {
@@ -111,6 +116,14 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
         if(err) {
             return cb(err);
         }
+        var message = JSON.stringify({
+            type: 'event',
+            eventName: 'M:emailReceived',
+            data: {
+                email: email
+            }
+        });
+        sys.ws.send('M:'+mailboxID, message);
         return cb(null, email);
     });
 };
@@ -245,6 +258,14 @@ exports.deleteEmail = function (emailID, mailboxes, cb) {
             if(err) {
                 return cb(err);
             }
+            var message = JSON.stringify({
+                type: 'event',
+                eventName: 'M:emailDeleted',
+                data: {
+                    email: mail
+                }
+            });
+            sys.ws.send('M:'+mail.mailbox, message);
             return cb(null, mail);
         });
     });

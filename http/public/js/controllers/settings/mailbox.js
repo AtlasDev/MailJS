@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification, mailbox) {
+app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, notification, mailbox, socket) {
     $rootScope.isLoading = true;
     $scope.showDomainCreateForm = false;
     $scope.domains = [];
@@ -51,8 +51,10 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'title': $scope.mailboxTitle
             }
         };
+        $scope.localAddress = '';
+        $scope.mailboxDomain = '';
+        $scope.mailboxTitle = '';
         $http(req).then(function(res) {
-            mailbox.addMailbox(res.data.mailbox);
             $rootScope.isLoading = false;
             notification.send('Mailbox created!', 'Mailbox has been added to the database.', 'success');
         }, function(res) {
@@ -77,8 +79,9 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'disabled': $scope.domainDisabled
             }
         };
+        $scope.domain = '';
+        $scope.domainDisabled = '';
         $http(req).then(function(res) {
-            $scope.domains.push(res.data.domain);
             $rootScope.isLoading = false;
             notification.send('Domain added!', 'Domain has been added to the database.', 'success');
         }, function(res) {
@@ -187,6 +190,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'x-token': user.sessionID
             }
         };
+        $scope.maxDomainTransferUses = '';
         $http(req).then(function(res) {
             $rootScope.isLoading = false;
             notification.send('Transfer code created!', "Code: "+res.data.code.code, 'success');
@@ -207,6 +211,7 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'x-token': user.sessionID
             }
         };
+        $scope.maxMailboxTransferUses = '';
         $http(req).then(function(res) {
             $rootScope.isLoading = false;
             notification.send('Transfer code created!', "Code: "+res.data.code.code, 'success');
@@ -244,15 +249,24 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
                 'title': $scope.inboxTitle
             }
         };
+        $scope.inboxTitle = '';
         $http(req).then(function(res) {
             $scope.viewingMailbox.inboxes.push(res.data.inbox);
             $rootScope.isLoading = false;
-            notification.send('Inbox added!', 'Inbox `'+res.data.inbox.title+'` created successfully.', 'success');
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Cannot add inbox!', res.data.error.message, 'error');
         });
     };
+
+    socket.getSocket().onMessage(function (event) {
+        var message = JSON.parse(event.data);
+        if(message.type == 'event') {
+            if(message.eventName == 'U:domainAdded') {
+                $scope.domains.push(message.data.domain);
+            }
+        }
+    });
 
     if(typeof user.getUser()._id == 'undefined') {
         $rootScope.$on('userLoaded', function () {

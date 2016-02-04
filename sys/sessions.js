@@ -2,12 +2,12 @@
 'use strict';
 
 var RedisSessions = require("redis-sessions");
-var redis = require('./redis.js');
 var user = require('./user.js');
+var sys = require('./main.js');
 
 function Sessions() {
    /*jshint validthis: true */
-   this.sessions = new RedisSessions({client: redis, namespace: 'sess'});
+   this.sessions = new RedisSessions({client: sys.redis, namespace: 'sess'});
    this.appName = 'MailJS';
 }
 
@@ -39,6 +39,14 @@ Sessions.prototype.create = function(username, ip, other, callback) {
        },
        function(err, resp) {
            if(err) { return cb(err, null); }
+           var message = JSON.stringify({
+               type: 'event',
+               eventName: 'U:sessionCreated',
+               data: {
+                   ip: ip
+               }
+           });
+           sys.ws.send('U:'+user._id, message);
            cb(null, resp.token);
        });
    });

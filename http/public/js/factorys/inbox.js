@@ -1,4 +1,4 @@
-app.factory('inbox', function ($http, user) {
+app.factory('inbox', function ($http, user, socket) {
     var inboxes = {};
 
     var get = function getInbox(inbox, page, cb) {
@@ -19,7 +19,6 @@ app.factory('inbox', function ($http, user) {
 			}
 		};
 		$http(req).then(function(res) {
-            console.log(res.data);
             inboxes[inbox] = res.data.emails;
 			return cb(null, res.data.emails);
 		}, function(res) {

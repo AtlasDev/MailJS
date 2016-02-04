@@ -18,7 +18,6 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 
     $rootScope.$on('socketStatusChange', function () {
         $scope.socketStatus = socket.getStatus();
-        $scope.$apply();
     });
 
     $rootScope.$on('currentMailboxChange', function (event, mailbox) {
@@ -45,10 +44,5 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
     $scope.isFullscreen = function () {
         return fullscreen.isFullscreen();
     };
-
-	socket.on('error:auth', function () {
-		$cookies.remove('MailJS');
-		$window.location.href = '/index.html?msg=Authentication%20failure!';
-	});
 });
 }());

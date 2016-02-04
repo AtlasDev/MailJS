@@ -96,6 +96,7 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-route.min.js',
                     'http/public/js/angular/angular-toastr.tpls.min.js',
                     'http/public/js/angular/angular-cookies.min.js',
+                    'http/public/js/angular/angular-websocket.min.js',
                     'http/public/js/angular/angular-translate.min.js',
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
@@ -322,7 +323,11 @@ module.exports = function (grunt) {
                         expand: true,
                         src: [
                             'http/views/**',
-                            'http/public/**'
+                            'http/public/**',
+                            '!http/public/css/**',
+                            '!http/public/fonts/**',
+                            '!http/public/img/**',
+                            '!http/public/js/**'
                         ],
                         dest: 'tmp'
                     }

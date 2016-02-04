@@ -3,6 +3,7 @@
 
 var Inbox = require('../models/inbox.js');
 var validator = require('validator');
+var sys = require('./main.js');
 
 /**
  * Create default inboxes for a mailbox
@@ -16,6 +17,7 @@ var validator = require('validator');
 /**
  * @callback createDefaultsCallback
  * @param {Error} err Error object, should be undefined.
+ * @param {Object} inboxes Created inboxes.
  */
 exports.createDefaults = function (mailboxID, callback) {
     if (!validator.isMongoId(mailboxID)) {
@@ -60,7 +62,7 @@ exports.createDefaults = function (mailboxID, callback) {
                     if(err) {
                         return callback(err);
                     }
-                    return callback();
+                    return callback(null, [inbox, junk, send, trash]);
                 });
             });
         });
@@ -133,6 +135,14 @@ exports.createInbox = function (mailboxID, title, cb) {
         if(err) {
             return cb(err);
         }
+        var message = JSON.stringify({
+            type: 'event',
+            eventName: 'M:inboxCreated',
+            data: {
+                inbox: inbox
+            }
+        });
+        sys.ws.send('M:'+inbox.mailbox, message);
         return cb(null, inbox);
     });
 };

@@ -1,4 +1,4 @@
-app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
+app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, socket, notification) {
     var current;
     var mailboxes = [];
 
@@ -55,14 +55,16 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
         });
     }
 
-    function changeMailbox(id) {
+    function changeMailbox(id, skip) {
         for(var i = 0; i<mailboxes.length; i++) {
             if(mailboxes[i]._id == id) {
                 $cookies.put('lastMailbox', mailboxes[i]._id);
                 current = mailboxes[i];
-                for (var j = 0; j < current.inboxes.length; j++) {
-                    if(current.inboxes[j].type == "Inbox") {
-                        $location.path("/mailbox/"+current.inboxes[j]._id);
+                if(!skip) {
+                    for (var j = 0; j < current.inboxes.length; j++) {
+                        if(current.inboxes[j].type == "Inbox") {
+                            $location.path("/mailbox/"+current.inboxes[j]._id);
+                        }
                     }
                 }
                 $rootScope.$emit('currentMailboxChange', current);
@@ -86,6 +88,34 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location) {
     function getCurrent() {
         return current;
     }
+
+    socket.getSocket().onMessage(function (event) {
+        var message = JSON.parse(event.data);
+        if(message.type == 'event') {
+            if(message.eventName == 'M:emailReceived') {
+                message.data.email.senderDisplay = message.data.email.senderDisplay || message.data.email.sender;
+                notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null,  function () {
+                    changeMailbox(message.data.email.mailbox, true);
+                    $location.path("/mail/"+message.data.email._id);
+                });
+            } else if(message.eventName == 'M:inboxCreated') {
+                for (var i = 0; i < mailboxes.length; i++) {
+                    if(mailboxes[i]._id == message.data.inbox.mailbox) {
+                        mailboxes[i].inboxes.push(message.data.inbox);
+                        notification.send('New inbox.', message.data.inbox.name, 'info', null, function () {
+                            changeMailbox(message.data.inbox.mailbox, true);
+                            $location.path("/mailbox/"+message.data.inbox._id);
+                        });
+                    }
+                }
+            } else if(message.eventName == 'U:mailboxAdded') {
+                addMailbox(message.data.mailbox);
+                notification.send('New mailbox.', message.data.mailbox.title, 'info', null, function () {
+                    changeMailbox(message.data.mailbox._id);
+                });
+            }
+        }
+    });
 
     function addMailbox(mailbox) {
         mailboxes.push(mailbox);

@@ -14,6 +14,7 @@ exports.email = require('./email.js');
 exports.transfer = require('./transfer.js');
 exports.invitation = require('./invitation.js');
 
+exports.ws = require('./ws.js');
 exports.redis = require('./redis.js');
 exports.util = require('./util.js');
 exports.worker = require('./worker.js');

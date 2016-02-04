@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox, notification, $location) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
 	$scope.mailbox = $routeParams.inbox;
@@ -12,6 +12,11 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, i
 			$rootScope.isLoading = false;
 			if(err) {
 				notification.send('Could not get mail!', err.message, 'error');
+				for (var j = 0; j < mailbox.getCurrent().inboxes.length; j++) {
+					if(mailbox.getCurrent().inboxes[j].type == "Inbox") {
+						$location.path("/mailbox/"+mailbox.getCurrent().inboxes[j]._id);
+					}
+				}
 			}
 			$scope.mails = emails;
 		});

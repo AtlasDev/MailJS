@@ -1,14 +1,13 @@
 (function () {
 'use strict';
 
-var util = require('./util.js');
 var Mailbox = require('../models/mailbox.js');
 var Domain = require('../models/domain.js');
 var User = require('../models/user.js');
 var Inbox = require('../models/inbox.js');
-var inboxFunc = require('./inbox.js');
 var validator = require('validator');
 var mongoose = require('mongoose');
+var sys = require('./main.js');
 
 /**
  * Create a new mailbox
@@ -70,6 +69,12 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                 return callback(error);
             }
         }
+        if(domain.creator != userID && domain.users.indexOf(userID) == -1) {
+            error = new Error('Permission denied.');
+            error.name = 'EPERMS';
+            error.type = 401;
+            return callback(error);
+        }
         var address = local+'@'+domain.domain;
         Mailbox.findOne({address: address}, function (err, resMailbox) {
             if(err) {
@@ -91,7 +96,7 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                 if(err) {
                     return callback(err);
                 }
-                inboxFunc.createDefaults(mailbox._id, function (err) {
+                sys.inbox.createDefaults(mailbox._id, function (err, inboxes) {
                     if(err) {
                         return callback(err);
                     }
@@ -103,7 +108,18 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                             if(err) {
                                 return callback(err);
                             }
-                            util.log('Mailbox `'+mailbox.address+'` created.');
+                            mailbox = mailbox.toObject();
+                            mailbox.inboxes = inboxes;
+                            var message = JSON.stringify({
+                                type: 'event',
+                                eventName: 'U:mailboxAdded',
+                                data: {
+                                    mailbox: mailbox,
+                                    type: 'create'
+                                }
+                            });
+                            sys.ws.send('U:'+userID, message);
+                            sys.util.log('Mailbox `'+mailbox.address+'` created.');
                             return callback(null, mailbox);
                         }
                     );
@@ -233,13 +249,13 @@ exports.isAdmin = function (mailboxID, userID, cb) {
  * @since 0.1.0
  * @version 1
  * @param {string} mailboxID Mailbox id of the mailbox to get the inbox from
- * @param {getInboxCallback} callback Callback function after getting the mailbox.
+ * @param {getInboxCallback} callback Callback function after getting the inboxes.
  */
 
 /**
  * @callback getInboxCallback
  * @param {Error} err Error object, should be undefined.
- * @param {Object} inbox THe main inbox object.
+ * @param {Object} inbox The main inbox object.
  */
 exports.getInbox = function (mailboxID, cb) {
     var error;
@@ -297,7 +313,16 @@ exports.addUser = function (mailboxID, user, cb) {
         if(err) {
             return cb(err);
         }
-        util.log('User `'+user._id+'` has been added to the mailbox `'+mailboxID+'`');
+        var message = JSON.stringify({
+            type: 'event',
+            eventName: 'M:userAdded',
+            data: {
+                user: user._id,
+                mailbox: mailboxID
+            }
+        });
+        sys.ws.send('M:'+mailboxID, message);
+        sys.util.log('User `'+user._id+'` has been added to the mailbox `'+mailboxID+'`');
         return cb(null);
     });
 };

@@ -12,7 +12,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
         $translate.use($scope.lang);
     };
     $scope.updateTimeout = function () {
-        var newTimeout = notification.setTimeout($scope.notifyTimeout);
+        var newTimeout = notification.setNotiTimeout($scope.notifyTimeout);
         if(newTimeout !== false) {
             $scope.notifyTimeout = newTimeout;
         }
@@ -95,9 +95,6 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
             }
         }).then(function(res) {
             $rootScope.isLoading = false;
-            if(res.data.type == "mailbox") {
-                mailbox.addMailbox(res.data.object);
-            }
             notification.send('Successfully added to the '+res.data.type+'.', 'You can now use it!', 'success');
         }, function(res) {
             $rootScope.isLoading = false;
