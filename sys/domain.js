@@ -56,7 +56,8 @@ exports.create = function (domain, admin, disabled, cb) {
                 type: 'event',
                 eventName: 'U:domainAdded',
                 data: {
-                    domain: newDomain
+                    domain: newDomain,
+                    type: 'create'
                 }
             });
             sys.ws.send('U:'+admin, message);

@@ -41,10 +41,10 @@ app.factory('notification', function (toastr) {
         }
         if(typeof icon == "function") {
             callback = icon;
-            icon = '/favicon-96x96.png';
+            icon = '/dist/img/favicon-96x96.png';
         }
         if(icon === null) {
-            icon = '/favicon-96x96.png';
+            icon = '/dist/img/favicon-96x96.png';
         }
         if(check() === true && screenFocus === false) {
             var options = {
@@ -93,7 +93,7 @@ app.factory('notification', function (toastr) {
                         localStorage.setItem('notifications', true);
                         var options = {
                               body: 'The notification system works! You will get a notification everytime you get a new E-mail. You can always disable it in the settings if it gets annoying.',
-                              icon: '/favicon-96x96.png'
+                              icon: '/dist/img/favicon-96x96.png'
                         };
                         var notification = new Notification('Awesome!', options);
                         setTimeout(notification.close.bind(notification), 10000);

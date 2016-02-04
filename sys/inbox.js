@@ -17,6 +17,7 @@ var sys = require('./main.js');
 /**
  * @callback createDefaultsCallback
  * @param {Error} err Error object, should be undefined.
+ * @param {Object} inboxes Created inboxes.
  */
 exports.createDefaults = function (mailboxID, callback) {
     if (!validator.isMongoId(mailboxID)) {
@@ -61,7 +62,7 @@ exports.createDefaults = function (mailboxID, callback) {
                     if(err) {
                         return callback(err);
                     }
-                    return callback();
+                    return callback(null, [inbox, junk, send, trash]);
                 });
             });
         });

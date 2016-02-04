@@ -69,6 +69,12 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                 return callback(error);
             }
         }
+        if(domain.creator != userID && domain.users.indexOf(userID) == -1) {
+            error = new Error('Permission denied.');
+            error.name = 'EPERMS';
+            error.type = 401;
+            return callback(error);
+        }
         var address = local+'@'+domain.domain;
         Mailbox.findOne({address: address}, function (err, resMailbox) {
             if(err) {
@@ -90,7 +96,7 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                 if(err) {
                     return callback(err);
                 }
-                sys.inbox.createDefaults(mailbox._id, function (err) {
+                sys.inbox.createDefaults(mailbox._id, function (err, inboxes) {
                     if(err) {
                         return callback(err);
                     }
@@ -102,11 +108,14 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
                             if(err) {
                                 return callback(err);
                             }
+                            mailbox = mailbox.toObject();
+                            mailbox.inboxes = inboxes;
                             var message = JSON.stringify({
                                 type: 'event',
                                 eventName: 'U:mailboxAdded',
                                 data: {
-                                    mailbox: mailbox
+                                    mailbox: mailbox,
+                                    type: 'create'
                                 }
                             });
                             sys.ws.send('U:'+userID, message);
@@ -240,13 +249,13 @@ exports.isAdmin = function (mailboxID, userID, cb) {
  * @since 0.1.0
  * @version 1
  * @param {string} mailboxID Mailbox id of the mailbox to get the inbox from
- * @param {getInboxCallback} callback Callback function after getting the mailbox.
+ * @param {getInboxCallback} callback Callback function after getting the inboxes.
  */
 
 /**
  * @callback getInboxCallback
  * @param {Error} err Error object, should be undefined.
- * @param {Object} inbox THe main inbox object.
+ * @param {Object} inbox The main inbox object.
  */
 exports.getInbox = function (mailboxID, cb) {
     var error;

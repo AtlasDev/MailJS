@@ -263,14 +263,15 @@ var removeSocket = function (wsID) {
         if(users[uid].ws[wsID]) {
             delete users[uid].ws[wsID];
             if(Object.keys(users[uid].ws).length === 0) {
-                sub.unsubscribe('U:'+uid);
                 for (var i = 0; i < users[uid].mailboxes.length; i++) {
+                    mailboxes[users[uid].mailboxes[i]].splice(mailboxes[users[uid].mailboxes[i]].indexOf[uid], 1);
                     delete mailboxes[users[uid].mailboxes[i]][uid];
                     if(mailboxes[users[uid].mailboxes[i]].length <= 0) {
                         sub.unsubscribe('M:'+mailboxes[users[uid].mailboxes[i]]);
                         delete mailboxes[users[uid].mailboxes[i]];
                     }
                 }
+                sub.unsubscribe('U:'+uid);
                 delete users[uid];
             }
         }

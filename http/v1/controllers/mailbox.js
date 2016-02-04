@@ -28,10 +28,10 @@ exports.postMailbox = function (req, res) {
     if(!req.body.local || !req.body.domain || !req.body.title) {
         return res.status(400).json({error: {name: 'EINVALID', message: 'Request data is missing.'}});
     }
-        sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, false, function (err, mailbox) {
-            if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-            return res.json({mailbox: mailbox});
-        });
+    sys.mailbox.create(req.body.local, req.body.domain, req.user._id, req.body.title, false, function (err, mailbox) {
+        if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
+        return res.json({mailbox: mailbox});
+    });
 };
 
 exports.getMailbox = function (req, res) {

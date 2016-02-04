@@ -56,7 +56,20 @@ exports.claim = function (req, res) {
                             if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
                             code.use(function (err) {
                                 if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
-                                return res.json({type: 'mailbox', object: mailbox});
+                                sys.inbox.getInboxes(mailbox._id, function (err, inboxes) {
+                                    if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                                    mailbox.inboxes = inboxes;
+                                    var message = JSON.stringify({
+                                        type: 'event',
+                                        eventName: 'U:mailboxAdded',
+                                        data: {
+                                            mailbox: mailbox,
+                                            type: 'transfer'
+                                        }
+                                    });
+                                    sys.ws.send('U:'+req.user._id, message);
+                                    return res.json({type: 'mailbox', object: mailbox});
+                                });
                             });
                         });
                     });
@@ -68,6 +81,15 @@ exports.claim = function (req, res) {
                         if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
                         code.use(function (err) {
                             if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
+                            var message = JSON.stringify({
+                                type: 'event',
+                                eventName: 'U:domainAdded',
+                                data: {
+                                    domain: domain,
+                                    type: 'transfer'
+                                }
+                            });
+                            sys.ws.send('U:'+req.user._id, message);
                             return res.json({type: 'domain', object: domain});
                         });
                     });

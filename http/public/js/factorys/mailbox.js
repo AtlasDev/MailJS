@@ -92,7 +92,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, s
         if(message.type == 'event') {
             if(message.eventName == 'M:emailReceived') {
                 message.data.email.senderDisplay = message.data.email.senderDisplay || message.data.email.sender;
-                notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null, function () {
+                notification.send('Mail from: '+message.data.email.senderDisplay, message.data.email.subject, 'info', null,  function () {
                     changeMailbox(message.data.email.mailbox);
                     $location.path("/mail/"+message.data.email._id);
                 });
@@ -100,11 +100,16 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, s
                 for (var i = 0; i < mailboxes.length; i++) {
                     if(mailboxes[i]._id == message.data.inbox.mailbox) {
                         mailboxes[i].inboxes.push(message.data.inbox);
-                        notification.send('New inbox `'+message.data.inbox.name+'`.', null, 'info', null, function () {
+                        notification.send('New inbox.', message.data.inbox.name, 'info', null, null, function () {
                             changeMailbox(message.data.email.mailbox);
                         });
                     }
                 }
+            } else if(message.eventName == 'U:mailboxAdded') {
+                addMailbox(message.data.mailbox);
+                notification.send('New mailbox.', message.data.mailbox.title, 'info', null, null, function () {
+                    changeMailbox(message.data.mailbox._id);
+                });
             }
         }
     });
