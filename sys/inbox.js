@@ -136,7 +136,7 @@ exports.createInbox = function (mailboxID, title, cb) {
         }
         var message = JSON.stringify({
             type: 'event',
-            eventName: 'M:inboxAdded',
+            eventName: 'M:inboxCreated',
             data: {
                 inbox: inbox
             }
