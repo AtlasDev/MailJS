@@ -5,7 +5,7 @@
     "uninstall": true,
     "maxExits": 10,
     "servePublic": true,
-    "generateCerts": false,
+    "generateCerts": true,
     "ravenURL": "https://cd0fa88eb40b4ecb877d00de8020b8eb:72d01c0491014645b0e63ae29bdea40a@app.getsentry.com/50149",
     "reportErrors": false,
     "variables": {

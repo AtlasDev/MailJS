@@ -9,7 +9,6 @@
     "MailJS": "./lib/app.js"
   },
   "scripts": {
-    "start": "node lib/app.js",
     "test": "grunt hint"
   },
   "repository": {
