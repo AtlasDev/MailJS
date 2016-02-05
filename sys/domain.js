@@ -321,8 +321,8 @@ exports.getCert = function (domain, cb) {
         var subCert;
         var subKey;
         try {
-            subCert = fs.readFileSync('./lib/server.crt', 'utf8');
-            subKey = fs.readFileSync('./lib/server.key', 'utf8');
+            subCert = fs.readFileSync(__dirname+'/../lib/server.crt', 'utf8');
+            subKey = fs.readFileSync(__dirname+'/../lib/server.key', 'utf8');
         } catch (e) {
             sys.util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
         }
