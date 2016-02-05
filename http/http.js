@@ -125,6 +125,16 @@ httpsApp.use('/api/*', function (req, res, next) {
 
 httpsApp.use('/api/v1', v1apiRouter);
 
+if(config.variables) {
+    httpsApp.get('/:endpoint', function (req, res, next) {
+        if(config.variables[req.params.endpoint]) {
+            res.send(config.variables[req.params.endpoint]);
+        } else {
+            next();
+        }
+    });
+}
+
 http.listen(config.http.port, config.http.host);
 https.listen(config.https.port, config.https.host);
 sys.util.log('HTTP server started at port '+config.http.port, true);
