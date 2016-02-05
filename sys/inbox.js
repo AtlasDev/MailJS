@@ -20,7 +20,7 @@ var sys = require('./main.js');
  * @param {Object} inboxes Created inboxes.
  */
 exports.createDefaults = function (mailboxID, callback) {
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -84,7 +84,7 @@ exports.createDefaults = function (mailboxID, callback) {
  * @param {Array} inboxes Array of inbox objects.
  */
 exports.getInboxes = function (mailboxID, cb) {
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -115,13 +115,13 @@ exports.getInboxes = function (mailboxID, cb) {
  */
 exports.createInbox = function (mailboxID, title, cb) {
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if (!validator.isAscii(title) || title.length < 4 || title.length > 64) {
+    if (!validator.isAscii(title.toString()) || title.length < 4 || title.length > 64) {
         error = new Error('Invalid inbox title!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -163,7 +163,7 @@ exports.createInbox = function (mailboxID, title, cb) {
  */
 exports.get = function (inboxID, cb) {
     var error;
-    if (!validator.isMongoId(inboxID)) {
+    if (!validator.isMongoId(inboxID.toString())) {
         error = new Error('Invalid inbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

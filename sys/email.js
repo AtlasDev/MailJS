@@ -27,7 +27,7 @@ var sys = require('./main.js');
 exports.create = function (mailboxID, mail, cb) {
     var content = mail.html || mail.text;
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -39,7 +39,7 @@ exports.create = function (mailboxID, mail, cb) {
         error.type = 400;
         return cb(error);
     }
-    if (!validator.isEmail(mail.from[0].address)) {
+    if (!validator.isEmail(mail.from[0].address.toString())) {
         error = new Error('Invalid sender!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -146,7 +146,7 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
  */
 exports.getEmails = function (inboxID, limit, skip, cb) {
     var error;
-    if (!validator.isMongoId(inboxID)) {
+    if (!validator.isMongoId(inboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -189,7 +189,7 @@ exports.getEmails = function (inboxID, limit, skip, cb) {
  */
 exports.getEmail = function (emailID, mailboxes, cb) {
     var error;
-    if (!validator.isMongoId(emailID)) {
+    if (!validator.isMongoId(emailID.toString())) {
         error = new Error('Invalid email ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -232,7 +232,7 @@ exports.getEmail = function (emailID, mailboxes, cb) {
  */
 exports.deleteEmail = function (emailID, mailboxes, cb) {
     var error;
-    if (!validator.isMongoId(emailID)) {
+    if (!validator.isMongoId(emailID.toString())) {
         error = new Error('Invalid email ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

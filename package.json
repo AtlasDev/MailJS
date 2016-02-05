@@ -3,8 +3,13 @@
   "version": "0.1.1-Alpha",
   "description": "Redefine your mail.",
   "homepage": "https://www.mailjs.net",
+  "main": "./lib/app.js",
+  "bin": {
+    "mailjs": "./lib/app.js",
+    "MailJS": "./lib/app.js"
+  },
   "scripts": {
-    "start": "node app.js",
+    "start": "node lib/app.js",
     "test": "grunt hint"
   },
   "repository": {
@@ -22,6 +27,7 @@
     "colors": "^1.1.2",
     "connect-redis-sessions": "^1.2.0",
     "cookie-parser": "^1.4.0",
+    "daemonize2": "^0.4.2",
     "dnsbl-lookup": "^0.3.3",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
@@ -47,7 +53,6 @@
     "validator": "^4.1.0"
   },
   "devDependencies": {
-    "apidoc": "^0.13.1",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.7.0",

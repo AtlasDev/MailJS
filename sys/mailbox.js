@@ -29,13 +29,13 @@ var sys = require('./main.js');
  */
 exports.create = function (local, domainID, userID, title, overwrite, callback) {
     var error;
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if (!validator.isMongoId(domainID)) {
+    if (!validator.isMongoId(domainID.toString())) {
         error = new Error('Invalid domain ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -144,7 +144,7 @@ exports.create = function (local, domainID, userID, title, overwrite, callback) 
  * @param {Object|Boolean} mailbox Mailbox object of the found mailbox, false if not found.
  */
 exports.find = function (mailboxID, callback) {
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EINVALID';
         error.type = 400;
@@ -177,7 +177,7 @@ exports.find = function (mailboxID, callback) {
  * @param {Object} mailbox The found mailbox. null if mailbox was invalid
  */
 exports.verify = function (mailAddress, callback) {
-    if (!validator.isEmail(mailAddress)) {
+    if (!validator.isEmail(mailAddress.toString())) {
         var error = new Error('Invalid mail address!');
         error.name = 'EINVALID';
         error.type = 400;
@@ -212,13 +212,13 @@ exports.verify = function (mailAddress, callback) {
  */
 exports.isAdmin = function (mailboxID, userID, cb) {
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -259,7 +259,7 @@ exports.isAdmin = function (mailboxID, userID, cb) {
  */
 exports.getInbox = function (mailboxID, cb) {
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -290,7 +290,7 @@ exports.getInbox = function (mailboxID, cb) {
  */
 exports.addUser = function (mailboxID, user, cb) {
     var error;
-    if(!validator.isMongoId(mailboxID)) {
+    if(!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

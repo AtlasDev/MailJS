@@ -26,13 +26,13 @@ var sys = require('./main.js');
 exports.create = function (domain, admin, disabled, cb) {
     //TODO: handle dubble domains nicer
     var error;
-    if(!validator.isBoolean(disabled)) {
+    if(!validator.isBoolean(disabled.toString())) {
         error = new Error('Disabled is not a boolean!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if(!validator.isFQDN(domain)) {
+    if(!validator.isFQDN(domain.toString())) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -81,7 +81,7 @@ exports.create = function (domain, admin, disabled, cb) {
  * @param {Array} domains An array of domain objects
  */
 exports.getDomains = function (userID, callback) {
-    if(!validator.isMongoId(userID)) {
+    if(!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -110,13 +110,13 @@ exports.getDomains = function (userID, callback) {
  */
 exports.isAdmin = function (domainID, userID, cb) {
     var error;
-    if(!validator.isMongoId(userID)) {
+    if(!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if(!validator.isMongoId(domainID)) {
+    if(!validator.isMongoId(domainID.toString())) {
         error = new Error('Invalid domain ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -150,13 +150,13 @@ exports.isAdmin = function (domainID, userID, cb) {
  */
 exports.addUser = function (domainID, userID, cb) {
     var error;
-    if(!validator.isMongoId(userID)) {
+    if(!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    if(!validator.isMongoId(domainID)) {
+    if(!validator.isMongoId(domainID.toString())) {
         error = new Error('Invalid domain ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -210,7 +210,7 @@ exports.createCert = function (domain, cb) {
     }
     var error;
     var options;
-    if(!validator.isFQDN(domain)) {
+    if(!validator.isFQDN(domain.toString())) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -309,7 +309,7 @@ exports.createCert = function (domain, cb) {
 exports.getCert = function (domain, cb) {
     var error;
     domain = domain.replace(/^(mail\.)/,"").toLowerCase().trim();
-    if(!validator.isFQDN(domain)) {
+    if(!validator.isFQDN(domain.toString())) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -321,8 +321,8 @@ exports.getCert = function (domain, cb) {
         var subCert;
         var subKey;
         try {
-            subCert = fs.readFileSync('./server.crt', 'utf8');
-            subKey = fs.readFileSync('./server.key', 'utf8');
+            subCert = fs.readFileSync('./lib/server.crt', 'utf8');
+            subKey = fs.readFileSync('./lib/server.key', 'utf8');
         } catch (e) {
             sys.util.error('You need a substitute certificate if you want to disable certificate generation.', e, true);
         }

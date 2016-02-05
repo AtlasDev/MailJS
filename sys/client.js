@@ -65,7 +65,7 @@ exports.create = function (user, name, description, url, scopes, callback) {
  */
 exports.get = function (userID, limitBy, skip, callback) {
     var error;
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(userID.toString())) {
         error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         error.type = 400;
@@ -73,13 +73,13 @@ exports.get = function (userID, limitBy, skip, callback) {
     }
     limitBy = limitBy || 20;
     skip = skip || 0;
-    if (!validator.isInt(limitBy)) {
+    if (!validator.isInt(limitBy.toString())) {
         error = new Error('Invalid limitBy value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if (!validator.isInt(skip)) {
+    if (!validator.isInt(skip.toString())) {
         error = new Error('Invalid skip value!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -147,7 +147,7 @@ exports.verify = function (username, password, callback) {
  * @param {Int} removedCodes Amount of deleted codes in the process.
  */
 exports.delete = function (clientID, callback) {
-    if (!validator.isMongoId(clientID)) {
+    if (!validator.isMongoId(clientID.toString())) {
         var error = new Error('Invalid client ID!');
         error.name = 'EINVALID';
         error.type = 400;
@@ -193,7 +193,7 @@ exports.delete = function (clientID, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.deleteUser = function (userID, callback) {
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(userID.toString())) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         error.type = 400;
