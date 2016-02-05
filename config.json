@@ -8,6 +8,9 @@
     "generateCerts": false,
     "ravenURL": "https://cd0fa88eb40b4ecb877d00de8020b8eb:72d01c0491014645b0e63ae29bdea40a@app.getsentry.com/50149",
     "reportErrors": false,
+    "variables": {
+        "loaderio-74a3c66369bc6263e651e311775d9545": "loaderio-74a3c66369bc6263e651e311775d9545"
+    },
     "http": {
         "port": 80,
         "host": ""
