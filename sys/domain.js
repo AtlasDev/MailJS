@@ -225,7 +225,7 @@ exports.createCert = function (domain, cb) {
             options = {
                 email: 'info@'+domain,
                 domains: [domain, 'mail.'+domain],
-                webroot: './http/LE',
+                webroot: __dirname+'/../http/LE',
                 agreeTerms: true
             };
             letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
