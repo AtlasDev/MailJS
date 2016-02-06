@@ -77,7 +77,7 @@ module.exports = function () {
             });
         },
         onData: function(stream, session, cb){
-            var parser = new MailParser();
+            var parser = new MailParser({showAttachmentLinks: true});
             parser.on("end", function(mail){
                 var error = false;
                 for (var i = 0; i < session.envelope.rcptTo.length; i++) {
