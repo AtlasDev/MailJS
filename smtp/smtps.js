@@ -12,7 +12,6 @@ module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
     //Emails are stored in the database to be opened by there owner.
     var smtp = new SMTPServer({
-        secure: true,
         SNICallback: function (domain, cb) {
             sys.domain.getCert(domain, function (err, cert) {
                 if(err) {
@@ -100,14 +99,12 @@ module.exports = function () {
                                         error = true;
                                         return cb(err);
                                     }
+                                    if(i == session.envelope.rcptTo.length) {
+                                        return cb(null, "Message stored.");
+                                    }
                                 }
                             );
                         });
-                        if(i == session.envelope.rcptTo.length - 1) {
-                            if(error === false) {
-                                return cb(null, "Message stored.");
-                            }
-                        }
                     }
                 }
             });
