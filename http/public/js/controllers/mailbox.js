@@ -8,7 +8,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, i
 	$scope.page = 1;
 
 	var init = function() {
-		inbox.get($routeParams.inbox, 1, function (err, emails) {
+		inbox.get($routeParams.inbox, function (err, emails) {
 			$rootScope.isLoading = false;
 			if(err) {
 				notification.send('Could not get mail!', err.message, 'error');
