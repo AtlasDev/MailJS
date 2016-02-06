@@ -4,7 +4,6 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
 
     // Events:
     // socketStatusChange
-    // socketMessage
 
     ws.onMessage(function (event) {
         var message = JSON.parse(event.data);
@@ -17,6 +16,8 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
         } else {
             switch (message.eventName) {
                 case 'S:responsive':
+                    status = 3;
+                    $rootScope.$emit('socketStatusChange');
                     ws.send(JSON.stringify({
                         type: 'event',
                         eventName: 'auth',
@@ -37,11 +38,10 @@ app.factory('socket', function ($rootScope, $cookies, $websocket, notification) 
     ws.onClose(function () {
         status = 0;
         $rootScope.$emit('socketStatusChange');
-    });
-
-    ws.onOpen(function () {
-        status = 3;
-        $rootScope.$emit('socketStatusChange');
+        $('body').removeClass('preloaded');
+        setTimeout(function () {
+            location.reload();
+        }, 2500);
     });
 
     function getStatus() {

@@ -69,7 +69,7 @@ exports.create = function (username, password, firstName, lastName, isAdmin, cal
  * @param {Object} user User object of the found user.
  */
 exports.find = function (userID, callback) {
-    if (!validator.isMongoId(userID.toString())) {
+    if (!userID || !validator.isMongoId(userID.toString())) {
         var error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

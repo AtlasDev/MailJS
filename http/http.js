@@ -63,11 +63,12 @@ var https = require('https').createServer({
 httpsApp.use(function(req, res, next) {
     if(config.generateCerts === false) {
         sys.util.log('HSTS disabled to allow connections, please re-enable certificate generation to turn on HSTS.', false, true);
+    } else {
         res.set('Strict-Transport-Security', 'max-age=31536000');
     }
     res.set('X-Powered-By', 'MailJS');
     res.set('X-Frame-Options', 'DENY');
-    res.set('Content-Security-Policy', 'style-src \'unsafe-inline\' \'self\'; img-src https://secure.gravatar.com \'self\'; connect-src wss://'+req.headers.host+' \'self\'; default-src \'self\'');
+    res.set('Content-Security-Policy', 'style-src \'unsafe-inline\' \'self\'; img-src https: data: \'self\'; connect-src wss://'+req.headers.host+' \'self\'; default-src \'self\'');
     next();
 });
 

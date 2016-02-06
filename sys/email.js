@@ -25,6 +25,10 @@ var sys = require('./main.js');
  * @param {Object} email The newly created email.
  */
 exports.create = function (mailboxID, mail, cb) {
+    if(mail.html) {
+        mail.html = mail.html.replace(new RegExp('http://', 'g'), 'https://');
+        mail.html = mail.html.replace(new RegExp('<a', 'g'), '<a target="_blank"');
+    }
     var content = mail.html || mail.text;
     var error;
     if (!validator.isMongoId(mailboxID.toString())) {
@@ -98,7 +102,8 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
     email.subject = mail.subject;
     email.content = striptags(content.trim(), [
         'a', 'b', 'i', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'br', 'font', 'p', 'strong',
-        'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol'
+        'em', 'small', 'marked', 'del', 'sub', 'sup', 'span', 'li' , 'ul', 'ol', 'style', 'img',
+        'html', 'head', 'body', 'tbody', 'table', 'td', 'tr',
     ]);
     email.attachments = mail.attachments;
     email.attachmentsMeta = mail.attachmentsMeta;
@@ -109,7 +114,7 @@ var createHelper = function (mail, content, inbox, mailboxID, cb) {
     if(mail.text) {
         email.preview = mail.text.trim().substr(0, 100);
     } else {
-        email.preview = '';
+        email.preview = striptags(mail.html.trim().substr(0, 100));
     }
     email.receivedBy = os.hostname();
     email.save(function (err) {
