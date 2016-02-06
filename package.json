@@ -4,6 +4,9 @@
   "description": "Redefine your mail.",
   "homepage": "https://www.mailjs.net",
   "main": "./lib/app.js",
+  "contributors": [
+    "Dany Sluijk <dany@atlasdev.nl> (https://atlasdev.nl)"
+  ],
   "bin": {
     "mailjs": "./lib/app.js",
     "MailJS": "./lib/app.js"
