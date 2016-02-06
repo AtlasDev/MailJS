@@ -22,19 +22,19 @@ var mongoose = require('mongoose');
  */
 exports.create = function (object, type, maxUses, cb) {
     var error;
-    if (!validator.isMongoId(object)) {
+    if (!validator.isMongoId(object.toString())) {
         error = new Error('Invalid object ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if ((!validator.isInt(type)) || type < 1 || type > 3) {
+    if ((!validator.isInt(type.toString())) || type < 1 || type > 3) {
         error = new Error('Invalid type!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if ((!validator.isInt(maxUses)) || maxUses < 0) {
+    if ((!validator.isInt(maxUses.toString())) || maxUses < 0) {
         error = new Error('Invalid maxUses!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -70,7 +70,7 @@ exports.create = function (object, type, maxUses, cb) {
  */
 exports.find = function (id, cb) {
     var error;
-    if (!validator.isMongoId(id)) {
+    if (!validator.isMongoId(id.toString())) {
         error = new Error('Invalid transfer ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -158,7 +158,7 @@ exports.findByCode = function (code, cb) {
  */
 exports.findByObject = function (objectID, type, cb) {
     var error;
-    if (!validator.isMongoId(objectID)) {
+    if (!validator.isMongoId(objectID.toString())) {
         error = new Error('Invalid object ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

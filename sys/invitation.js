@@ -20,7 +20,7 @@ var validator = require('validator');
  */
 exports.create = function (message, cb) {
     var error;
-    if(message && !validator.isAscii(message)) {
+    if(message && !validator.isAscii(message.toString())) {
         error = new Error('Invalid message!');
         error.name = 'EVALIDATION';
         error.type = 400;

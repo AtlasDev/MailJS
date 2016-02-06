@@ -207,7 +207,7 @@ var handleClient = function handleClient(ws, user) {
 
 var addToMailbox = function addToMailbox(user, mailboxID, cb) {
     var error;
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;

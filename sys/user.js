@@ -30,7 +30,7 @@ exports.create = function (username, password, firstName, lastName, isAdmin, cal
         error.type = 400;
         return callback(error);
     }
-    if(password.length < 7 || validator.isAlpha(password) || !/[a-z]/g.test(password) || !/[A-Z]/g.test(password)) {
+    if(password.length < 7 || validator.isAlpha(password.toString()) || !/[a-z]/g.test(password) || !/[A-Z]/g.test(password)) {
         error = new Error('Password does not meet the requirements!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -69,7 +69,7 @@ exports.create = function (username, password, firstName, lastName, isAdmin, cal
  * @param {Object} user User object of the found user.
  */
 exports.find = function (userID, callback) {
-    if (!validator.isMongoId(userID)) {
+    if (!userID || !validator.isMongoId(userID.toString())) {
         var error = new Error('Invalid user ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -127,7 +127,7 @@ exports.findByUsername = function (username, callback) {
  * @param {Array|Boolean} users An array of user objects found, false if non found.
  */
 exports.findByMailbox = function (mailboxID, callback) {
-    if (!validator.isMongoId(mailboxID)) {
+    if (!validator.isMongoId(mailboxID.toString())) {
         var error = new Error('Invalid mailbox ID!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -163,13 +163,13 @@ exports.findAll = function (limitBy, skip, callback) {
     limitBy = parseInt(limitBy) || 20;
     skip = parseInt(skip) || 0;
     var error;
-    if (!validator.isInt(limitBy)) {
+    if (!validator.isInt(limitBy.toString())) {
         error = new Error('Invalid limitBy value!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return callback(error);
     }
-    if (!validator.isInt(skip)) {
+    if (!validator.isInt(skip.toString())) {
         error = new Error('Invalid skip value!');
         error.name = 'EVALIDATION';
         error.type = 400;
@@ -234,7 +234,7 @@ exports.verify = function (username, password, callback) {
  * @param {Error} err Error object, should be undefined.
  */
 exports.delete = function (userID, callback) {
-    if (!validator.isMongoId(userID)) {
+    if (!validator.isMongoId(userID.toString())) {
         var error = new Error('Invalid user ID!');
         error.name = 'EINVALID';
         error.type = 400;

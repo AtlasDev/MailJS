@@ -10,6 +10,7 @@
 var config   = require('../config.json');
 var mongoose = require('mongoose');
 var util     = require('./util.js');
+var fs       = require('fs');
 var cluster  = require('cluster');
 var raven    = require('raven');
 
