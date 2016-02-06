@@ -1,12 +1,11 @@
 app.factory('inbox', function ($http, user, socket) {
     var inboxes = {};
 
-    var get = function getInbox(inbox, page, cb) {
-        page = page || 1;
+    var get = function get(inbox, cb) {
         if(inboxes[inbox]) {
             return cb(null, inboxes[inbox]);
         } else {
-            reqInbox(inbox, page, cb);
+            reqInbox(inbox, 1, cb);
         }
     };
 
@@ -34,6 +33,26 @@ app.factory('inbox', function ($http, user, socket) {
             }
 		});
     };
+
+    socket.getSocket().onMessage(function (event) {
+        var message = JSON.parse(event.data);
+        if(message.type == 'event') {
+            if(message.eventName == 'M:emailReceived') {
+                if(inboxes[message.data.email.inbox]) {
+                    inboxes[message.data.email.inbox].push(message.data.email);
+                }
+            } else if(message.eventName == 'M:emailDeleted') {
+                if(inboxes[message.data.email.inbox]) {
+                    for (var i = 0; i < inboxes[message.data.email.inbox].length; i++) {
+                        if(inboxes[message.data.email.inbox][i]._id == message.data.email._id) {
+                            inboxes[message.data.email.inbox].splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     return {
         get: get

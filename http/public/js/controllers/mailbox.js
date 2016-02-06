@@ -4,11 +4,11 @@
 app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox, notification, $location) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
-	$scope.mailbox = $routeParams.inbox;
+	$scope.inbox = $routeParams.inbox;
 	$scope.page = 1;
 
 	var init = function() {
-		inbox.get($routeParams.inbox, 1, function (err, emails) {
+		inbox.get($routeParams.inbox, function (err, emails) {
 			$rootScope.isLoading = false;
 			if(err) {
 				notification.send('Could not get mail!', err.message, 'error');
@@ -22,7 +22,7 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, i
 		});
 		for (var i = 0; i < mailbox.getCurrent().inboxes.length; i++) {
 			if(mailbox.getCurrent().inboxes[i]._id == $routeParams.inbox) {
-				$scope.mailbox = mailbox.getCurrent().inboxes[i].name;
+				$scope.inbox = mailbox.getCurrent().inboxes[i].name;
 				break;
 			}
 		}
