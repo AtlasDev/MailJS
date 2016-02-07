@@ -15,7 +15,6 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var config = require('../config.json');
 var v1apiRouter = require('./v1/apiRouter.js');
-//var socketio = require('./socketio.js');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
 var tls = require('tls');

@@ -3,3 +3,4 @@ npm-debug.log
 tmp
 builds
 http/public/dist
+MailJS.pid

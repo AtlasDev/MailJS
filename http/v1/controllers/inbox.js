@@ -11,7 +11,6 @@ exports.postInbox = function (req, res) {
         if (isAdmin === true) {
             sys.inbox.createInbox(req.body.mailbox, req.body.title, function (err, inbox) {
                 if (err) return res.status(err.type || 500).json({error: {name: err.name, message: err.message}});
-                //TODO send creation event over Socket.IO
                 return res.json({inbox: inbox});
             });
         } else {
