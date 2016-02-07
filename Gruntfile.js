@@ -31,7 +31,8 @@ module.exports = function (grunt) {
                         join_vars: true,
                         keep_fargs: true,
                         keep_fnames: true
-                    }
+                    },
+                    preserveComments: false
                 }
             },
             dist: {
@@ -62,7 +63,22 @@ module.exports = function (grunt) {
                         warnings: true,
                         keep_fargs: true,
                         keep_fnames: true
-                    }
+                    },
+                    preserveComments: false
+                }
+            },
+            app: {
+                files: {
+                    'tmp/lib/app.js': 'lib/app.js'
+                },
+                options: {
+                    banner: '#!/usr/bin/env node'+
+                        '\n\n/*\n   <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev\n'+
+                        '   Copyright (C) AtlasDev - All Rights Reserved\n'+
+                        '   Unauthorized copying of this file, via any medium is strictly prohibited\n'+
+                        '   Proprietary and confidential\n'+
+                        '   Written by Dany Sluijk <dany@atlasdev.nl>, January 2016\n*/\n',
+                    preserveComments: false
                 }
             }
         },
@@ -258,8 +274,7 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: [
-                    'http/public/**/*.js',
-                    'http/public/**/*.css'
+                    '**/*'
                 ],
                 tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:favicon', 'copy:fonts'],
                 options: {
@@ -447,6 +462,7 @@ module.exports = function (grunt) {
         'concat:login',
         'uglify:public',
         'uglify:dist',
+        'uglify:app',
         'imagemin:public',
         'copy:favicon',
         'copy:json',
@@ -463,8 +479,12 @@ module.exports = function (grunt) {
         'clean:temp'
     ]);
     grunt.registerTask('build-dev', [
-        'cssmin',
+        'jshint:all',
         'concat:app',
-        'concat:login'
+        'concat:login',
+        'cssmin',
+        'imagemin:public',
+        'copy:favicon',
+        'copy:fonts'
     ]);
 };
