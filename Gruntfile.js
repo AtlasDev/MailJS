@@ -100,7 +100,6 @@ module.exports = function (grunt) {
                     'http/public/js/other/jquery.min.js',
                     'http/public/js/other/bootstrap.min.js',
                     'http/public/js/other/bootstrap3-wysihtml5.all.min.js',
-                    'http/public/js/other/socketio.min.js',
                     'http/public/js/other/qrcode.js',
                     'http/public/js/other/UAParser.min.js',
                     'http/public/js/angular/angular.min.js',
