@@ -26,7 +26,6 @@ var sys = require('./main.js');
  */
 exports.create = function (mailboxID, mail, cb) {
     if(mail.html) {
-        mail.html = mail.html.replace(new RegExp('http://', 'g'), 'https://');
         mail.html = mail.html.replace(new RegExp('<a', 'g'), '<a target="_blank"');
     }
     var content = mail.html || mail.text;
