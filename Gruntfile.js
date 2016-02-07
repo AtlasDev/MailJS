@@ -16,7 +16,7 @@ module.exports = function (grunt) {
                         '   Unauthorized copying of this file, via any medium is strictly prohibited\n'+
                         '   Proprietary and confidential\n'+
                         '   Written by Dany Sluijk <dany@atlasdev.nl>, January 2016\n*/\n',
-                    mangle: true,
+                    mangle: false,
                     screwIE8: true,
                     compress: {
                         sequences: true,
