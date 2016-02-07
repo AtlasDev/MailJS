@@ -12,7 +12,8 @@
     "MailJS": "./lib/app.js"
   },
   "scripts": {
-    "test": "grunt hint"
+    "test": "grunt hint",
+    "start": "mailjs start"
   },
   "repository": {
     "type": "git",
@@ -66,6 +67,7 @@
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-contrib-uglify": "^0.5.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-string-replace": "^1.2.1",
     "vinyl-fs": "2.2.1"
   }
 }

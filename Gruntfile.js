@@ -69,7 +69,7 @@ module.exports = function (grunt) {
             },
             app: {
                 files: {
-                    'tmp/lib/app.js': 'lib/app.js'
+                    'tmp/lib/app.js': 'tmp/lib/app.js'
                 },
                 options: {
                     banner: '#!/usr/bin/env node'+
@@ -349,6 +349,19 @@ module.exports = function (grunt) {
                 ]
             }
         },
+        'string-replace': {
+            app: {
+                files: {
+                    'tmp/lib/app.js': 'lib/app.js'
+                },
+                options: {
+                    replacements: [{
+                        pattern: '#!/usr/bin/env node',
+                        replacement: ''
+                    }]
+                }
+            }
+        },
         clean: {
             temp: {
                 src: ["tmp"]
@@ -435,6 +448,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-string-replace');
 
     grunt.registerTask('dev', [
         'watch:all'
@@ -462,6 +476,7 @@ module.exports = function (grunt) {
         'concat:login',
         'uglify:public',
         'uglify:dist',
+        'string-replace:app',
         'uglify:app',
         'imagemin:public',
         'copy:favicon',
