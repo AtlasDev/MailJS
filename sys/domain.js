@@ -190,7 +190,7 @@ exports.addUser = function (domainID, userID, cb) {
 };
 
 /**
- * Generate a trusted certificate with Lets Encrypt, adds mail. subdomain.
+ * Generate a trusted certificate with Lets Encrypt.
  * @name createCert
  * @since 0.1.1
  * @version 1
@@ -210,21 +210,22 @@ exports.createCert = function (domain, cb) {
     }
     var error;
     var options;
-    if(!validator.isFQDN(domain.toString())) {
+    domain = domain.toLowerCase().trim();
+    var subDomain = 'mail.'+domain;
+    if(!validator.isFQDN(domain.toString()) || !validator.isFQDN(subDomain.toString())) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
         error.type = 400;
         return cb(error);
     }
-    domain = domain.toLowerCase().trim();
-    sys.redis.get("certs:"+domain, function (err, reply) {
+    sys.redis.get("certs:"+subDomain, function (err, reply) {
         if(err) {
             return cb(err);
         }
         if(!reply) {
             options = {
                 email: 'info@'+domain,
-                domains: [domain, 'mail.'+domain],
+                domains: subDomain,
                 webroot: __dirname+'/../http/LE',
                 agreeTerms: true
             };
@@ -238,7 +239,7 @@ exports.createCert = function (domain, cb) {
                     caCert: caCert,
                     accountKey: accountKey
                 };
-                sys.redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
                     if(err) {
                         return cb(err);
                     }
@@ -264,7 +265,7 @@ exports.createCert = function (domain, cb) {
             }
             options = {
                 email: 'info@'+domain,
-                domains: [domain, 'mail.'+domain],
+                domains: subDomain,
                 webroot: './http/LE',
                 agreeTerms: true,
                 accountKey: oldCert.accountKey,
@@ -280,7 +281,7 @@ exports.createCert = function (domain, cb) {
                     caCert: caCert,
                     accountKey: accountKey
                 };
-                sys.redis.set('certs:'+domain, JSON.stringify(cert), function (err) {
+                sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
                     if(err) {
                         return cb(err);
                     }
@@ -308,7 +309,7 @@ exports.createCert = function (domain, cb) {
  */
 exports.getCert = function (domain, cb) {
     var error;
-    domain = domain.replace(/^(mail\.)/,"").toLowerCase().trim();
+    domain = domain.toLowerCase().trim();
     if(!validator.isFQDN(domain.toString())) {
         error = new Error('Domain not an FQDN!');
         error.name = 'EVALIDATION';
@@ -347,7 +348,7 @@ exports.getCert = function (domain, cb) {
         var oneMonth = new Date();
         oneMonth.setDate(oneMonth.getMonth()+1);
         if(letiny.getExpirationDate(cert.cert).getTime() <= new Date().getTime()) {
-            exports.createCert(domain, function (err, cert) {
+            exports.createCert(domain.substring(5), function (err, cert) {
                 if(err) {
                     return cb(err);
                 }
