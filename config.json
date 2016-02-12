@@ -11,6 +11,9 @@
     "variables": {
         "loaderio-74a3c66369bc6263e651e311775d9545": "loaderio-74a3c66369bc6263e651e311775d9545"
     },
+    "pubIPs": [
+        ""
+    ],
     "http": {
         "port": 80,
         "host": ""

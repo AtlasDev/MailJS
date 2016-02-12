@@ -7,6 +7,7 @@ var letiny = require('letiny');
 var config = require('../config.json');
 var fs = require('fs');
 var sys = require('./main.js');
+var dns = require('dns');
 
 /**
  * Create a new domain.
@@ -218,78 +219,86 @@ exports.createCert = function (domain, cb) {
         error.type = 400;
         return cb(error);
     }
-    sys.redis.get("certs:"+subDomain, function (err, reply) {
+    dns.resolve(subDomain, ['A', 'AAAA'], function (err, ip) {
         if(err) {
             return cb(err);
         }
-        if(!reply) {
-            options = {
-                email: 'info@'+domain,
-                domains: subDomain,
-                webroot: __dirname+'/../http/LE',
-                agreeTerms: true
-            };
-            letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
-                if(err) {
-                    return cb(err);
-                }
-                cert = {
-                    cert: cert,
-                    key: key,
-                    caCert: caCert,
-                    accountKey: accountKey
-                };
-                sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
-                    if(err) {
-                        return cb(err);
-                    }
-                    sys.util.log('Certificate for `'+domain+'` generated.');
-                    return cb(null, cert);
-                });
-            });
-        } else {
-            //refresh certs
-            var oldCert;
-            try {
-                oldCert = JSON.parse(reply);
-            } catch (e) {
-                return cb(e);
-            }
-            var oneMonth = new Date();
-            oneMonth.setDate(oneMonth.getMonth()+1);
-            if(letiny.getExpirationDate(oldCert.cert).getTime() < oneMonth.getTime()) {
-                error = new Error('Domain has over 1 month of life!');
-                error.name = 'ENOTEXPIRED';
-                error.type = 400;
-                return cb(error);
-            }
-            options = {
-                email: 'info@'+domain,
-                domains: subDomain,
-                webroot: './http/LE',
-                agreeTerms: true,
-                accountKey: oldCert.accountKey,
-                privateKey: oldCert.key
-            };
-            letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
-                if(err) {
-                    return cb(err);
-                }
-                cert = {
-                    cert: cert,
-                    key: key,
-                    caCert: caCert,
-                    accountKey: accountKey
-                };
-                sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
-                    if(err) {
-                        return cb(err);
-                    }
-                    sys.util.log('Certificate for `'+domain+'` refreshed.');
-                    return cb(null, cert);
-                });
-            });
+        if(config.pubIPs.indexOf(ip) == -1) {
+            error = new Error('DNS of `'+subDomain+'` is not set up correctly!');
         }
+        sys.redis.get("certs:"+subDomain, function (err, reply) {
+            if(err) {
+                return cb(err);
+            }
+            if(!reply) {
+                options = {
+                    email: 'info@'+domain,
+                    domains: subDomain,
+                    webroot: __dirname+'/../http/LE',
+                    agreeTerms: true
+                };
+                letiny.getCert(options, function(err, cert, key, caCert, accountKey) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    cert = {
+                        cert: cert,
+                        key: key,
+                        caCert: caCert,
+                        accountKey: accountKey
+                    };
+                    sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
+                        if(err) {
+                            return cb(err);
+                        }
+                        sys.util.log('Certificate for `'+domain+'` generated.');
+                        return cb(null, cert);
+                    });
+                });
+            } else {
+                //refresh certs
+                var oldCert;
+                try {
+                    oldCert = JSON.parse(reply);
+                } catch (e) {
+                    return cb(e);
+                }
+                var oneMonth = new Date();
+                oneMonth.setDate(oneMonth.getMonth()+1);
+                if(letiny.getExpirationDate(oldCert.cert).getTime() < oneMonth.getTime()) {
+                    error = new Error('Domain has over 1 month of life!');
+                    error.name = 'ENOTEXPIRED';
+                    error.type = 400;
+                    return cb(error);
+                }
+                options = {
+                    email: 'info@'+domain,
+                    domains: subDomain,
+                    webroot: './http/LE',
+                    agreeTerms: true,
+                    accountKey: oldCert.accountKey,
+                    privateKey: oldCert.key
+                };
+                letiny.getCert(options, function (err, cert, key, caCert, accountKey) {
+                    if(err) {
+                        return cb(err);
+                    }
+                    cert = {
+                        cert: cert,
+                        key: key,
+                        caCert: caCert,
+                        accountKey: accountKey
+                    };
+                    sys.redis.set('certs:'+subDomain, JSON.stringify(cert), function (err) {
+                        if(err) {
+                            return cb(err);
+                        }
+                        sys.util.log('Certificate for `'+domain+'` refreshed.');
+                        return cb(null, cert);
+                    });
+                });
+            }
+        });
     });
 };
 
