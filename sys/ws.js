@@ -301,11 +301,6 @@ var sendUser = function (userID, message) {
 };
 
 sub.on("message", function (channel, message) {
-    try {
-        message = JSON.parse(message);
-    } catch (e) {
-        util.error('JSON parse error!', e);
-    }
     var id = channel.substring(2);
     if(channel.charAt(0) == "M") {
         if(!mailboxes[id]) {
@@ -316,7 +311,17 @@ sub.on("message", function (channel, message) {
             return;
         }
     } else if(channel.charAt(0) == "U") {
-        sendUser(id, message);
+        try {
+            message = JSON.parse(message);
+        } catch (e) {
+            util.error('JSON parse error!', e);
+        }
+        if(message.eventName == "U:mailboxAdded") {
+            sub.subscribe('M:'+message.data.mailbox._id);
+            mailboxes[message.data.mailbox._id] = [id];
+            users[id].mailboxes.push(message.data.mailbox._id);
+        }
+        sendUser(id, JSON.stringify(message));
         return;
     } else {
         return;
