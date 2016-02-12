@@ -12,6 +12,7 @@ module.exports = function () {
     //SMTP submission receives emails send by other MTAs and handles them. No auth accepted, but only accepts local domains as RCPT TO.
     //Emails are stored in the database to be opened by there owner.
     var smtp = new SMTPServer({
+        size: 1048576*15,
         SNICallback: function (domain, cb) {
             sys.domain.getCert(domain, function (err, cert) {
                 if(err) {
@@ -80,6 +81,11 @@ module.exports = function () {
             var parser = new MailParser({showAttachmentLinks: true});
             parser.on("end", function(mail){
                 var error = false;
+                if(stream.sizeExceeded){
+                    err = new Error('Message exceeds maximum message size of 15 MB');
+                    err.responseCode = 552;
+                    return cb(err);
+                }
                 for (var i = 0; i < session.envelope.rcptTo.length; i++) {
                     if(error === false) {
                         sys.mailbox.verify(session.envelope.rcptTo[i].address, function (err, isValid, mailbox) {
