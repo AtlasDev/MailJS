@@ -105,7 +105,7 @@
 						<ul class="sidebar-menu">
 							<li class="header">{{'common.inboxes' | translate | uppercase}}</li>
 							<li ng-repeat="inbox in currentMailbox.inboxes"><a href="#/mailbox/{{inbox._id}}">
-								<i class="fa fa-{{inbox.name | lowercase}} treeview"></i> <span>{{inbox.name}}</span></a>
+								<i class="fa fa-{{inbox.name | lowercase}}"></i> <span>{{inbox.name}}</span></a>
 							</li>
 							<li class="header">{{'settings.settings' | translate | uppercase}}</li>
 							<li class=""><a href="#/mainSettings"><i class="fa fa-gears"></i> <span>{{'settings.settings' | translate | capitalize}}</span></a></li>
