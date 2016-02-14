@@ -28,18 +28,6 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         });
     }
 
-    $scope.changeGroup = function (user, oldGroupID) {
-        var newGroup = $scope.newSelectGroup[user._id];
-        if(oldGroupID == newGroup._id) {
-            return notification.send('Group not changed.', 'User is already member of `'+newGroup.name+'`');
-        }
-        if(confirm('Are you sure you want to change the group of `'+user.username+'` to `'+newGroup.name+'`?') === true) {
-            notification.send('Cannot change group!', 'Not implemented', 'info');
-        } else {
-            return notification.send('Group not changed.', 'Canceled on prompt.');
-        }
-    };
-
     $scope.createUser = function () {
         if(typeof $scope.username == "undefined" || !$scope.username) {
             return notification.send('Cannot create user!', 'Username empty.', 'error');
@@ -75,6 +63,11 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         };
         $http(req).then(function(res) {
             $scope.users.push(res.data.data);
+            $scope.username = "";
+            $scope.password = "";
+            $scope.firstName = "";
+            $scope.lastName = "";
+            $scope.repeatPassword = "";
             notification.send('User created', 'User `'+$scope.username+'` has been created.', 'success');
             $rootScope.isLoading = false;
         }, function(res) {
