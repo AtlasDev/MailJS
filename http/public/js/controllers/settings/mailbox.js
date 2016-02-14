@@ -56,7 +56,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         $scope.mailboxTitle = '';
         $http(req).then(function(res) {
             $rootScope.isLoading = false;
-            notification.send('Mailbox created!', 'Mailbox has been added to the database.', 'success');
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Maibox creation failed!', res.data.error.message, 'error');
@@ -83,7 +82,6 @@ app.controller("mailboxSettingsCtrl", function($scope, $rootScope, user, $http, 
         $scope.domainDisabled = '';
         $http(req).then(function(res) {
             $rootScope.isLoading = false;
-            notification.send('Domain added!', 'Domain has been added to the database.', 'success');
         }, function(res) {
             $rootScope.isLoading = false;
             notification.send('Domain adding failed!', res.data.error.message, 'error');

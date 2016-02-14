@@ -23,7 +23,7 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             $scope.users = res.data.users;
             $rootScope.isLoading = false;
         }, function(res) {
-            notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+            notification.send('Could not load users.', 'The server errored, please report this to your sysadmin.', 'error');
             $rootScope.isLoading = false;
         });
     }
@@ -68,7 +68,6 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             $scope.firstName = "";
             $scope.lastName = "";
             $scope.repeatPassword = "";
-            notification.send('User created', 'User `'+$scope.username+'` has been created.', 'success');
             $rootScope.isLoading = false;
         }, function(res) {
             notification.send('An error occured!', res.data.error.message || 'The server errored, please report this to your sysadmin.', 'error');
