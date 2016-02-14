@@ -61,7 +61,11 @@
 										</li>
 										<li class="user-body">
 											<div class="list-group">
-												<button type="button" class="list-group-item full" ng-click="changeMailbox(box._id)" ng-repeat="box in mailboxes">{{box.address}}</button>
+												<button type="button" class="list-group-item full" ng-click="changeMailbox(box._id)" ng-repeat="box in mailboxes">
+													<!-- <span class="badge">Unread</span> -->
+													<h4 class="list-group-item-heading" ng-class="{bold: box.address == currentMailbox.address}">{{box.title}}</h4>
+													<p class="list-group-item-text">{{box.address}}</p>
+												</button>
 											</div>
 						                </li>
 										<!-- Menu Footer-->
