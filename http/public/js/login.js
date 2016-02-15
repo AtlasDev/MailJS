@@ -196,15 +196,17 @@ $("#setupTransfer").submit(function(event) {
 });
 
 var showTFA = function () {
-    $('#2fa-box').show();
     $('#login-box').hide();
     $('#setup-box').hide();
+    $('#2fa-box').show();
+    $('#code').focus();
 };
 
 var showLogin = function () {
     $('#2fa-box').hide();
     $('#login-box').show();
     $('#setup-box').hide();
+    $('#username').focus();
 };
 
 var showSetup = function () {
@@ -234,6 +236,7 @@ var showSetup = function () {
     $('#2fa-box').hide();
     $('#login-box').hide();
     $('#setup-box').show();
+    $('#transferCode').focus();
 };
 
 var setName = function (name) {
