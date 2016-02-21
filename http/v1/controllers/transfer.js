@@ -50,7 +50,7 @@ exports.claim = function (req, res) {
             case 2:
                 code.isValid(function (err) {
                     if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
-                    sys.mailbox.addUser(code.object, req.user, function (err, domain) {
+                    sys.mailbox.addUser(code.object, req.user, function (err) {
                         if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
                         sys.mailbox.find(code.object, function (err, mailbox) {
                             if (err) return res.status(err.type || 500).json({ error: {name: err.name, message: err.message} });
