@@ -33,6 +33,8 @@ $(document).ready(function() {
         });
     } else if(Cookies.get('MailJS')) {
         window.location.replace("app.html");
+    } else {
+        $('#username').focus();
     }
 });
 
