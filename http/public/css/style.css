@@ -95,3 +95,7 @@ button.list-group-item {
 .red {
 	color: rgb(208, 30, 30) !important;
 }
+
+.italic {
+	font-style: italic;
+}
