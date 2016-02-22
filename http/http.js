@@ -61,19 +61,7 @@ var https = require('https').createServer({
     honorCipherOrder: true
 }, httpsApp);
 
-var store = new RedisStore({
-    client: sys.redis
-});
-
-var limiter = new Limiter({
-    db: store,
-    innerTimeLimit: config.rateLimit.innerTimeLimit,
-    innerLimit: config.rateLimit.innerLimit,
-    outerTimeLimit: config.rateLimit.outerTimeLimit,
-    outerLimit: config.rateLimit.outerLimit
-});
-
-httpsApp.use(limiter.middleware(), function(req, res, next) {
+httpsApp.use(function(req, res, next) {
     if(config.generateCerts === false) {
         sys.util.log('HSTS disabled to allow connections, please re-enable certificate generation to turn on HSTS.', false, true);
     } else {
@@ -135,7 +123,19 @@ httpsApp.use(function(err, req, res, next) {
 
 sys.ws.start(https);
 
-httpsApp.use('/api/*', function (req, res, next) {
+var store = new RedisStore({
+    client: sys.redis
+});
+
+var limiter = new Limiter({
+    db: store,
+    innerTimeLimit: config.rateLimit.innerTimeLimit,
+    innerLimit: config.rateLimit.innerLimit,
+    outerTimeLimit: config.rateLimit.outerTimeLimit,
+    outerLimit: config.rateLimit.outerLimit
+});
+
+httpsApp.use('/api/*', limiter.middleware(), function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
