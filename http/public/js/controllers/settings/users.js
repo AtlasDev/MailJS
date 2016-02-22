@@ -23,22 +23,10 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
             $scope.users = res.data.users;
             $rootScope.isLoading = false;
         }, function(res) {
-            notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
+            notification.send('Could not load users.', 'The server errored, please report this to your sysadmin.', 'error');
             $rootScope.isLoading = false;
         });
     }
-
-    $scope.changeGroup = function (user, oldGroupID) {
-        var newGroup = $scope.newSelectGroup[user._id];
-        if(oldGroupID == newGroup._id) {
-            return notification.send('Group not changed.', 'User is already member of `'+newGroup.name+'`');
-        }
-        if(confirm('Are you sure you want to change the group of `'+user.username+'` to `'+newGroup.name+'`?') === true) {
-            notification.send('Cannot change group!', 'Not implemented', 'info');
-        } else {
-            return notification.send('Group not changed.', 'Canceled on prompt.');
-        }
-    };
 
     $scope.createUser = function () {
         if(typeof $scope.username == "undefined" || !$scope.username) {
@@ -75,7 +63,11 @@ app.controller("userSettingsCtrl", function(user, $scope, $rootScope, $location,
         };
         $http(req).then(function(res) {
             $scope.users.push(res.data.data);
-            notification.send('User created', 'User `'+$scope.username+'` has been created.', 'success');
+            $scope.username = "";
+            $scope.password = "";
+            $scope.firstName = "";
+            $scope.lastName = "";
+            $scope.repeatPassword = "";
             $rootScope.isLoading = false;
         }, function(res) {
             notification.send('An error occured!', res.data.error.message || 'The server errored, please report this to your sysadmin.', 'error');

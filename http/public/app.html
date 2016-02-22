@@ -12,7 +12,7 @@
 		<!-- Styling -->
 		<link href="dist/css/style.min.css" rel="stylesheet" type="text/css" />
 	</head>
-	<body>
+	<body class="sidebar-mini">
 		<div id="preloader-wrapper">
 			<div id="preloader"></div>
 			<div class="preloader-section section-left"></div>
@@ -26,8 +26,7 @@
 					<!-- Logo -->
 					<div class="logo">
 						<!-- mini logo for sidebar mini 50x50 pixels -->
-						<span class="logo-mini"><b>M</b>JS</span>
-						<!-- logo for regular state and mobile devices -->
+						<span class="logo-mini"><img src="dist/img/favicon-44x44.png" alt="MJS"></img></span>
 						<span class="logo-lg"><b>Mail</b>JS</span>
 					</div>
 
@@ -45,14 +44,14 @@
 									<!-- Menu Toggle Button -->
 									<a href="" class="dropdown-toggle" data-toggle="dropdown">
 										<!-- The user image in the navbar-->
-										<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&d=retro" class="user-image" alt="{{user.firstName}} {{user.lastName}}" />
+										<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&amp;d=retro" class="user-image" alt="{{user.firstName}} {{user.lastName}}" />
 										<!-- hidden-xs hides the username on small devices so only the image appears. -->
 										<span class="hidden-xs">{{user.firstName}} {{user.lastName}}</span>
 									</a>
 									<ul class="dropdown-menu">
 										<!-- The user image in the menu -->
 										<li class="user-header">
-											<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&d=retro" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
+											<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&amp;d=retro" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 											<p>
 												{{user.firstName}} {{user.lastName}}
 												<small ng-if="user.isAdmin == true">{{'common.admin' | translate}}</small>
@@ -61,7 +60,11 @@
 										</li>
 										<li class="user-body">
 											<div class="list-group">
-												<button type="button" class="list-group-item full" ng-click="changeMailbox(box._id)" ng-repeat="box in mailboxes">{{box.address}}</button>
+												<button type="button" class="list-group-item full" ng-click="changeMailbox(box._id)" ng-repeat="box in mailboxes">
+													<!-- <span class="badge">Unread</span> -->
+													<h4 class="list-group-item-heading" ng-class="[{bold: box.address == currentMailbox.address}, {italic: box.address == currentMailbox.address}]">{{box.title}}</h4>
+													<p class="list-group-item-text">{{box.address}}</p>
+												</button>
 											</div>
 						                </li>
 										<!-- Menu Footer-->
@@ -88,7 +91,7 @@
 						<!-- Sidebar user panel (optional) -->
 						<div class="user-panel">
 							<div class="pull-left image">
-								<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&d=retro" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
+								<img ng-src="https://secure.gravatar.com/avatar/{{mailHash}}?s=100&amp;d=retro" class="img-circle" alt="{{user.firstName}} {{user.lastName}}" />
 							</div>
 							<div class="pull-left info">
 								<p>{{currentMailbox.title}}</p>
@@ -101,9 +104,9 @@
 						<!-- Sidebar Menu -->
 						<ul class="sidebar-menu">
 							<li class="header">{{'common.inboxes' | translate | uppercase}}</li>
-							<li ng-repeat="inbox in currentMailbox.inboxes"><a href="#/mailbox/{{inbox._id}}"><i class="fa fa-{{inbox.name | lowercase}}"></i> <span>{{inbox.name}}</span></a></li>
-						</ul>
-						<ul class="sidebar-menu">
+							<li ng-repeat="inbox in currentMailbox.inboxes"><a href="#/mailbox/{{inbox._id}}">
+								<i class="fa fa-{{inbox.name | lowercase}}"></i> <span>{{inbox.name}}</span></a>
+							</li>
 							<li class="header">{{'settings.settings' | translate | uppercase}}</li>
 							<li class=""><a href="#/mainSettings"><i class="fa fa-gears"></i> <span>{{'settings.settings' | translate | capitalize}}</span></a></li>
 						</ul><!-- /.sidebar-menu -->

@@ -62,7 +62,7 @@ TransferSchema.methods.isValid = function(cb) {
         });
         return cb(null, false);
     }
-    if(this.maxUses !== 0 && this.maxUses >= this.uses) {
+    if(this.maxUses !== 0 && this.maxUses <= this.uses) {
         this.remove(function (err) {
             if(err) {
                 return cb(err, false);

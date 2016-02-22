@@ -14,7 +14,6 @@ module.exports = function () {
         authMethods: ['LOGIN', 'XOAUTH2'],
         logger: false,
         onAuth: function (auth, session, cb) {
-            console.log(auth);
             if(auth.method == "LOGIN") {
                 sys.user.verify(auth.username, auth.password, function (err, isMatch, user) {
                     if(err) {
