@@ -18,6 +18,8 @@ var v1apiRouter = require('./v1/apiRouter.js');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
 var tls = require('tls');
+var Limiter = require('express-rate-limiter-redis/limiter');
+var RedisStore = require('express-rate-limiter-redis');
 
 require('ejs');
 
@@ -101,6 +103,11 @@ httpsApp.use(bodyParser.urlencoded({
     extended: true
 }));
 
+if(config.trustProxy === true) {
+    httpsApp.enable('trust proxy');
+    sys.util.log('App running in trusted proxy mode, only enable this if nessarry.', false, true);
+}
+
 httpsApp.use(passport.initialize());
 
 httpsApp.use(function(err, req, res, next) {
@@ -116,7 +123,19 @@ httpsApp.use(function(err, req, res, next) {
 
 sys.ws.start(https);
 
-httpsApp.use('/api/*', function (req, res, next) {
+var store = new RedisStore({
+    client: sys.redis
+});
+
+var limiter = new Limiter({
+    db: store,
+    innerTimeLimit: config.rateLimit.innerTimeLimit,
+    innerLimit: config.rateLimit.innerLimit,
+    outerTimeLimit: config.rateLimit.outerTimeLimit,
+    outerLimit: config.rateLimit.outerLimit
+});
+
+httpsApp.use('/api/*', limiter.middleware(), function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
