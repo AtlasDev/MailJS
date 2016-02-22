@@ -18,6 +18,8 @@ var v1apiRouter = require('./v1/apiRouter.js');
 var sys = require('../sys/main.js');
 var redisSessions = require("connect-redis-sessions");
 var tls = require('tls');
+var Limiter = require('express-rate-limiter-redis/limiter');
+var RedisStore = require('express-rate-limiter-redis');
 
 require('ejs');
 
@@ -59,7 +61,19 @@ var https = require('https').createServer({
     honorCipherOrder: true
 }, httpsApp);
 
-httpsApp.use(function(req, res, next) {
+var store = new RedisStore({
+    client: sys.redis
+});
+
+var limiter = new Limiter({
+    db: store,
+    innerTimeLimit: config.rateLimit.innerTimeLimit,
+    innerLimit: config.rateLimit.innerLimit,
+    outerTimeLimit: config.rateLimit.outerTimeLimit,
+    outerLimit: config.rateLimit.outerLimit
+});
+
+httpsApp.use(limiter.middleware(), function(req, res, next) {
     if(config.generateCerts === false) {
         sys.util.log('HSTS disabled to allow connections, please re-enable certificate generation to turn on HSTS.', false, true);
     } else {
@@ -100,6 +114,11 @@ httpsApp.use(bodyParser.json());
 httpsApp.use(bodyParser.urlencoded({
     extended: true
 }));
+
+if(config.trustProxy === true) {
+    httpsApp.enable('trust proxy');
+    sys.util.log('App running in trusted proxy mode, only enable this if nessarry.', false, true);
+}
 
 httpsApp.use(passport.initialize());
 

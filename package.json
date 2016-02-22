@@ -34,6 +34,7 @@
     "dnsbl-lookup": "^0.3.3",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
+    "express-rate-limiter-redis": "^1.1.0",
     "kerberos": "0.0.18",
     "letiny": "^0.1.1",
     "mailparser": "^0.5.3",

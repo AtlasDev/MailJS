@@ -8,6 +8,7 @@
     "generateCerts": true,
     "ravenURL": "https://cd0fa88eb40b4ecb877d00de8020b8eb:72d01c0491014645b0e63ae29bdea40a@app.getsentry.com/50149",
     "reportErrors": true,
+    "trustProxy": false,
     "variables": {},
     "pubIPs": [
         ""
@@ -37,5 +38,11 @@
     "redis": {
         "host": "localhost",
         "port": 6379
+    },
+    "rateLimit": {
+        "outerLimit": 150,
+        "outerTimeLimit": 300000,
+        "innerLimit": 1500,
+        "innerTimeLimit": 5
     }
 }

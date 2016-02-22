@@ -5,9 +5,10 @@
     "uninstall": true,
     "maxExits": 10,
     "servePublic": true,
-    "generateCerts": true,
+    "generateCerts": false,
     "ravenURL": "https://5c29b8bb0c0b496d964e6eaee929014b@app.getsentry.com/50149",
     "reportErrors": false,
+    "trustProxy": false,
     "variables": {
         "loaderio-74a3c66369bc6263e651e311775d9545": "loaderio-74a3c66369bc6263e651e311775d9545"
     },
@@ -39,5 +40,11 @@
     "redis": {
         "host": "localhost",
         "port": 6379
+    },
+    "rateLimit": {
+        "outerLimit": 150,
+        "outerTimeLimit": 300000,
+        "innerLimit": 100000,
+        "innerTimeLimit": 2
     }
 }
