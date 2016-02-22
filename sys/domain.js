@@ -225,6 +225,9 @@ exports.createCert = function (domain, cb) {
         }
         if(config.pubIPs.indexOf(ip) == -1) {
             error = new Error('DNS of `'+subDomain+'` is not set up correctly!');
+            error.name = 'EINVALID';
+            error.type = 400;
+            return cb(error);
         }
         sys.redis.get("certs:"+subDomain, function (err, reply) {
             if(err) {
