@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox, md5) {
+app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socket, $http, user, fullscreen, mailbox, md5, hotkeys) {
 	$rootScope.isLoading = true;
 
     $scope.socketStatus = socket.getStatus();
@@ -10,6 +10,22 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 	$scope.currentMailbox = {};
     $scope.notifyTimeout = localStorage.getItem('notifyTimeout');
 	$scope.mailHash = "";
+
+	hotkeys.add({
+		combo: 'f',
+		description: 'Toggle fullscreen.',
+		callback: function() {
+			fullscreen.toggleFullScreen();
+		}
+	});
+
+	hotkeys.add({
+		combo: 'shift+backspace',
+		description: 'Logout the user.',
+		callback: function() {
+			user.logout();
+		}
+	});
 
     $rootScope.$on('userLoaded', function () {
         $scope.isInit = true;

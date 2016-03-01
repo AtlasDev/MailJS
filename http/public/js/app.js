@@ -1,4 +1,16 @@
-var app = angular.module("mail", ['ngRoute', 'ngWebSocket', 'ngCookies', 'angular-md5', 'pascalprecht.translate', 'ngAnimate', 'toastr', 'monospaced.qrcode', 'ngMask', 'ngSanitize']);
+var app = angular.module("mail", [
+	'ngRoute',
+	'ngWebSocket',
+	'ngCookies',
+	'angular-md5',
+	'pascalprecht.translate',
+	'ngAnimate',
+	'toastr',
+	'monospaced.qrcode',
+	'ngMask',
+	'ngSanitize',
+	'cfp.hotkeys'
+]);
 
 app.config(function($routeProvider) {
 	$routeProvider
@@ -21,10 +33,6 @@ app.config(function($routeProvider) {
 		.when('/mailboxSettings', {
 			templateUrl : 'pages/settings/mailbox.html',
 			controller  : 'mailboxSettingsCtrl'
-		})
-		.when('/sessionSettings', {
-			templateUrl : 'pages/settings/sessions.html',
-			controller  : 'sessionsSettingsCtrl'
 		})
 		.when('/sessionSettings', {
 			templateUrl : 'pages/settings/sessions.html',

@@ -127,7 +127,7 @@ app.controller("mainSettingsCtrl", function($scope, $rootScope, $translate, $htt
                     $window.location.href = '/index.html?msg=Token%20invalid.';
                     return;
                 } else {
-                    rootScope.isLoading = false;
+                    $rootScope.isLoading = false;
                     notification.send('Internal Server Error', 'The server errored, please report this to your sysadmin.', 'error');
                 }
             });

@@ -116,8 +116,10 @@ module.exports = function (grunt) {
                     'http/public/js/angular/angular-translate-storagecookie.min.js',
                     'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
                     'http/public/js/angular/angular-sanitize.min.js',
+                    'http/public/js/angular/angular-hotkeys.js',
                     'http/public/js/other/adminlte.min.js',
                     'http/public/js/other/select2.full.min.js',
+                    'http/public/js/other/mousetrap.js',
 
                     'http/public/js/app.js',
                     'http/public/js/controllers/**/*.js',
@@ -256,7 +258,8 @@ module.exports = function (grunt) {
                         'http/public/css/font-awesome.min.css',
                         'http/public/css/ionicons.min.css',
                         'http/public/css/AdminLTE.min.css',
-                        'http/public/css/select2.min.css'
+                        'http/public/css/select2.min.css',
+                        'http/public/css/hotkeys.css'
                     ],
                     'http/public/dist/css/login.min.css': [
                         'http/public/css/bootstrap.min.css',
@@ -273,9 +276,19 @@ module.exports = function (grunt) {
         watch: {
             all: {
                 files: [
-                    '**/*'
+                    '**/*.js',
+                    '**/*.css',
+                    '**/*.html'
                 ],
-                tasks: ['jshint:all', 'concat:app', 'concat:login', 'cssmin', 'imagemin:public', 'copy:favicon', 'copy:fonts'],
+                tasks: [
+                    'jshint:all',
+                    'concat:app',
+                    'concat:login',
+                    'cssmin',
+                    'imagemin:public',
+                    'copy:favicon',
+                    'copy:fonts'
+                ],
                 options: {
                     atBegin: true
                 }
