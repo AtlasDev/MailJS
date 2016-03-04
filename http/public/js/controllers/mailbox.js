@@ -22,13 +22,12 @@ app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, i
 			}
 		}
 	}).add({
-		combo: 'crtl+down',
+		combo: 'ctrl+down',
 		description: 'Go to the next inbox.',
 		callback: function() {
-			console.log('h');
 			for (var i = 0; i < mailbox.getCurrent().inboxes.length; i++) {
 				if(mailbox.getCurrent().inboxes[i]._id == $routeParams.inbox) {
-					if(mailbox.getCurrent().inboxes.length == i) {
+					if(mailbox.getCurrent().inboxes.length == i+1) {
 						break;
 					}
 					$location.path("/mailbox/"+mailbox.getCurrent().inboxes[i+1]._id);
