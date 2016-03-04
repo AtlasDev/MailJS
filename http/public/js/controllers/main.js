@@ -27,6 +27,40 @@ app.controller("mainCtrl", function($rootScope, $scope, $cookies, $window, socke
 		}
 	});
 
+	hotkeys.add({
+		combo: 'ctrl+shift+down',
+		description: 'Go to the next mailbox.',
+		callback: function() {
+			var current = mailbox.getCurrent()._id;
+			for (var i = 0; i < mailbox.getMailboxes().length; i++) {
+				if(mailbox.getMailboxes()[i]._id == current) {
+					if(i+1==mailbox.getMailboxes().length) {
+						break;
+					}
+					mailbox.changeMailbox(mailbox.getMailboxes()[i+1]._id);
+					break;
+				}
+			}
+		}
+	});
+
+	hotkeys.add({
+		combo: 'ctrl+shift+up',
+		description: 'Go to the previous mailbox.',
+		callback: function() {
+			var current = mailbox.getCurrent()._id;
+			for (var i = 0; i < mailbox.getMailboxes().length; i++) {
+				if(mailbox.getMailboxes()[i]._id == current) {
+					if(i===0) {
+						break;
+					}
+					mailbox.changeMailbox(mailbox.getMailboxes()[i-1]._id);
+					break;
+				}
+			}
+		}
+	});
+
     $rootScope.$on('userLoaded', function () {
         $scope.isInit = true;
         $scope.user = user.getUser();
