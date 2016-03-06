@@ -219,7 +219,7 @@ exports.createCert = function (domain, cb) {
         error.type = 400;
         return cb(error);
     }
-    dns.resolve(subDomain, ['A', 'AAAA'], function (err, ip) {
+    dns.lookup(subDomain, function (err, ip) {
         if(err) {
             return cb(err);
         }

@@ -1,11 +1,41 @@
 (function () {
 'use strict';
 
-app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox, notification, $location) {
+app.controller('mailboxCtrl', function($rootScope, $routeParams, $scope, user, inbox, mailbox, notification, $location, hotkeys) {
 	$rootScope.isLoading = true;
 	$scope.title = 'Mailbox';
 	$scope.inbox = $routeParams.inbox;
 	$scope.page = 1;
+
+	hotkeys.bindTo($scope).add({
+		combo: 'ctrl+up',
+		description: 'Go to the previous inbox.',
+		callback: function() {
+			for (var i = 0; i < mailbox.getCurrent().inboxes.length; i++) {
+				if(mailbox.getCurrent().inboxes[i]._id == $routeParams.inbox) {
+					if(i === 0) {
+						break;
+					}
+					$location.path("/mailbox/"+mailbox.getCurrent().inboxes[i-1]._id);
+					break;
+				}
+			}
+		}
+	}).add({
+		combo: 'ctrl+down',
+		description: 'Go to the next inbox.',
+		callback: function() {
+			for (var i = 0; i < mailbox.getCurrent().inboxes.length; i++) {
+				if(mailbox.getCurrent().inboxes[i]._id == $routeParams.inbox) {
+					if(mailbox.getCurrent().inboxes.length == i+1) {
+						break;
+					}
+					$location.path("/mailbox/"+mailbox.getCurrent().inboxes[i+1]._id);
+					break;
+				}
+			}
+		}
+	});
 
 	var init = function() {
 		inbox.get($routeParams.inbox, function (err, emails) {

@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, user, $http, notification, mailbox, $location) {
+app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, user, $http, notification, mailbox, $location, hotkeys) {
 	$rootScope.isLoading = true;
 	$scope.mail = {};
 
@@ -26,6 +26,35 @@ app.controller('mailCtrl', function($rootScope, $scope, $routeParams, $window, u
 			}
 		});
 	};
+
+	hotkeys.bindTo($scope).add({
+		combo: 'del',
+		description: 'Delete E-mail.',
+		callback: function() {
+			$rootScope.isLoading = true;
+			var req = {
+				method: 'DELETE',
+				url: '/api/v1/email/' + $routeParams.uuid,
+				headers: {
+					'x-token': user.sessionID
+				}
+			};
+			$http(req).then(function(res) {
+				$rootScope.isLoading = false;
+				notification.send('Email deleted.', '', 'info');
+				$window.location.href = '#/mailbox/'+$scope.mail.inbox;
+			}, function(res) {
+				$rootScope.isLoading = false;
+				notification.send('Could not delete mail!', res.data.error.message, 'error');
+			});
+		}
+	}).add({
+		combo: 'backspace',
+		description: 'Go back to the inbox.',
+		callback: function() {
+			$window.location.href = '#/mailbox/'+$scope.mail.inbox;
+		}
+	});
 
 	$scope.deleteMail = function () {
 		$rootScope.isLoading = true;
