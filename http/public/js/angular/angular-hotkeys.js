@@ -30,7 +30,7 @@
      * @type {String}
      */
 
-    this.templateTitle = 'Keyboard Shortcuts:';
+    this.templateTitle = 'MailJS keyboard Shortcuts:';
 
     /**
      * Configurable settings for the cheat sheet header and footer.  Both are HTML, and the header
@@ -69,7 +69,7 @@
      * Configurable setting for the cheat sheet description
      * @type {String}
      */
-    this.cheatSheetDescription = 'Show / hide this help menu';
+    this.cheatSheetDescription = 'Show/hide cheatsheet';
 
     this.$get = function ($rootElement, $rootScope, $compile, $window, $document) {
 
