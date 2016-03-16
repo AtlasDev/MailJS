@@ -129,10 +129,10 @@ var store = new RedisStore({
 
 var limiter = new Limiter({
     db: store,
-    windowMs: config.rateLimit.windowMs,
-    delayMs: config.rateLimit.delayMs,
-    max: config.rateLimit.maxRequests,
-    message: '{"error":{"name":"ELIMIT",message:"Too many requests"}}'
+    innerTimeLimit: config.rateLimit.innerTimeLimit,
+    innerLimit: config.rateLimit.innerLimit,
+    outerTimeLimit: config.rateLimit.outerTimeLimit,
+    outerLimit: config.rateLimit.outerLimit
 });
 
 httpsApp.use('/api/*', limiter.middleware(), function (req, res, next) {
