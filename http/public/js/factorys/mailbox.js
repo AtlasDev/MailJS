@@ -51,7 +51,7 @@ app.factory('mailbox', function ($http, user, $rootScope, $cookies, $location, s
             }
         }, function (res) {
             $cookies.remove('MailJS');
-            $window.location.href = '/index.html?msg='+JSON.parse(res.data).error.message;
+            $location.path('/index.html?msg='+JSON.parse(res.data).error.message);
         });
     }
 
