@@ -17,7 +17,13 @@
 			<div class="login-logo">
 				<b>Mail</b>JS
 			</div>
-			<div class="login-box-body">
+			<noscript>
+				<div class="login-box-body">
+					<h3>Javascript is not enabled.</h3>
+					MailJS is not able to work properly with javascript disabled.
+				</div>
+			</noscript>
+			<div class="login-box-body" style="display:none" id="inital-login">
 				<p class="login-box-msg">Sign in to access your mailbox</p>
                 <div class="alert alert-danger hidden" id="loginError">
                     <strong>Login failed: </strong><div id="loginErrorMsg"></div>
