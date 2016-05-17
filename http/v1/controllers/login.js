@@ -13,6 +13,9 @@ exports.postLogin = function(req, res) {
         responseUser.tfaToken = undefined;
         if(req.user.tfa === true) {
             req.session.finishTFA = false;
+            responseUser.isAdmin = undefined;
+            responseUser._id = undefined;
+            responseUser.mailboxes = undefined;
         } else {
             req.session.finishTFA = true;
         }

@@ -34,6 +34,7 @@ $(document).ready(function() {
     } else if(Cookies.get('MailJS')) {
         window.location.replace("app.html");
     } else {
+        $('#inital-login').show();
         $('#username').focus();
     }
 });

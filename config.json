@@ -42,9 +42,9 @@
         "port": 6379
     },
     "rateLimit": {
-        "innerLimit": 6,
-        "innerTimeLimit": 300,
+        "innerLimit": 25,
+        "innerTimeLimit": 10000,
         "outerLimit": 100,
-        "outerTimeLimit": 200000
+        "outerTimeLimit": 100000
     }
 }

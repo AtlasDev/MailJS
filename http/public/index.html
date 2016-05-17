@@ -17,7 +17,13 @@
 			<div class="login-logo">
 				<b>Mail</b>JS
 			</div>
-			<div class="login-box-body">
+			<noscript>
+				<div class="login-box-body">
+					<h3>Javascript is not enabled.</h3>
+					MailJS is not able to work properly with javascript disabled.
+				</div>
+			</noscript>
+			<div class="login-box-body" style="display:none" id="inital-login">
 				<p class="login-box-msg">Sign in to access your mailbox</p>
                 <div class="alert alert-danger hidden" id="loginError">
                     <strong>Login failed: </strong><div id="loginErrorMsg"></div>
@@ -43,13 +49,13 @@
 				<b>Mail</b>JS
 			</div>
 			<div class="login-box-body">
-				<p class="login-box-msg">Welcome <b class="name"></b>! Please fill in your 2fa code to proceed</p>
+				<p class="login-box-msg">Welcome <b class="name"></b>. Please fill in your 2fa code to proceed.</p>
                 <div class="alert alert-danger hidden" id="TFAerror">
                     <strong>Login failed: </strong><div id="TFAerrorMsg"></div>
                 </div>
 				<form action="#" id="2fa" name="2fa">
 					<div class="form-group has-feedback">
-						<input id="code" type="text" class="form-control" placeholder="Code"/>
+						<input id="code" type="number" class="form-control" placeholder="Code" maxlength="6" autocomplete="false"/>
 						<span class="glyphicon glyphicon-asterisk form-control-feedback"></span>
 					</div>
 					<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>

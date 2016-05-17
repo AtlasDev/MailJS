@@ -41,7 +41,7 @@ var mailboxes = {};
 exported();
 
 sub.on("error", function (err) {
-    util.error("Redis subsciber errored", err, true);
+    util.error("Redis subscriber errored", err, true);
 });
 
 pub.on("error", function (err) {
