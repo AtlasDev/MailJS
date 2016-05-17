@@ -25,14 +25,17 @@
 
 var redis = require('redis');
 var Ws = require('ws').Server;
-var util  = require('./util.js');
-var config = require('../config.json');
-var sys = require('./main.js');
+var config = require('config');
 var validator = require('validator');
 var uuid = require('uuid');
 
-var sub = redis.createClient(config.redis.port, config.redis.host);
-var pub = require('./redis.js');
+if(!config.has('db.redis.host') || !config.has('db.redis.port')) {
+   	logger.error('Missing Redis config variables');
+   	process.exit(1);
+}
+
+var sub = redis.createClient(config.get('db.redis.port'), config.get('db.redis.host'));
+var pub = require('../lib/redis.js');
 var exported = function () {};
 
 var users = {};
@@ -41,11 +44,11 @@ var mailboxes = {};
 exported();
 
 sub.on("error", function (err) {
-    util.error("Redis subscriber errored", err, true);
+    logger.error("Redis subscriber errored", err);
 });
 
 pub.on("error", function (err) {
-    util.error("Redis publisher errored", err, true);
+    logger.error("Redis publisher errored", err);
 });
 
 exported.start = function (server) {
@@ -53,6 +56,7 @@ exported.start = function (server) {
     server.on('connection', function connection(ws) {
         ws.on('message', function incoming(msg, flags) {
             if (flags.binary) {
+				logger.debug('User send binary.');
                 ws.send(JSON.stringify({
                     type: 'error',
                     error: {
@@ -66,6 +70,7 @@ exported.start = function (server) {
             try {
                 msg = JSON.parse(msg);
             } catch (e) {
+				logger.debug('User send invalid JSON.');
                 ws.send(JSON.stringify({
                     type: 'error',
                     error: {
@@ -280,7 +285,7 @@ var removeSocket = function (wsID) {
 
 var handleSend = function handleSend(err) {
     if(err) {
-        util.error('Websocket errored!', err);
+        logger.error('Websocket errored!', err);
         return;
     }
 };
@@ -314,7 +319,7 @@ sub.on("message", function (channel, message) {
         try {
             message = JSON.parse(message);
         } catch (e) {
-            util.error('JSON parse error!', e);
+            logger.error('JSON parse error!', e);
         }
         if(message.eventName == "U:mailboxAdded") {
             sub.subscribe('M:'+message.data.mailbox._id);

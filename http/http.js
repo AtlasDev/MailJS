@@ -13,21 +13,24 @@ var express = require('express');
 var passport = require('passport');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var config = require('../config.json');
-var v1apiRouter = require('./v1/apiRouter.js');
-var sys = require('../sys/main.js');
+var config = require('config');
+var logger = require('../lib/log.js');
+var v2apiRouter = require('./v2/apiRouter.js');
+//var sys = require('../sys/main.js');
+var redis = require('../lib/redis.js');
 var redisSessions = require("connect-redis-sessions");
+var compression = require('compression');
 var tls = require('tls');
 var Limiter = require('express-rate-limiter-redis/limiter');
 var RedisStore = require('express-rate-limiter-redis');
-
-require('ejs');
+var ws = require('./ws.js');
 
 var httpApp = express();
 var httpsApp = express();
 var http = require('http').createServer(httpApp);
 var https = require('https').createServer({
     SNICallback: function (domain, cb) {
+		logger.debug('Looking up certificate.');
         sys.domain.getCert(domain, function (err, cert) {
             if(err) {
                 return cb(err);
@@ -62,8 +65,9 @@ var https = require('https').createServer({
 }, httpsApp);
 
 httpsApp.use(function(req, res, next) {
-    if(config.generateCerts === false) {
-        sys.util.log('HSTS disabled to allow connections, please re-enable certificate generation to turn on HSTS.', false, true);
+	logger.debug('Got request');
+    if(config.has('generateCerts') && config.get('generateCerts') === false) {
+        logger.log('HSTS disabled to allow connections, please re-enable certificate generation to turn on HSTS.');
     } else {
         res.set('Strict-Transport-Security', 'max-age=31536000');
     }
@@ -79,23 +83,33 @@ httpApp.use('*', function (req, res, next) {
     return res.redirect('https://'+req.headers.host+req.url);
 });
 
-if(config.servePublic !== false) {
+if(config.has('servePublic') && config.get('servePublic') === true) {
+	logger.debug('Serving static files');
     httpsApp.use(express.static(__dirname + '/public'));
 }
 
 httpsApp.use(express.query());
 httpsApp.use(cookieParser());
+httpsApp.use(compression());
+
+if(!config.has('db.redis.host') || !config.has('db.redis.port')) {
+   	logger.error('Missing Redis config variables');
+   	process.exit(1);
+}
+
 httpsApp.use(redisSessions({
     app: "MailJS",
     namespace: 'sess',
-    host: config.redis.host,
-    port: config.redis.port,
+    host: config.get('db.redis.host'),
+    port: config.get('db.redis.port'),
+	wipe: 6000,
+	ttl: 172800,
     cookie: {
-        httpOnly: false
+        httpOnly: true
     }
 }));
 
-httpsApp.set('view engine', 'ejs');
+httpsApp.set('view engine', require('ejs'));
 httpsApp.set('views',__dirname + '/views');
 
 httpsApp.use(bodyParser.json());
@@ -103,9 +117,9 @@ httpsApp.use(bodyParser.urlencoded({
     extended: true
 }));
 
-if(config.trustProxy === true) {
+if(config.has('trustProxy') && config.get('trustProxy') === true) {
     httpsApp.enable('trust proxy');
-    sys.util.log('App running in trusted proxy mode, only enable this if nessarry.', false, true);
+    logger.debug('App running in trusted proxy mode, only enable this if nessarry.');
 }
 
 httpsApp.use(passport.initialize());
@@ -117,22 +131,27 @@ httpsApp.use(function(err, req, res, next) {
             message: 'JSON invalid.'
         }});
     }
-    sys.util.error('Express errored:', err);
+    logger.error('Express errored.', err);
     res.status(500).send('Internal Server Error');
 });
 
-sys.ws.start(https);
+ws.start(https);
 
 var store = new RedisStore({
-    client: sys.redis
+    client: redis
 });
+
+if(!config.has('rateLimit.innerTimeLimit') || !config.has('rateLimit.innerLimit') || !config.has('rateLimit.outerTimeLimit') || !config.has('rateLimit.outerLimit')) {
+   	logger.error('Missing rate limiter config variables');
+   	process.exit(1);
+}
 
 var limiter = new Limiter({
     db: store,
-    innerTimeLimit: config.rateLimit.innerTimeLimit,
-    innerLimit: config.rateLimit.innerLimit,
-    outerTimeLimit: config.rateLimit.outerTimeLimit,
-    outerLimit: config.rateLimit.outerLimit
+    innerTimeLimit: config.get('rateLimit.innerTimeLimit'),
+    innerLimit: config.get('rateLimit.innerLimit'),
+    outerTimeLimit: config.get('rateLimit.outerTimeLimit'),
+    outerLimit: config.get('rateLimit.outerLimit')
 });
 
 httpsApp.use('/api/*', limiter.middleware(), function (req, res, next) {
@@ -142,22 +161,17 @@ httpsApp.use('/api/*', limiter.middleware(), function (req, res, next) {
     next();
 });
 
-httpsApp.use('/api/v1', v1apiRouter);
+httpsApp.use('/api/v2', v2apiRouter);
 
-if(config.variables) {
-    httpsApp.get('/:endpoint', function (req, res, next) {
-        if(config.variables[req.params.endpoint]) {
-            res.send(config.variables[req.params.endpoint]);
-        } else {
-            next();
-        }
-    });
+if(!config.has('http.port') || !config.has('https.port')) {
+	logger.error('Missing HTTP config variables');
+   	process.exit(1);
 }
 
-http.listen(config.http.port, config.http.host);
-https.listen(config.https.port, config.https.host);
-sys.util.log('HTTP server started at port '+config.http.port, true);
-sys.util.log('HTTPS server started at port '+config.https.port, true);
+http.listen(config.get('http.port'), config.get('http.host'));
+https.listen(config.get('https.port'), config.get('https.host'));
+logger.log('HTTP server started at port '+config.get('http.port'));
+logger.log('HTTPS server started at port '+config.get('https.port'));
 
 };
 

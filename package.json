@@ -1,15 +1,15 @@
 {
   "name": "MailJS",
-  "version": "0.1.3-Alpha",
+  "version": "0.2.0-Alpha",
   "description": "Redefine your mail.",
   "homepage": "https://www.mailjs.net",
-  "main": "./lib/app.js",
+  "main": "./dir/app.js",
   "contributors": [
     "Dany Sluijk <dany@atlasdev.nl> (https://atlasdev.nl)"
   ],
   "bin": {
-    "mailjs": "./lib/app.js",
-    "MailJS": "./lib/app.js"
+    "mailjs": "./dir/app.js",
+    "MailJS": "./dir/app.js"
   },
   "scripts": {
     "test": "grunt hint",
@@ -25,9 +25,11 @@
   },
   "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^0.8.6",
     "body-parser": "1.15.0",
     "colors": "1.1.2",
+    "compression": "^1.6.2",
+    "config": "^1.20.2",
     "connect-redis-sessions": "1.2.0",
     "cookie-parser": "1.4.1",
     "daemonize2": "0.4.2",
@@ -45,7 +47,6 @@
     "passport-http-bearer": "1.0.1",
     "passport-local": "1.0.0",
     "passport-sessiontoken": "0.1.1",
-    "raven": "0.10.0",
     "redis": "2.5.1",
     "redis-sessions": "1.0.1",
     "smtp-server": "1.9.0",
@@ -53,6 +54,7 @@
     "striptags": "2.1.1",
     "uuid": "2.0.1",
     "validator": "5.1.0",
+    "winston": "^2.2.0",
     "ws": "1.0.1"
   },
   "devDependencies": {

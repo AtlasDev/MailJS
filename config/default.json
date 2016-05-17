@@ -1,17 +1,11 @@
 {
-    "configured": true,
-    "process_name": "MailJS",
+    "processName": "MailJS",
+	"debug": true,
     "noinstall": false,
     "uninstall": true,
-    "maxExits": 10,
     "servePublic": true,
     "generateCerts": true,
-    "ravenURL": "https://5c29b8bb0c0b496d964e6eaee929014b@app.getsentry.com/50149",
-    "reportErrors": false,
     "trustProxy": false,
-    "variables": {
-        "loaderio-74a3c66369bc6263e651e311775d9545": "loaderio-74a3c66369bc6263e651e311775d9545"
-    },
     "pubIPs": [
         "84.83.185.120"
     ],
@@ -31,15 +25,17 @@
         ]
     },
     "db": {
-        "host": "localhost",
-        "port": 27017,
-        "database": "mailjs",
-        "username": "",
-        "password": ""
-    },
-    "redis": {
-        "host": "localhost",
-        "port": 6379
+		"mongod": {
+	        "host": "localhost",
+	        "port": 27017,
+	        "database": "mailjs",
+	        "username": "",
+	        "password": ""
+		},
+	    "redis": {
+	        "host": "localhost",
+	        "port": 6379
+	    }
     },
     "rateLimit": {
         "innerLimit": 25,

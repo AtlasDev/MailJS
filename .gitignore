@@ -4,3 +4,5 @@ tmp
 builds
 http/public/dist
 MailJS.pid
+http/LE
+log
