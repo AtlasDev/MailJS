@@ -1,7 +1,7 @@
 {
     "processName": "MailJS",
 	"debug": false,
-    "noinstall": false,
+    "install": true,
     "uninstall": false,
     "servePublic": true,
     "generateCerts": true,

@@ -21,12 +21,13 @@ if(cluster.isMaster){
 
 	process.title = config.has('processName') ? config.get('processName') : 'MailJS';
 
-	logger.info('Starting MailJS');
-	logger.info('System: ' + process.platform + ' @ ' + process.arch);
-	logger.info('MailJS v' + pack.version);
-	logger.info('NodeJS ' + process.version);
-	logger.info('V8 engine v' + process.versions.v8);
-	console.log('');
+	logger.info('Starting MailJS', {
+		platform: process.platform,
+		arch: process.arch,
+		mailjs: pack.version,
+		nodejs: process.version,
+		engine: process.versions.v8
+	});
 
 	logger.info('Booting workers');
 	for(var i = 0; i < os.cpus().length; i++) {
@@ -48,9 +49,14 @@ if(cluster.isMaster){
 	logger.info('Booting worker #'+cluster.worker.id);
 	process.title = (config.has('processName') ? config.get('processName') : 'MailJS') + ' worker #'+cluster.worker.id;
 
-	require('../lib/mongo.js');
-	require('../http/http.js')();
-	require('../smtp/smtp.js');
+	require('../lib/mongo.js').then(function() {
+		return require('../http/http.js');
+	}).then(function() {
+		require('../smtp/smtp.js');
+	}).catch(function (err) {
+		logger.error('Could not start server.', err);
+		process.exit(1);
+	});
 
 	process.on('uncaughtException', function(err) {
 	    logger.error("An uncaught exception has taken place!", err);

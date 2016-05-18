@@ -1,13 +1,7 @@
-(function () {
+module.exports = function () {
+
+return new Promise(function(resolve, reject) {
 'use strict';
-
-/**
- * @file The main HTTP handler
- * @author AtlasDev
- * @copyright Dany Sluijk 2015
- */
-
-var http = function() {
 
 var express = require('express');
 var passport = require('passport');
@@ -94,7 +88,7 @@ httpsApp.use(compression());
 
 if(!config.has('db.redis.host') || !config.has('db.redis.port')) {
    	logger.error('Missing Redis config variables');
-   	process.exit(1);
+	return reject();
 }
 
 httpsApp.use(redisSessions({
@@ -143,7 +137,7 @@ var store = new RedisStore({
 
 if(!config.has('rateLimit.innerTimeLimit') || !config.has('rateLimit.innerLimit') || !config.has('rateLimit.outerTimeLimit') || !config.has('rateLimit.outerLimit')) {
    	logger.error('Missing rate limiter config variables');
-   	process.exit(1);
+	return reject();
 }
 
 var limiter = new Limiter({
@@ -165,15 +159,26 @@ httpsApp.use('/api/v2', v2apiRouter);
 
 if(!config.has('http.port') || !config.has('https.port')) {
 	logger.error('Missing HTTP config variables');
-   	process.exit(1);
+	return reject();
 }
 
-http.listen(config.get('http.port'), config.get('http.host'));
-https.listen(config.get('https.port'), config.get('https.host'));
-logger.log('HTTP server started at port '+config.get('http.port'));
-logger.log('HTTPS server started at port '+config.get('https.port'));
+var otherListening = false;
+http.listen(config.get('http.port'), config.get('http.host'), function () {
+	logger.log('HTTP server started at port '+config.get('http.port'));
+	if(otherListening) {
+		resolve();
+	} else {
+		otherListening = true;
+	}
+});
+https.listen(config.get('https.port'), config.get('https.host'), function () {
+	logger.log('HTTPS server started at port '+config.get('https.port'));
+	if(otherListening) {
+		resolve();
+	} else {
+		otherListening = true;
+	}
+});
 
-};
-
-module.exports = http;
-}());
+});
+}();

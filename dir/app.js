@@ -69,7 +69,7 @@ switch (process.argv[2]) {
         daemon.kill();
         break;
     case 'install':
-        require('./install.js')(process.argv[3]);
+        require('./install.js')();
         break;
     case 'uninstall':
         require('./uninstall.js')();
@@ -89,5 +89,5 @@ switch (process.argv[2]) {
         console.log('V8 engine v' + process.versions.v8);
         break;
     default:
-        console.log('Usage: mailjs [start|stop|restart|kill|install {domain}|uninstall|status|version]');
+        console.log('Usage: mailjs [start|stop|restart|kill|install|uninstall|status|version]');
 }

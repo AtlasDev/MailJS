@@ -1,86 +1,58 @@
+module.exports = function () {
 'use strict';
 
-module.exports = function (setupDomain) {
-var mongoose = require('mongoose');
-var config = require('../config.json');
-var colors = require('colors');
+var config = require('config');
 var pack = require('../package.json');
-var sys = require('../sys/main.js');
-var validator = require('validator');
+var logger = require('../lib/log.js');
+var validate = require('../lib/validate.js');
+var error = require('../lib/error.js');
+var user = require('../lib/user.js');
+var group = require('../lib/group.js');
+var prompt = require('prompt');
+var promptResults;
 
-if(config.noinstall === true) {
+if(config.has('install') && config.get('install') === false) {
+	logger.error('Installation disabled in the config.');
     process.exit(0);
 }
 
-console.log('\n')
-console.log(' __  __       _ _    '+'    _  _____  '.cyan);
-console.log('|  \\\/  |     (_) | '+'     | |/ ____| '.cyan);
-console.log('| \\\  / | __ _ _| | '+'     | | (___   '.cyan);
-console.log('| |\\\/| |/ _` | | | '+' _   | |\\\___ \\\  '.cyan);
-console.log('| |  | | (_| | | | '  +'|  __| |____) | '.cyan);
-console.log('|_|  |_|\\\__,_|_|_| '+' \\\____/|_____/  '.cyan);
-console.log('\n');
-console.log('Installing MailJS');
-console.log('System: ' + process.platform + ' @ ' + process.arch);
-console.log('MailJS v' + pack.version);
-console.log('NodeJS ' + process.version);
-console.log('V8 engine v' + process.versions.v8);
-console.log('');
+logger.info('Installing MailJS', {
+	platform: process.platform,
+	arch: process.arch,
+	mailjs: pack.version,
+	nodejs: process.version,
+	engine: process.versions.v8
+});
 
-if(!config.configured) {
-    console.log('MailJS not configured!'.red);
-    process.exit(1);
-}
-
-if(!setupDomain || !validator.isFQDN(setupDomain.toString())) {
-    console.log('Initial domain not given or not an FQDN!'.red);
-    process.exit(1);
-}
-
-console.log('Connecting to the database..');
-var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
-mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
-
-require('../http/http.js')();
-
-mongoose.connection.on('open', function(){
-    console.log('Creating first user.');
-    console.log(' - Generating password..');
-    var password = sys.util.uid(12);
-    console.log('   - password generated');
-    sys.user.create('admin', password, 'Admin', 'Adminius', true, function (err, user) {
-        if (err) {
-            console.log(colors.red('Failed to create initial user: '.red+err.errmsg+" ("+err.code+")."));
-            process.exit(1);
-        }
-        console.log(' - User created.');
-        console.log('Creating first domain..');
-        sys.domain.create(setupDomain, user._id, false, function (err, domain) {
-            if (err) {
-                console.log(colors.red('Failed to create initial domain: '.red+err));
-                process.exit(1);
-            }
-            console.log('Domain created.');
-            console.log('Creating initial mailbox..');
-            sys.mailbox.create('info', domain._id, user._id, 'Info '+domain.domain, true, function (err, mailbox) {
-                if (err) {
-                    console.log(colors.red('Failed to create initial mailbox: '.red+err));
-                    process.exit(1);
-                }
-                console.log('Initial mailbox created.');
-                console.log('');
-                console.log('###############');
-                console.log('##  Installation Finished!');
-                console.log('##  Initial account details:');
-                console.log('##  Username: '+'admin'.cyan);
-                console.log('##  Password: '+colors.cyan(password));
-                console.log('##  Mail address: '+'info@'.cyan+setupDomain.cyan);
-                console.log('##  SAVE THIS INFORMATION CAREFULLY!');
-                console.log('##  It is NOT recoverable!');
-                console.log('###############');
-                process.exit(0);
-            });
-        });
-    });
+require('../lib/mongo.js').then(function() {
+	return new Promise(function(resolve, reject) {
+		prompt.get(['username', 'password', 'repeat password', 'admin group name'], function (err, result) {
+			if(err) {
+				reject(err);
+			} else if(!validate.name(result.username)) {
+				reject(error.validation('Invalid username.'));
+			} else if(!validate.password(result.password)) {
+				reject(error.validation('Invalid password.'));
+			} else if(result['password'] !== result['repeat password']) {
+				reject(error.validation('Passwords do not match.'));
+			} else if(!validate.name(result['admin group name'])) {
+				reject(error.validation('Invalid group name.'));
+			} else {
+				promptResults = result;
+				resolve();
+			}
+		});
+	});
+}).then(function() {
+	logger.info('Creating first group..');
+	return group.create(promptResults['admin group name'], '#F00');
+}).then(function (group) {
+	logger.info('Creating first user..');
+	return user.create(promptResults['username'], promptResults['password'], group._id);
+}).then(function (user) {
+	logger.info('All set! user mailjs start to start the daemon, and browse to the web app to set up the initial domain.');
+}).catch(function (err) {
+	logger.error('Could not install!', err);
+	process.exit(1);
 });
 };
