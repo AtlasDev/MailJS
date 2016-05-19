@@ -278,7 +278,8 @@ module.exports = function (grunt) {
                 files: [
                     '**/*.js',
                     '**/*.css',
-                    '**/*.html'
+                    '**/*.html',
+					'!node_modules/*'
                 ],
                 tasks: [
                     'jshint:all',

@@ -38,7 +38,7 @@
     "express-rate-limiter-redis": "1.1.0",
     "letiny": "0.1.1",
     "mailparser": "0.5.3",
-    "mongoose": "4.4.7",
+    "mongoose": "4.4.17",
     "oauth2orize": "1.2.2",
     "passport": "0.3.2",
     "passport-http": "0.3.0",

@@ -24,7 +24,9 @@ logger.info('Installing MailJS', {
 	engine: process.versions.v8
 });
 
-require('../lib/mongo.js').then(function() {
+var mongo = require('../lib/mongo.js');
+
+mongo.then(function(db) {
 	return new Promise(function(resolve, reject) {
 		prompt.get(['username', 'password', 'repeat password', 'admin group name'], function (err, result) {
 			if(err) {
@@ -50,7 +52,9 @@ require('../lib/mongo.js').then(function() {
 	logger.info('Creating first user..');
 	return user.create(promptResults['username'], promptResults['password'], group._id);
 }).then(function (user) {
-	logger.info('All set! user mailjs start to start the daemon, and browse to the web app to set up the initial domain.');
+	logger.info('All set! Use `mailjs start` to start the daemon, and browse to the web app to set up the initial domain.');
+	require('mongoose').disconnect();
+	process.exit(0);
 }).catch(function (err) {
 	logger.error('Could not install!', err);
 	process.exit(1);
