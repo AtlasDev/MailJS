@@ -1,51 +1,59 @@
+module.exports = function () {
 'use strict';
 
-module.exports = function () {
-var mongoose = require('mongoose');
-var config = require('../config.json');
+var config = require('config');
 var pack = require('../package.json');
 var redis = require('redis');
+var logger = require('../lib/log.js');
+var mongoose = require('mongoose');
 
-require('colors');
+logger.info('Uninstalling MailJS', {
+	platform: process.platform,
+	arch: process.arch,
+	mailjs: pack.version,
+	nodejs: process.version,
+	engine: process.versions.v8
+});
 
-console.log('\n')
-console.log(' __  __       _ _    '+'    _  _____  '.cyan);
-console.log('|  \\\/  |     (_) | '+'     | |/ ____| '.cyan);
-console.log('| \\\  / | __ _ _| | '+'     | | (___   '.cyan);
-console.log('| |\\\/| |/ _` | | | '+' _   | |\\\___ \\\  '.cyan);
-console.log('| |  | | (_| | | | '  +'|  __| |____) | '.cyan);
-console.log('|_|  |_|\\\__,_|_|_| '+' \\\____/|_____/  '.cyan);
-console.log('\n');
-console.log('Uninstalling MailJS');
-console.log('System: ' + process.platform + ' @ ' + process.arch);
-console.log('MailJS v' + pack.version);
-console.log('NodeJS ' + process.version);
-console.log('V8 engine v' + process.versions.v8);
-console.log('');
-
-if(config.uninstall !== true) {
-    console.log('Safety switch saved the data!'.red);
+if(config.has('uninstall') && config.get('uninstall') === false) {
+    logger.info('Uninstallation disabled in the config.');
     process.exit(0);
 }
 
-console.log('Connecting to the database..');
-var dburl = 'mongodb://'+config.db.host+':'+config.db.port+'/'+config.db.database;
-mongoose.connect(dburl, {user: config.db.username, pass: config.db.password});
+var mongo = require('../lib/mongo.js');
 
-mongoose.connection.on('open', function(){
-    console.log('Deleting database..');
-    mongoose.connection.db.dropDatabase(function () {
-        console.log('Database deleted.');
-        console.log('Connecting to redis..');
-        var client = redis.createClient(config.redis.port, config.redis.host);
-        client.on('ready', function () {
-            console.log('Flushing redis database..');
-            client.flushdb(function () {
-                console.log('Redis flushed.');
-                console.log('Uninstall successfull, it\'s a shame to see you go away :(');
-                process.exit(0);
+mongo.then(function (db) {
+	return new Promise(function(resolve, reject) {
+	    mongoose.connection.db.dropDatabase(function (err) {
+			if(err) {
+				reject(err);
+			} else {
+				logger.info('Dropped database.');
+				resolve();
+			}
+		});
+	});
+}).then(function () {
+	return new Promise(function (resolve, reject) {
+		resolve(require('../lib/redis.js'));
+	});
+}).then(function (redis) {
+	return new Promise(function(resolve, reject) {
+		redis.on('ready', function () {
+            redis.flushdb(function (err) {
+				if(err) {
+					return reject(err);
+				}
+                logger.info('Redis flushed.');
+                logger.info('Uninstall successfull, it is a shame to see you go away :(');
+				require('mongoose').disconnect();
+				process.exit(0);
+				resolve();
             });
         });
-    });
+	});
+}).catch(function (err) {
+	logger.error('Could not uninstall!', err);
+	process.exit(1);
 });
 };

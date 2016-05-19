@@ -7,8 +7,8 @@ module.exports = function (grunt) {
         uglify: {
             public: {
                 files: {
-                    'http/public/dist/js/app.min.js': ['http/public/dist/js/app.min.js'],
-                    'http/public/dist/js/login.min.js': ['http/public/dist/js/login.min.js']
+                    'lib/http/public/dist/js/app.min.js': ['lib/http/public/dist/js/app.min.js'],
+                    'lib/http/public/dist/js/login.min.js': ['lib/http/public/dist/js/login.min.js']
                 },
                 options: {
                     banner: '/*\n   <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> © AtlasDev\n'+
@@ -38,7 +38,17 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    src: ['./**/*.js', './http/*.js', './http/v*/*.js', '!./node_modules/**', '!./Gruntfile.js', '!./builds/**', '!./http/public/**', '!./http/doc/**', '!./http/docfiles/**'],
+                    src: [
+						'./**/*.js',
+						'./lib/http/*.js',
+						'./lib/http/v*/*.js',
+						'!./node_modules/**',
+						'!./Gruntfile.js',
+						'!./builds/**',
+						'!./lib/http/public/**',
+						'!./lib/http/doc/**',
+						'!./lib/http/docfiles/**'
+					],
                     dest: 'tmp'
                 }],
                 options: {
@@ -88,44 +98,44 @@ module.exports = function (grunt) {
             },
             login: {
                 src: [
-                    'http/public/js/other/jquery.min.js',
-                    'http/public/js/other/bootstrap.min.js',
-                    'http/public/js/other/js.cookie.js',
-                    'http/public/js/login.js'
+                    'lib/http/public/js/other/jquery.min.js',
+                    'lib/http/public/js/other/bootstrap.min.js',
+                    'lib/http/public/js/other/js.cookie.js',
+                    'lib/http/public/js/login.js'
                 ],
-                dest: 'http/public/dist/js/login.min.js'
+                dest: 'lib/http/public/dist/js/login.min.js'
             },
             app: {
                 src: [
-                    'http/public/js/other/jquery.min.js',
-                    'http/public/js/other/bootstrap.min.js',
-                    'http/public/js/other/bootstrap3-wysihtml5.all.min.js',
-                    'http/public/js/other/qrcode.js',
-                    'http/public/js/other/UAParser.min.js',
-                    'http/public/js/angular/angular.min.js',
-                    'http/public/js/angular/angular-md5.min.js',
-                    'http/public/js/angular/angular-animate.js',
-                    'http/public/js/angular/angular-mask.js',
-                    'http/public/js/angular/angular-qrcode.js',
-                    'http/public/js/angular/angular-animate.min.js',
-                    'http/public/js/angular/angular-route.min.js',
-                    'http/public/js/angular/angular-toastr.tpls.min.js',
-                    'http/public/js/angular/angular-cookies.min.js',
-                    'http/public/js/angular/angular-websocket.min.js',
-                    'http/public/js/angular/angular-translate.min.js',
-                    'http/public/js/angular/angular-translate-storagecookie.min.js',
-                    'http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
-                    'http/public/js/angular/angular-sanitize.min.js',
-                    'http/public/js/angular/angular-hotkeys.js',
-                    'http/public/js/other/adminlte.min.js',
-                    'http/public/js/other/select2.full.min.js',
-                    'http/public/js/other/mousetrap.js',
+                    'lib/http/public/js/other/jquery.min.js',
+                    'lib/http/public/js/other/bootstrap.min.js',
+                    'lib/http/public/js/other/bootstrap3-wysihtml5.all.min.js',
+                    'lib/http/public/js/other/qrcode.js',
+                    'lib/http/public/js/other/UAParser.min.js',
+                    'lib/http/public/js/angular/angular.min.js',
+                    'lib/http/public/js/angular/angular-md5.min.js',
+                    'lib/http/public/js/angular/angular-animate.js',
+                    'lib/http/public/js/angular/angular-mask.js',
+                    'lib/http/public/js/angular/angular-qrcode.js',
+                    'lib/http/public/js/angular/angular-animate.min.js',
+                    'lib/http/public/js/angular/angular-route.min.js',
+                    'lib/http/public/js/angular/angular-toastr.tpls.min.js',
+                    'lib/http/public/js/angular/angular-cookies.min.js',
+                    'lib/http/public/js/angular/angular-websocket.min.js',
+                    'lib/http/public/js/angular/angular-translate.min.js',
+                    'lib/http/public/js/angular/angular-translate-storagecookie.min.js',
+                    'lib/http/public/js/angular/angular-translate-loaderstaticfiles.min.js',
+                    'lib/http/public/js/angular/angular-sanitize.min.js',
+                    'lib/http/public/js/angular/angular-hotkeys.js',
+                    'lib/http/public/js/other/adminlte.min.js',
+                    'lib/http/public/js/other/select2.full.min.js',
+                    'lib/http/public/js/other/mousetrap.js',
 
-                    'http/public/js/app.js',
-                    'http/public/js/controllers/**/*.js',
-                    'http/public/js/factorys/*.js'
+                    'lib/http/public/js/app.js',
+                    'lib/http/public/js/controllers/**/*.js',
+                    'lib/http/public/js/factorys/*.js'
                 ],
-                dest: 'http/public/dist/js/app.min.js'
+                dest: 'lib/http/public/dist/js/app.min.js'
             }
         },
         compress: {
@@ -169,7 +179,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'http/doc',
+                        cwd: 'lib/http/doc',
                         src: '**/*',
                         dest: 'docs',
                         mode: 'gzip'
@@ -185,7 +195,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'tmp/http/public',
+                        cwd: 'tmp/lib/http/public',
                         src: '**/*',
                         dest: 'public',
                         mode: 'gzip'
@@ -200,7 +210,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'tmp/http/public',
+                        cwd: 'tmp/lib/http/public',
                         src: '**/*',
                         dest: 'public',
                         mode: 'tgz'
@@ -247,28 +257,28 @@ module.exports = function (grunt) {
             },
             target: {
                 files: {
-                    'http/public/dist/css/style.min.css': [
-                        'http/public/css/bootstrap.min.css',
-                        'http/public/css/angular-toastr.min.css',
-                        'http/public/css/preloader.css',
-                        'http/public/css/style.css',
-                        'http/public/css/loader.css',
-                        'http/public/css/skins/skin-red-light.min.css',
-                        'http/public/css/bootstrap3-wysihtml5.min.css',
-                        'http/public/css/font-awesome.min.css',
-                        'http/public/css/ionicons.min.css',
-                        'http/public/css/AdminLTE.min.css',
-                        'http/public/css/select2.min.css',
-                        'http/public/css/hotkeys.css'
+                    'lib/http/public/dist/css/style.min.css': [
+                        'lib/http/public/css/bootstrap.min.css',
+                        'lib/http/public/css/angular-toastr.min.css',
+                        'lib/http/public/css/preloader.css',
+                        'lib/http/public/css/style.css',
+                        'lib/http/public/css/loader.css',
+                        'lib/http/public/css/skins/skin-red-light.min.css',
+                        'lib/http/public/css/bootstrap3-wysihtml5.min.css',
+                        'lib/http/public/css/font-awesome.min.css',
+                        'lib/http/public/css/ionicons.min.css',
+                        'lib/http/public/css/AdminLTE.min.css',
+                        'lib/http/public/css/select2.min.css',
+                        'lib/http/public/css/hotkeys.css'
                     ],
-                    'http/public/dist/css/login.min.css': [
-                        'http/public/css/bootstrap.min.css',
-                        'http/public/css/angular-toastr.min.css',
-                        'http/public/css/skins/skin-red-light.min.css',
-                        'http/public/css/bootstrap3-wysihtml5.min.css',
-                        'http/public/css/AdminLTE.min.css',
-                        'http/public/css/font-awesome.min.css',
-                        'http/public/css/ionicons.min.css'
+                    'lib/http/public/dist/css/login.min.css': [
+                        'lib/http/public/css/bootstrap.min.css',
+                        'lib/http/public/css/angular-toastr.min.css',
+                        'lib/http/public/css/skins/skin-red-light.min.css',
+                        'lib/http/public/css/bootstrap3-wysihtml5.min.css',
+                        'lib/http/public/css/AdminLTE.min.css',
+                        'lib/http/public/css/font-awesome.min.css',
+                        'lib/http/public/css/ionicons.min.css'
                     ]
                 }
             }
@@ -296,7 +306,7 @@ module.exports = function (grunt) {
             },
             js: {
                 files: [
-                    'http/public/js/**/*.js'
+                    'lib/http/public/js/**/*.js'
                 ],
                 tasks: ['concat:app', 'concat:login'],
                 options: {
@@ -305,7 +315,7 @@ module.exports = function (grunt) {
             },
             css: {
                 files: [
-                    'http/public/css/**/*.js'
+                    'lib/http/public/css/**/*.js'
                 ],
                 tasks: ['cssmin'],
                 options: {
@@ -314,7 +324,7 @@ module.exports = function (grunt) {
             },
             img: {
                 files: [
-                    'http/public/img/**/*.{png,jpg,gif,ico}'
+                    'lib/http/public/img/**/*.{png,jpg,gif,ico}'
                 ],
                 tasks: ['imagemin:public', 'copy:favicon'],
                 options: {
@@ -337,25 +347,25 @@ module.exports = function (grunt) {
             },
             fonts: {
                 expand: true,
-                cwd: 'http/public/fonts/',
+                cwd: 'lib/http/public/fonts/',
                 src: '**',
-                dest: 'http/public/dist/fonts'
+                dest: 'lib/http/public/dist/fonts'
             },
             favicon: {
-                src: ['http/public/img/favicon.ico'],
-                dest: 'http/public/dist/img/favicon.ico'
+                src: ['lib/http/public/img/favicon.ico'],
+                dest: 'lib/http/public/dist/img/favicon.ico'
             },
             public: {
                 files: [
                     {
                         expand: true,
                         src: [
-                            'http/views/**',
-                            'http/public/**',
-                            '!http/public/css/**',
-                            '!http/public/fonts/**',
-                            '!http/public/img/**',
-                            '!http/public/js/**'
+                            'lib/http/views/**',
+                            'lib/http/public/**',
+                            '!lib/http/public/css/**',
+                            '!lib/http/public/fonts/**',
+                            '!lib/http/public/img/**',
+                            '!lib/http/public/js/**'
                         ],
                         dest: 'tmp'
                     }
@@ -380,7 +390,7 @@ module.exports = function (grunt) {
                 src: ["tmp"]
             },
             client: {
-                src: ["tmp/http/public"]
+                src: ["tmp/lib/http/public"]
             }
         },
         imagemin: {
@@ -390,9 +400,9 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'http/public/img',
+                    cwd: 'lib/http/public/img',
                     src: ['**/*.{png,jpg,gif}'],
-                    dest: 'http/public/dist/img'
+                    dest: 'lib/http/public/dist/img'
                 }]
             }
         },
@@ -424,30 +434,30 @@ module.exports = function (grunt) {
             all: [
                 'sys/*.js',
                 'models/*.js',
-                'http/**/*.js',
-                '!http/public/dist/**',
-                '!http/public/js/other/**',
-                '!http/public/js/angular/**',
-                '!http/doc/**',
-                '!http/docfiles/**',
-                'smtp/**/*.js'
+                'lib/http/**/*.js',
+                '!lib/http/public/dist/**',
+                '!lib/http/public/js/other/**',
+                '!lib/http/public/js/angular/**',
+                '!lib/http/doc/**',
+                '!lib/http/docfiles/**',
+                'lib/smtp/**/*.js'
             ],
             sys: [
                 'sys/**/*.js'
             ],
             http: [
-                'http/**/*.js',
-                '!http/public/dist/**',
-                '!http/public/js/other/**',
-                '!http/public/js/angular/**',
-                '!http/doc/**',
-                '!http/docfiles/**'
+                'lib/http/**/*.js',
+                '!lib/http/public/dist/**',
+                '!lib/http/public/js/other/**',
+                '!lib/http/public/js/angular/**',
+                '!lib/http/doc/**',
+                '!lib/http/docfiles/**'
             ],
             smtp: [
-                'smtp/**/*.js'
+                'lib/smtp/**/*.js'
             ],
             models: [
-                'models/*.js'
+                'lib/models/*.js'
             ]
         }
     });

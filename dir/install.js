@@ -52,9 +52,12 @@ mongo.then(function(db) {
 	logger.info('Creating first user..');
 	return user.create(promptResults['username'], promptResults['password'], group._id);
 }).then(function (user) {
-	logger.info('All set! Use `mailjs start` to start the daemon, and browse to the web app to set up the initial domain.');
-	require('mongoose').disconnect();
-	process.exit(0);
+	return new Promise(function(resolve, reject) {
+		require('mongoose').disconnect();
+		logger.info('All set! Use `mailjs start` to start the daemon, and browse to the web app to set up the initial domain.');
+		process.exit(0);
+		resolve();
+	});
 }).catch(function (err) {
 	logger.error('Could not install!', err);
 	process.exit(1);

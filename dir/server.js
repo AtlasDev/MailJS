@@ -18,7 +18,6 @@ var pack    = require('../package.json');
 var os      = require('os');
 
 if(cluster.isMaster){
-
 	process.title = config.has('processName') ? config.get('processName') : 'MailJS';
 
 	logger.info('Starting MailJS', {
@@ -50,9 +49,10 @@ if(cluster.isMaster){
 	process.title = (config.has('processName') ? config.get('processName') : 'MailJS') + ' worker #'+cluster.worker.id;
 
 	require('../lib/mongo.js').then(function() {
-		return require('../http/http.js');
+		return require('../lib/http/http.js');
 	}).then(function() {
-		require('../smtp/smtp.js');
+		require('../lib/redis.js');
+		require('../lib/smtp/smtp.js');
 	}).catch(function (err) {
 		logger.error('Could not start server.', err);
 		process.exit(1);
