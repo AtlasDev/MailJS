@@ -52,7 +52,8 @@ if(cluster.isMaster){
 		return require('../lib/http/http.js');
 	}).then(function() {
 		require('../lib/redis.js');
-		require('../lib/smtp/smtp.js');
+		//TODO
+		//require('../lib/smtp/smtp.js');
 	}).catch(function (err) {
 		logger.error('Could not start server.', err);
 		process.exit(1);
