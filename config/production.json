@@ -1,14 +1,11 @@
 {
     "processName": "MailJS",
 	"debug": false,
-    "install": true,
     "uninstall": false,
     "servePublic": true,
-    "generateCerts": true,
+    "staging": false,
     "trustProxy": false,
-    "pubIPs": [
-        ""
-    ],
+    "pubIPs": "",
     "http": {
         "port": 80,
         "host": ""

@@ -8,14 +8,9 @@ var validate = require('../lib/validate.js');
 var error = require('../lib/error.js');
 var user = require('../lib/user.js');
 var group = require('../lib/group.js');
-var group = require('../lib/domain.js');
+var domain = require('../lib/domain.js');
 var prompt = require('prompt');
 var promptResults;
-
-if(config.has('install') && config.get('install') === false) {
-	logger.error('Installation disabled in the config.');
-    process.exit(0);
-}
 
 logger.info('Installing MailJS', {
 	platform: process.platform,
@@ -27,7 +22,18 @@ logger.info('Installing MailJS', {
 
 var mongo = require('../lib/mongo.js');
 
-mongo.then(function(db) {
+mongo.then(function () {
+	return new Promise(function(resolve, reject) {
+		user.getAll(null, null, 'username').then(function (users) {
+			if(users.length > 0) {
+				return reject(error.invalid('MailJS already installed!'));
+			}
+			resolve();
+		})
+	});
+}).then(function() {
+	return require('../lib/http/http.js');
+}).then(function(db) {
 	return new Promise(function(resolve, reject) {
 		prompt.get(['username', 'password', 'repeat password', 'initial domain', 'admin group name'], function (err, result) {
 			if(err) {
@@ -56,7 +62,7 @@ mongo.then(function(db) {
 	return user.create(promptResults['username'], promptResults['password'], group._id);
 }).then(function (user) {
 	logger.info('Creating initial domain.');
-	return domain.create(promptResults['initial domain']);
+	return domain.create(promptResults['initial domain'], user._id);
 }).then(function () {
 	return new Promise(function(resolve, reject) {
 		require('mongoose').disconnect();

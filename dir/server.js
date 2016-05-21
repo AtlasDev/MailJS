@@ -35,10 +35,11 @@ if(cluster.isMaster){
 
 	cluster.on('exit', function(worker, code, signal) {
 	    logger.error('Worker '+worker.process.pid+' died ('+(code||signal)+'), restarting...');
-		if(config.has('debug') && config.get('debug') == true) {
+		if(config.has('debug') && config.get('debug') === true) {
 			process.exit(1);
+		} else {
+	    	cluster.fork();
 		}
-	    cluster.fork();
 	});
 
 	process.on('uncaughtException', function(err) {
@@ -49,9 +50,13 @@ if(cluster.isMaster){
 	process.title = (config.has('processName') ? config.get('processName') : 'MailJS') + ' worker #'+cluster.worker.id;
 
 	require('../lib/mongo.js').then(function() {
-		return require('../lib/http/http.js');
+		return new Promise(function(resolve, reject) {
+			require('../lib/redis.js');
+			resolve();
+		});
 	}).then(function() {
-		require('../lib/redis.js');
+		return require('../lib/http/http.js');
+	}).then(function () {
 		//TODO
 		//require('../lib/smtp/smtp.js');
 	}).catch(function (err) {

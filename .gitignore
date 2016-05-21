@@ -2,7 +2,6 @@ node_modules
 npm-debug.log
 tmp
 builds
-http/public/dist
+lib/http/public
 MailJS.pid
-http/LE
 log
